@@ -117,6 +117,18 @@ function getSlotDisplayTitle(slotKey) {
 function filterItemsForSlot(slotKey, query = "") {
   const q = query.trim().toLowerCase();
   return allItems.filter(item => {
+    if (currentClass !== "all") {
+      if (Array.isArray(item.classes) && item.classes.length > 0 && !item.classes.includes(currentClass)) {
+        return false;
+      }
+      if (currentClass === "paladin" && ["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(item.subclass)) {
+        return false;
+      }
+      if (currentClass === "warrior" && ["wand", "relic", "libram"].includes(item.subclass)) {
+        return false;
+      }
+    }
+
     let match = false;
     if (slotKey === "main_hand") {
       match = ["twohand", "onehand", "mainhand", "two_hand", "one_hand", "main_hand"].includes(item.slot);
@@ -316,8 +328,19 @@ function hideTooltip() {
 }
 
 function equipItem(slotKey, itemId) {
-  equippedItems[slotKey] = itemId;
   const item = itemsById[String(itemId)];
+  if (item && currentClass !== "all") {
+    if (Array.isArray(item.classes) && item.classes.length > 0 && !item.classes.includes(currentClass)) {
+      return;
+    }
+    if (currentClass === "paladin" && ["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(item.subclass)) {
+      return;
+    }
+    if (currentClass === "warrior" && ["wand", "relic", "libram"].includes(item.subclass)) {
+      return;
+    }
+  }
+  equippedItems[slotKey] = itemId;
 
   const card = document.querySelector(`.slot-card[data-slot="${slotKey}"]`) ||
     document.querySelector(`.weapon-card[data-slot="${slotKey}"]`) ||
@@ -577,7 +600,11 @@ function renderDropdownItems(dropdown, slotKey, items) {
 
     const subSpan = document.createElement("span");
     subSpan.className = "item-subtag";
-    subSpan.textContent = `ilvl ${item.item_level}`;
+    if (item.set && item.set.name) {
+      subSpan.textContent = `ilvl ${item.item_level} · ${item.set.name}`;
+    } else {
+      subSpan.textContent = `ilvl ${item.item_level}`;
+    }
 
     itemEl.appendChild(leftDiv);
     itemEl.appendChild(subSpan);
@@ -680,8 +707,8 @@ function handleGlobalSearch(query) {
         e.preventDefault();
         hideTooltip();
         equipItem(targetSlot, item.id);
-        closeGlobalDropdown();
-        document.getElementById("global-search").value = "";
+        const gs = document.getElementById("global-search");
+        if (gs) gs.value = "";
       });
 
       gDropdown.appendChild(itemEl);
@@ -1127,7 +1154,10 @@ function renderSimulationResults(data) {
       consecration_dps: "Consecration (Holy Tick)",
       exorcism_dps: "Exorcism",
       hammer_of_wrath_dps: "Hammer of Wrath (<20% Execute)",
-      judgement_8set_holy_dps: "T2 8-Piece Holy Shock Proc"
+      judgement_8set_holy_dps: "T2 8-Piece Holy Shock Proc",
+      judgement_3set_holy_dps: "Judgement 3-Piece Holy Damage",
+      judgement_8set_smite_dps: "Judgement 8-Piece Smite Proc",
+      lawbringer_8set_holy_dps: "Lawbringer 8-Piece Holy Radiance"
     };
 
     for (const [key, dpsVal] of Object.entries(bd)) {
@@ -1267,6 +1297,19 @@ function switchClass(newClass) {
       allItems = data.items || [];
       itemsById = {};
       allItems.forEach(it => { itemsById[String(it.id)] = it; });
+      SLOTS.forEach(slotKey => {
+        const id = equippedItems[slotKey];
+        if (id) {
+          const it = itemsById[String(id)];
+          if (!it || (currentClass !== "all" && Array.isArray(it.classes) && it.classes.length > 0 && !it.classes.includes(currentClass))) {
+            unequipItem(slotKey);
+          } else if (currentClass === "paladin" && ["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(it.subclass)) {
+            unequipItem(slotKey);
+          } else if (currentClass === "warrior" && ["wand", "relic", "libram"].includes(it.subclass)) {
+            unequipItem(slotKey);
+          }
+        }
+      });
       recalculateLiveStats();
       runSimulation();
     })

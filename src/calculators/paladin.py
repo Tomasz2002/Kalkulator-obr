@@ -54,20 +54,41 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         sp = gear["spell_power"]
 
         active_sets = gear.get("active_sets", {})
-        t2_judgement = active_sets.get("217", {})
-        t2_pieces = t2_judgement.get("equipped_count", 0)
+        t1_holy_pieces = active_sets.get("208", {}).get("equipped_count", 0)
+        t1_tank_pieces = active_sets.get("1004", {}).get("equipped_count", 0)
+        t1_dps_pieces = active_sets.get("1005", {}).get("equipped_count", 0)
+        t2_holy_pieces = active_sets.get("217", {}).get("equipped_count", 0)
+        t2_tank_pieces = active_sets.get("2004", {}).get("equipped_count", 0)
+        t2_dps_pieces = active_sets.get("2005", {}).get("equipped_count", 0)
+        t3_holy_pieces = active_sets.get("528", {}).get("equipped_count", 0)
+        t3_tank_pieces = active_sets.get("3004", {}).get("equipped_count", 0)
+        t3_dps_pieces = active_sets.get("3005", {}).get("equipped_count", 0)
 
-        if t2_pieces >= 5:
-            sp += 47
-
-        has_t2_8set = t2_pieces >= 8
+        if t1_holy_pieces >= 3:
+            gear["healing"] += 31
+        if t2_holy_pieces >= 3:
+            gear["healing"] += 57
+        if t2_tank_pieces >= 5 or t2_dps_pieces >= 5:
+            sp += 27
+        if t3_tank_pieces >= 8 or t3_dps_pieces >= 8:
+            sp += 57
 
         crit_pct = gear["crit"] + (gear["agility"] / 20.0) + (1.0 * conviction)
+        if t1_dps_pieces >= 5:
+            crit_pct += 2.0
+        if t3_dps_pieces >= 2:
+            crit_pct += 3.0
+
         hit_pct = gear["hit"] + (1.0 * precision)
         spell_crit_pct = crit_pct + (1.0 * sanctified_light)
+        if t1_holy_pieces >= 5:
+            spell_crit_pct += 2.0
+
+        set_haste = 2.0 if t3_dps_pieces >= 4 else 0.0
+        total_haste = haste_percent + set_haste
 
         weapon_speed = gear["main_weapon_speed"] if gear["main_weapon_speed"] > 0 else 2.0
-        effective_speed = weapon_speed / (1.0 + (haste_percent / 100.0))
+        effective_speed = weapon_speed / (1.0 + (total_haste / 100.0))
         exact_melee_swings = 1 + int(fight_duration / effective_speed) if fight_duration > 0 and effective_speed > 0 else 0
 
         min_dmg = gear["main_weapon_min_dmg"]
@@ -103,6 +124,10 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         white_damage_total = exact_melee_swings * avg_white_hit
         white_dps = white_damage_total / fight_duration if fight_duration > 0 else 0.0
 
+        flat_holy_per_hit = 3.0 if (t2_tank_pieces >= 3 or t2_dps_pieces >= 3) else 0.0
+        t2_flat_holy_total = exact_melee_swings * flat_holy_per_hit * holy_mult
+        t2_flat_holy_dps = t2_flat_holy_total / fight_duration if fight_duration > 0 else 0.0
+
         spell_crit_multiplier = 1.0 + (spell_crit_pct / 100.0 * 0.5)
 
         sor_mult = 1.0 + (0.02 * improved_sor)
@@ -111,25 +136,39 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         seal_damage_total = exact_melee_swings * sor_hit
         seal_dps = seal_damage_total / fight_duration if fight_duration > 0 else 0.0
 
+        jor_bonus = 148.0 if t1_dps_pieces >= 3 else 0.0
         effective_judge_interval = max(6.0, judgement_interval - (1.0 * improved_judgement))
         judgement_count = int(fight_duration / effective_judge_interval) if effective_judge_interval > 0 else 0
-        jor_hit = (185.0 + 0.50 * sp) * spell_crit_multiplier * holy_mult * sor_mult
+        jor_hit = (185.0 + jor_bonus + 0.50 * sp) * spell_crit_multiplier * holy_mult * sor_mult
         judgement_damage_total = judgement_count * jor_hit
         judgement_dps = judgement_damage_total / fight_duration if fight_duration > 0 else 0.0
 
-        t2_damage_total = 0.0
-        t2_dps = 0.0
-        if has_t2_8set:
-            t2_proc_damage = 63.5 + 0.05 * sp
-            t2_damage_total = judgement_count * t2_proc_damage * spell_crit_multiplier * holy_mult
-            t2_dps = t2_damage_total / fight_duration if fight_duration > 0 else 0.0
+        t2_proc_damage_total = 0.0
+        t2_proc_dps = 0.0
+        if t2_dps_pieces >= 8:
+            t2_proc_hits = exact_melee_swings * crit_chance
+            t2_proc_damage_total = t2_proc_hits * 300.0 * spell_crit_multiplier * holy_mult
+            t2_proc_dps = t2_proc_damage_total / fight_duration if fight_duration > 0 else 0.0
+
+        t1_proc_damage_total = 0.0
+        t1_proc_dps = 0.0
+        if t1_dps_pieces >= 8:
+            t1_proc_damage_total = exact_melee_swings * 0.20 * 112.0 * spell_crit_multiplier * holy_mult
+            t1_proc_dps = t1_proc_damage_total / fight_duration if fight_duration > 0 else 0.0
+        elif t1_tank_pieces >= 8:
+            t1_proc_damage_total = exact_melee_swings * 0.20 * 90.0 * spell_crit_multiplier * holy_mult
+            t1_proc_dps = t1_proc_damage_total / fight_duration if fight_duration > 0 else 0.0
 
         consecration_ticks = int(fight_duration * 1.0) if consecration else 0
         consec_tick_dmg = (48.0 + 0.0416 * sp) * holy_mult
         consec_damage_total = consecration_ticks * consec_tick_dmg
         consec_dps = consec_damage_total / fight_duration if fight_duration > 0 else 0.0
 
-        exorcism_count = int(fight_duration / exorcism_interval) if exorcism_interval > 0 else 0
+        actual_exorcism_interval = exorcism_interval
+        if t3_tank_pieces >= 6 or t3_dps_pieces >= 6:
+            actual_exorcism_interval = max(1.0, exorcism_interval - 5.0)
+
+        exorcism_count = int(fight_duration / actual_exorcism_interval) if actual_exorcism_interval > 0 else 0
         exorcism_hit = (535.0 + 0.428 * sp) * spell_crit_multiplier * holy_mult
         exorcism_damage_total = exorcism_count * exorcism_hit
         exorcism_dps = exorcism_damage_total / fight_duration if fight_duration > 0 else 0.0
@@ -150,9 +189,11 @@ class PaladinCombatCalculator(BaseCombatCalculator):
 
         own_damage_total = (
             white_damage_total
+            + t2_flat_holy_total
             + seal_damage_total
             + judgement_damage_total
-            + t2_damage_total
+            + t2_proc_damage_total
+            + t1_proc_damage_total
             + consec_damage_total
             + exorcism_damage_total
             + how_damage_total
@@ -187,8 +228,12 @@ class PaladinCombatCalculator(BaseCombatCalculator):
             "consecration_dps": round(consec_dps, 2),
             "exorcism_dps": round(exorcism_dps, 2),
         }
-        if has_t2_8set:
-            breakdown["judgement_8set_holy_dps"] = round(t2_dps, 2)
+        if t2_flat_holy_dps > 0:
+            breakdown["judgement_3set_holy_dps"] = round(t2_flat_holy_dps, 2)
+        if t2_proc_dps > 0:
+            breakdown["judgement_8set_smite_dps"] = round(t2_proc_dps, 2)
+        if t1_proc_dps > 0:
+            breakdown["lawbringer_8set_holy_dps"] = round(t1_proc_dps, 2)
         if how_damage_total > 0:
             breakdown["hammer_of_wrath_dps"] = round(how_dps, 2)
 

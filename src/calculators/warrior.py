@@ -42,10 +42,26 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         item_ids = [it if isinstance(it, (int, str)) else it.get("id") for it in equipped_items]
         gear = calculate_gear_totals(item_ids, self.db, enchants=enchants, race=race)
 
+        active_sets = gear.get("active_sets", {})
+        might_dps_pieces = active_sets.get("1003", active_sets.get("673", {})).get("equipped_count", 0)
+        wrath_dps_pieces = active_sets.get("2003", active_sets.get("674", {})).get("equipped_count", 0)
+        dread_dps_pieces = active_sets.get("3002", {}).get("equipped_count", 0)
+        valor_pieces = active_sets.get("189", {}).get("equipped_count", 0)
+        heroism_pieces = active_sets.get("511", {}).get("equipped_count", 0)
+
         race_clean = race.lower().strip()
         str_val = gear["strength"]
         agi_val = gear["agility"]
-        base_ap = gear["attack_power"] + (str_val * 2)
+
+        set_ap_bonus = 0.0
+        if valor_pieces >= 4:
+            set_ap_bonus += 40.0
+        if heroism_pieces >= 6:
+            set_ap_bonus += 40.0
+        if dread_dps_pieces >= 8:
+            set_ap_bonus += 100.0
+
+        base_ap = gear["attack_power"] + (str_val * 2) + set_ap_bonus
 
         has_mh = gear["main_weapon_speed"] > 0
         has_oh = gear.get("off_weapon_speed", 0.0) > 0
@@ -56,6 +72,8 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         oh_subclass = gear.get("off_weapon_subclass", "sword").lower()
 
         weapon_skill = 300
+        if wrath_dps_pieces >= 5:
+            weapon_skill += 5
         if race_clean == "human":
             if "sword" in mh_subclass or "mace" in mh_subclass:
                 weapon_skill += 3
@@ -78,6 +96,8 @@ class WarriorCombatCalculator(BaseCombatCalculator):
             dodge_chance = 0.065
 
         hit_gear = gear["hit"] / 100.0
+        if dread_dps_pieces >= 4:
+            hit_gear += 0.02
         special_miss = max(0.0, special_miss_base - hit_gear)
 
         if is_dw:
@@ -85,7 +105,13 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         else:
             white_miss = special_miss
 
-        crit_base = (gear["crit"] + (agi_val / 20.0) + (cruelty * 1.0)) / 100.0
+        set_crit_bonus = 0.0
+        if might_dps_pieces >= 8:
+            set_crit_bonus += 0.02
+        if dread_dps_pieces >= 6:
+            set_crit_bonus += 0.02
+
+        crit_base = (gear["crit"] + (agi_val / 20.0) + (cruelty * 1.0)) / 100.0 + set_crit_bonus
         crit_suppression = 0.03
         effective_crit = max(0.01, min(0.95, crit_base - crit_suppression))
 
@@ -105,12 +131,18 @@ class WarriorCombatCalculator(BaseCombatCalculator):
 
         troll_haste = 0.15 * min(1.0, 10.0 / fight_duration) if race_clean == "troll" and fight_duration > 0 else 0.0
         nelf_haste = 0.01 if race_clean == "nightelf" else 0.0
+        wrath_haste = 0.12 if wrath_dps_pieces >= 3 else 0.0
 
         ap = base_ap + racial_ap_bonus
 
-        total_haste = (haste_percent / 100.0) + effective_flurry_haste + troll_haste + nelf_haste
+        total_haste = (haste_percent / 100.0) + effective_flurry_haste + troll_haste + nelf_haste + wrath_haste
 
-        armor_reduction = target_armor / (target_armor + 5500.0) if target_armor > 0 else 0.0
+        arp = 0.0
+        for sp in gear.get("spells", []):
+            if sp.get("spell_id") == 48030:
+                arp += 25.0
+        eff_armor = max(0.0, target_armor - arp)
+        armor_reduction = eff_armor / (eff_armor + 5500.0) if eff_armor > 0 else 0.0
         armor_mult = 1.0 - armor_reduction
 
         general_phys_mult = death_wish_mult * enrage_mult
@@ -175,7 +207,6 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         uw_proc_rate = unbridled_wrath * 0.08
         mh_total_rage = mh_swings * (mh_rage_per_swing * (1.0 - white_miss) + uw_proc_rate)
         oh_total_rage = oh_swings * (oh_rage_per_swing * (1.0 - white_miss) + uw_proc_rate) if is_dw else 0.0
-        total_generated_rage = mh_total_rage + oh_total_rage
 
         if boss_hp_percent <= 20.0:
             exec_duration = fight_duration
@@ -191,7 +222,8 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         if bloodthirst:
             bt_cd = 6.0
             bt_count = int(fight_duration / bt_cd) if fight_duration > 0 else 0
-            bt_hit = (0.45 * ap) * yellow_crit_multiplier * (1.0 - special_miss) * general_phys_mult * armor_mult
+            bt_mult = 1.10 if dread_dps_pieces >= 2 else 1.0
+            bt_hit = (0.45 * ap) * yellow_crit_multiplier * (1.0 - special_miss) * general_phys_mult * armor_mult * bt_mult
             bt_damage_total = bt_count * bt_hit
             bt_dps = bt_damage_total / fight_duration if fight_duration > 0 else 0.0
 
@@ -218,7 +250,11 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         ww_damage_total = ww_count * ww_hit
         ww_dps = ww_damage_total / fight_duration if fight_duration > 0 else 0.0
 
-        consumed_primary_rage = (bt_count * 30) + (ms_count * 30) + (ww_count * 25)
+        bt_ms_cost = 20 if might_dps_pieces >= 5 else 30
+        ability_rage_bonus = 2.0 if might_dps_pieces >= 3 else 0.0
+        total_generated_rage = mh_total_rage + oh_total_rage + ((bt_count + ms_count + ww_count) * ability_rage_bonus)
+
+        consumed_primary_rage = (bt_count * bt_ms_cost) + (ms_count * bt_ms_cost) + (ww_count * 25)
         remaining_rage = max(0.0, total_generated_rage - consumed_primary_rage)
 
         hs_cost = max(9, 15 - imp_heroic)

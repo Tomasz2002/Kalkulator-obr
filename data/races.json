@@ -133,6 +133,22 @@
       "axe_skill": 0,
       "dagger_skill": 0,
       "racial_text": "Expansive Mind (+5% Intellect), Escape Artist, Arcane Res (+10)"
+    },
+    {
+      "id": "highelf",
+      "name": "High Elf",
+      "faction": "Alliance",
+      "icon": "race_bloodelf_female",
+      "str": 123,
+      "agi": 77,
+      "sta": 112,
+      "int": 27,
+      "spi": 48,
+      "sword_skill": 0,
+      "mace_skill": 0,
+      "axe_skill": 0,
+      "dagger_skill": 0,
+      "racial_text": "Arcane Meditation (+5 MP5), Arcane Resistance (+10), +2% Agility"
     }
   ],
   "paladin": [

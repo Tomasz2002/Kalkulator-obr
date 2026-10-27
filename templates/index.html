@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Octo WoW - Paladin DPS Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <header class="app-header">
+      <div class="header-main">
+        <h1 class="app-title">OCTO WOW - PALADIN DPS CALCULATOR</h1>
+        <p class="app-subtitle">Level 60 Paladin Combat Simulator & Talent Tree Optimizer</p>
+      </div>
+
+      <div class="top-controls">
+        <div class="search-box">
+          <span class="search-icon">&#9906;</span>
+          <input type="text" id="global-search" placeholder="Type to filter items across all slots (e.g. Ashbringer, Judgement, Ironfoe)..." autocomplete="off">
+          <button id="clear-search-btn" class="clear-btn" type="button" title="Clear search">&times;</button>
+          <div class="global-search-dropdown" id="global-search-dropdown" style="display: none;"></div>
+        </div>
+        <button id="btn-clear-gear" class="btn-secondary" type="button">Clear All Gear</button>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="equipment" id="tab-btn-equipment" type="button">Equipment & Stats</button>
+        <button class="nav-tab" data-tab="talents" id="tab-btn-talents" type="button">Talent Trees (<span id="tab-talent-count">51</span> points left)</button>
+        <button class="nav-tab" data-tab="settings" id="tab-btn-settings" type="button">Combat Settings</button>
+      </nav>
+    </header>
+
+    <main class="app-main">
+      <section class="tab-content active" id="content-equipment">
+        <div class="character-sheet">
+          <div class="slots-col left-col">
+            <div class="slot-card" data-slot="head">
+              <div class="slot-header">
+                <span class="slot-name">Head</span>
+                <span class="slot-clear" data-clear="head" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-head"></div>
+                <div class="combobox-wrap" data-slot="head">
+                  <input type="text" class="combobox-input" id="input-head" data-slot="head" placeholder="Search head..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="head" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-head" data-slot="head" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="neck">
+              <div class="slot-header">
+                <span class="slot-name">Neck</span>
+                <span class="slot-clear" data-clear="neck" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-neck"></div>
+                <div class="combobox-wrap" data-slot="neck">
+                  <input type="text" class="combobox-input" id="input-neck" data-slot="neck" placeholder="Search neck..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="neck" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-neck" data-slot="neck" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="shoulder">
+              <div class="slot-header">
+                <span class="slot-name">Shoulders</span>
+                <span class="slot-clear" data-clear="shoulder" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-shoulder"></div>
+                <div class="combobox-wrap" data-slot="shoulder">
+                  <input type="text" class="combobox-input" id="input-shoulder" data-slot="shoulder" placeholder="Search shoulders..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="shoulder" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-shoulder" data-slot="shoulder" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="back">
+              <div class="slot-header">
+                <span class="slot-name">Back</span>
+                <span class="slot-clear" data-clear="back" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-back"></div>
+                <div class="combobox-wrap" data-slot="back">
+                  <input type="text" class="combobox-input" id="input-back" data-slot="back" placeholder="Search back..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="back" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-back" data-slot="back" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="chest">
+              <div class="slot-header">
+                <span class="slot-name">Chest</span>
+                <span class="slot-clear" data-clear="chest" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-chest"></div>
+                <div class="combobox-wrap" data-slot="chest">
+                  <input type="text" class="combobox-input" id="input-chest" data-slot="chest" placeholder="Search chest..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="chest" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-chest" data-slot="chest" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="wrist">
+              <div class="slot-header">
+                <span class="slot-name">Wrists</span>
+                <span class="slot-clear" data-clear="wrist" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-wrist"></div>
+                <div class="combobox-wrap" data-slot="wrist">
+                  <input type="text" class="combobox-input" id="input-wrist" data-slot="wrist" placeholder="Search wrists..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="wrist" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-wrist" data-slot="wrist" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="center-col">
+            <div class="character-crest">
+              <div class="crest-sigil">&#9876;</div>
+              <div class="crest-title">PALADIN</div>
+              <div class="crest-sub">Level 60 Character Sheet</div>
+            </div>
+
+            <div class="stats-panel">
+              <div class="panel-heading">CHARACTER STATS</div>
+              <div class="stats-grid">
+                <div class="stat-row">
+                  <span class="s-name">Swing Timer:</span>
+                  <span class="s-val highlight" id="stat-speed">2.00s</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Attack Power:</span>
+                  <span class="s-val" id="stat-ap">0 AP</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Spell Damage:</span>
+                  <span class="s-val magic" id="stat-sp">0 SP</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Healing Power:</span>
+                  <span class="s-val heal" id="stat-healing">0 Heal</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Critical Strike:</span>
+                  <span class="s-val" id="stat-crit">0.0%</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Hit Chance:</span>
+                  <span class="s-val" id="stat-hit">0.0%</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Strength:</span>
+                  <span class="s-val" id="stat-str">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Agility:</span>
+                  <span class="s-val" id="stat-agi">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Stamina:</span>
+                  <span class="s-val" id="stat-sta">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Intellect:</span>
+                  <span class="s-val" id="stat-int">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="s-name">Armor:</span>
+                  <span class="s-val" id="stat-armor">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="quick-sim-bar">
+              <div class="duration-control">
+                <label for="cfg-duration">Fight Duration:</label>
+                <div class="duration-input-wrap">
+                  <input type="number" id="cfg-duration" value="60" min="10" max="600" step="5">
+                  <span>sec</span>
+                </div>
+                <div class="duration-quick-btns">
+                  <button type="button" class="btn-dur" data-dur="30">30s</button>
+                  <button type="button" class="btn-dur active" data-dur="60">60s</button>
+                  <button type="button" class="btn-dur" data-dur="90">90s</button>
+                  <button type="button" class="btn-dur" data-dur="120">120s</button>
+                  <button type="button" class="btn-dur" data-dur="180">180s</button>
+                </div>
+              </div>
+
+              <button id="btn-calculate" class="btn-calculate" type="button">
+                <span class="calc-icon">&#9876;</span>
+                <span class="calc-label">CALCULATE DPS</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="slots-col right-col">
+            <div class="slot-card" data-slot="hands">
+              <div class="slot-header">
+                <span class="slot-name">Hands</span>
+                <span class="slot-clear" data-clear="hands" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-hands"></div>
+                <div class="combobox-wrap" data-slot="hands">
+                  <input type="text" class="combobox-input" id="input-hands" data-slot="hands" placeholder="Search hands..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="hands" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-hands" data-slot="hands" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="waist">
+              <div class="slot-header">
+                <span class="slot-name">Waist</span>
+                <span class="slot-clear" data-clear="waist" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-waist"></div>
+                <div class="combobox-wrap" data-slot="waist">
+                  <input type="text" class="combobox-input" id="input-waist" data-slot="waist" placeholder="Search waist..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="waist" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-waist" data-slot="waist" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="legs">
+              <div class="slot-header">
+                <span class="slot-name">Legs</span>
+                <span class="slot-clear" data-clear="legs" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-legs"></div>
+                <div class="combobox-wrap" data-slot="legs">
+                  <input type="text" class="combobox-input" id="input-legs" data-slot="legs" placeholder="Search legs..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="legs" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-legs" data-slot="legs" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="feet">
+              <div class="slot-header">
+                <span class="slot-name">Feet</span>
+                <span class="slot-clear" data-clear="feet" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-feet"></div>
+                <div class="combobox-wrap" data-slot="feet">
+                  <input type="text" class="combobox-input" id="input-feet" data-slot="feet" placeholder="Search feet..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="feet" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-feet" data-slot="feet" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="finger1">
+              <div class="slot-header">
+                <span class="slot-name">Ring 1</span>
+                <span class="slot-clear" data-clear="finger1" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-finger1"></div>
+                <div class="combobox-wrap" data-slot="finger1">
+                  <input type="text" class="combobox-input" id="input-finger1" data-slot="finger1" placeholder="Search rings..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="finger1" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-finger1" data-slot="finger1" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="finger2">
+              <div class="slot-header">
+                <span class="slot-name">Ring 2</span>
+                <span class="slot-clear" data-clear="finger2" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-finger2"></div>
+                <div class="combobox-wrap" data-slot="finger2">
+                  <input type="text" class="combobox-input" id="input-finger2" data-slot="finger2" placeholder="Search rings..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="finger2" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-finger2" data-slot="finger2" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="trinket1">
+              <div class="slot-header">
+                <span class="slot-name">Trinket 1</span>
+                <span class="slot-clear" data-clear="trinket1" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-trinket1"></div>
+                <div class="combobox-wrap" data-slot="trinket1">
+                  <input type="text" class="combobox-input" id="input-trinket1" data-slot="trinket1" placeholder="Search trinkets..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="trinket1" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-trinket1" data-slot="trinket1" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slot-card" data-slot="trinket2">
+              <div class="slot-header">
+                <span class="slot-name">Trinket 2</span>
+                <span class="slot-clear" data-clear="trinket2" title="Unequip">&times;</span>
+              </div>
+              <div class="slot-body">
+                <div class="slot-icon quality-1" id="icon-trinket2"></div>
+                <div class="combobox-wrap" data-slot="trinket2">
+                  <input type="text" class="combobox-input" id="input-trinket2" data-slot="trinket2" placeholder="Search trinkets..." autocomplete="off">
+                  <button type="button" class="combobox-arrow" data-slot="trinket2" tabindex="-1">&#9662;</button>
+                  <div class="combobox-dropdown" id="dropdown-trinket2" data-slot="trinket2" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="weapons-row">
+          <div class="slot-card weapon-card" data-slot="main_hand">
+            <div class="slot-header">
+              <span class="slot-name">Main Hand / Two-Hand Weapon</span>
+              <span class="slot-clear" data-clear="main_hand" title="Unequip">&times;</span>
+            </div>
+            <div class="slot-body">
+              <div class="slot-icon quality-1" id="icon-main_hand"></div>
+              <div class="combobox-wrap" data-slot="main_hand">
+                <input type="text" class="combobox-input" id="input-main_hand" data-slot="main_hand" placeholder="Search weapons..." autocomplete="off">
+                <button type="button" class="combobox-arrow" data-slot="main_hand" tabindex="-1">&#9662;</button>
+                <div class="combobox-dropdown" id="dropdown-main_hand" data-slot="main_hand" style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slot-card weapon-card" data-slot="off_hand">
+            <div class="slot-header">
+              <span class="slot-name">Off Hand / Shield</span>
+              <span class="slot-clear" data-clear="off_hand" title="Unequip">&times;</span>
+            </div>
+            <div class="slot-body">
+              <div class="slot-icon quality-1" id="icon-off_hand"></div>
+              <div class="combobox-wrap" data-slot="off_hand">
+                <input type="text" class="combobox-input" id="input-off_hand" data-slot="off_hand" placeholder="Search off-hand & shields..." autocomplete="off">
+                <button type="button" class="combobox-arrow" data-slot="off_hand" tabindex="-1">&#9662;</button>
+                <div class="combobox-dropdown" id="dropdown-off_hand" data-slot="off_hand" style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="slot-card weapon-card" data-slot="relic">
+            <div class="slot-header">
+              <span class="slot-name">Libram / Relic</span>
+              <span class="slot-clear" data-clear="relic" title="Unequip">&times;</span>
+            </div>
+            <div class="slot-body">
+              <div class="slot-icon quality-1" id="icon-relic"></div>
+              <div class="combobox-wrap" data-slot="relic">
+                <input type="text" class="combobox-input" id="input-relic" data-slot="relic" placeholder="Search librams..." autocomplete="off">
+                <button type="button" class="combobox-arrow" data-slot="relic" tabindex="-1">&#9662;</button>
+                <div class="combobox-dropdown" id="dropdown-relic" data-slot="relic" style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-content" id="content-talents">
+        <div class="talents-header-bar">
+          <div class="pasek">
+            <span class="pill">spent <b id="wydane">0</b> / 51</span>
+            <span class="pill">character level <b id="poziom">10</b></span>
+          </div>
+          <button id="btn-reset-talents" class="btn-secondary" type="button">Clear points</button>
+        </div>
+
+        <div id="buildy"></div>
+
+        <div class="drzewka" id="drzewka"></div>
+
+        <div id="opisBuildu"></div>
+
+        <p class="talents-footer-note">Trees from octowow.st. Left-click to add a point, right-click to remove. A row unlocks after spending 5 points for each previous row in the same tree.</p>
+      </section>
+
+      <section class="tab-content" id="content-settings">
+        <div class="settings-box">
+          <div class="settings-heading">SIMULATION COMBAT SETTINGS</div>
+          <div class="settings-grid">
+            <div class="setting-item">
+              <label for="cfg-armor">Target Boss Armor:</label>
+              <div class="unit-wrap">
+                <input type="number" id="cfg-armor" value="3731" min="0" max="10000" step="100">
+                <span>points</span>
+              </div>
+              <div class="setting-hint">Standard Level 63 raid boss armor (3731)</div>
+            </div>
+
+            <div class="setting-item">
+              <label for="cfg-haste">Haste Bonus:</label>
+              <div class="unit-wrap">
+                <input type="number" id="cfg-haste" value="0" min="0" max="100" step="1">
+                <span>%</span>
+              </div>
+              <div class="setting-hint">Additional melee swing haste</div>
+            </div>
+
+            <div class="setting-item">
+              <label for="cfg-judge">Judgement Base Cooldown:</label>
+              <div class="unit-wrap">
+                <input type="number" id="cfg-judge" value="10" min="5" max="30" step="1">
+                <span>sec</span>
+              </div>
+              <div class="setting-hint">Reduced by Improved Judgement talent</div>
+            </div>
+
+            <div class="setting-item">
+              <label for="cfg-exorcism">Exorcism Interval:</label>
+              <div class="unit-wrap">
+                <input type="number" id="cfg-exorcism" value="15" min="5" max="60" step="1">
+                <span>sec</span>
+              </div>
+              <div class="setting-hint">Cast on cooldown against Undead/Demon targets</div>
+            </div>
+          </div>
+
+          <div class="checkbox-settings">
+            <label class="check-label">
+              <input type="checkbox" id="cfg-t2" checked>
+              <span class="check-custom"></span>
+              <span class="check-text">Tier 2 Judgement Set Bonus (+3 Holy damage instances per swing & judgement)</span>
+            </label>
+
+            <label class="check-label">
+              <input type="checkbox" id="cfg-lost" checked>
+              <span class="check-custom"></span>
+              <span class="check-text">Set "of the Lost" Bonus (4% chance to summon Cathedral Minion on spell hit)</span>
+            </label>
+
+            <label class="check-label">
+              <input type="checkbox" id="cfg-consec" checked>
+              <span class="check-custom"></span>
+              <span class="check-text">Consecration Active (1 Holy damage tick per second)</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="results-container" id="results-panel">
+        <div class="results-header-row">
+          <span class="results-title">SIMULATION RESULTS</span>
+          <span class="results-meta" id="sim-scenario-info">Duration: 60s | Ready</span>
+        </div>
+
+        <div class="results-cards-row">
+          <div class="res-card total-card">
+            <div class="card-label">TOTAL CHARACTER DPS</div>
+            <div class="card-value" id="res-total-dps">0.00</div>
+            <div class="card-sub" id="res-total-dmg">Total Damage: 0</div>
+          </div>
+
+          <div class="res-card own-card">
+            <div class="card-label">PALADIN DIRECT DPS</div>
+            <div class="card-value" id="res-own-dps">0.00</div>
+            <div class="card-sub" id="res-own-share">100% of damage</div>
+          </div>
+
+          <div class="res-card minion-card" id="card-minion-dps" style="display: none;">
+            <div class="card-label">MINIONS DPS (OF THE LOST)</div>
+            <div class="card-value" id="res-minion-dps">0.00</div>
+            <div class="card-sub" id="res-minion-range">Range: [0.00 - 0.00]</div>
+          </div>
+        </div>
+
+        <div class="share-bar-wrap" id="share-bar-wrap" style="display: none;">
+          <div class="share-bar-labels">
+            <span>Paladin Damage: <strong id="bar-lbl-own">100%</strong></span>
+            <span>Minion Damage: <strong id="bar-lbl-minion">0%</strong></span>
+          </div>
+          <div class="share-track">
+            <div class="share-fill-own" id="share-own-bar" style="width: 100%;"></div>
+            <div class="share-fill-minion" id="share-minion-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="breakdown-cards-row">
+          <div class="breakdown-card">
+            <div class="b-header">&#9876; PALADIN ATTACK BREAKDOWN</div>
+            <div class="b-rows" id="breakdown-list-own"></div>
+          </div>
+
+          <div class="breakdown-card">
+            <div class="b-header">&#9201; COMBAT STATISTICS</div>
+            <div class="b-rows">
+              <div class="b-item"><span>Total Melee Swings:</span><strong id="b-exact-swings">0</strong></div>
+              <div class="b-item"><span>Magic Damage Hits:</span><strong id="b-magic-hits">0</strong></div>
+              <div class="b-item"><span>Magic Hit Frequency:</span><strong id="b-magic-rate">0.000 / sec</strong></div>
+              <div class="b-item"><span>Boss Armor Reduction:</span><strong id="b-armor-reduc">40.4%</strong></div>
+              <div class="b-item"><span>Effective Critical Chance:</span><strong id="b-sim-crit">0.0%</strong></div>
+            </div>
+          </div>
+
+          <div class="breakdown-card" id="card-minion-breakdown" style="display: none;">
+            <div class="b-header">&#9760; MINION MECHANICS</div>
+            <div class="b-rows">
+              <div class="b-item"><span>Active Minions Average:</span><strong id="b-active-minions" class="magic">0.00</strong></div>
+              <div class="b-item"><span>Proc Chance:</span><strong>4.0% per harmful spell hit</strong></div>
+              <div class="b-item"><span>Procs Rate:</span><strong id="b-procs-sec">0.000 / sec</strong></div>
+              <div class="b-item"><span>Minion Lifetime:</span><strong>20.0 sec</strong></div>
+              <div class="b-item"><span>Soul Bolt Spell:</span><strong>230 - 279 Shadow (2.0s Cast)</strong></div>
+              <div class="b-item"><span>AP/SP Scaling:</span><strong class="warn">None (0% stat inheritance)</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="wow-tooltip" class="wow-tooltip"></div>
+  <div id="talent-tip" class="talent-tip"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+[
+  {
+    "nazwa": "Retribution",
+    "opis": "Build do samodzielnej gry: Seal of Command, dwuręczna broń i Blessing of Kings. Punkty w Holy idą wyłącznie w siłę i tańsze pieczęcie.",
+    "tryb": "PvE",
+    "opisEn": "A build for solo play: Seal of Command, a two-handed weapon and Blessing of Kings. Points in Holy go purely into strength and cheaper seals.",
+    "ikona": "inv_hammer_04",
+    "kolejnosc": [
+      "Benediction 5 — pieczęcie i Judgement kosztują mniej many, a mana jest tu wąskim gardłem.",
+      "Conviction 5 — szansa na trafienie krytyczne bronią, największy pojedynczy skok obrażeń.",
+      "Seal of Command jak tylko będzie dostępny — dodatkowe obrażenia święte z każdego uderzenia.",
+      "Two-Handed Weapon Specialization 3 i Vengeance 5.",
+      "Blessing of Kings 1 — +10% do wszystkich statystyk, opłaca się nawet grając solo.",
+      "Divine Strength 5 w Holy na końcu, jako czysty przyrost siły."
+    ],
+    "kolejnoscEn": [
+      "Benediction 5 — seals and Judgement cost less mana, and mana is the bottleneck here.",
+      "Conviction 5 — critical strike chance with weapons, the biggest single damage jump.",
+      "Seal of Command as soon as it's available — extra holy damage from every hit.",
+      "Two-Handed Weapon Specialization 3 and Vengeance 5.",
+      "Blessing of Kings 1 — +10% to all stats, worth it even when playing solo.",
+      "Divine Strength 5 in Holy at the end, as a pure strength gain."
+    ],
+    "uwagi": [
+      "Redoubt i Toughness w Protection to tanie punkty na przetrwanie przy walce z kilkoma celami naraz. Jeśli grasz w grupie, przenieś je do Improved Blessings.",
+      "Paladyn jest tylko po stronie Alliance — człowiek albo krasnolud."
+    ],
+    "uwagiEn": [
+      "Redoubt and Toughness in Protection are cheap survival points when fighting several targets at once. If you play in a group, move them to Improved Blessings.",
+      "Paladin is Alliance-only — human or dwarf."
+    ],
+    "pkt": {
+      "2|Improved Blessings": 5,
+      "2|Benediction": 5,
+      "2|Improved Judgement": 2,
+      "2|Improved Seal of the Crusader": 3,
+      "2|Deflection": 3,
+      "2|Conviction": 5,
+      "2|Blessing of Kings": 1,
+      "2|Two-Handed Weapon Specialization": 3,
+      "2|Vindication": 3,
+      "2|Vengeance": 5,
+      "2|Seal of Command": 1,
+      "2|Vengeful Strikes": 5,
+      "0|Divine Strength": 5,
+      "0|Improved Seal of Righteousness": 5
+    }
+  },
+  {
+    "nazwa": "Protection",
+    "opis": "Tankowanie instancji: Holy Shield, Reckoning i zagrożenie z Righteous Fury. Build nastawiony na trzymanie kilku celów naraz.",
+    "tryb": "PvE",
+    "opisEn": "Instance tanking: Holy Shield, Reckoning and threat from Righteous Fury. A build built around holding several targets at once.",
+    "ikona": "spell_holy_blessingofprotection",
+    "kolejnosc": [
+      "Improved Devotion Aura 5 i Toughness 5 — pancerz to podstawa tanka w tej klasie.",
+      "Improved Righteous Fury 3 — bez tego nie utrzymasz celów przy dobrym DPS-ie w grupie.",
+      "Shield Specialization 3 i Anticipation 3 — bloki i obrona.",
+      "Holy Shield jak tylko odblokujesz — blokowanie zadaje obrażenia święte, czyli samo robi zagrożenie.",
+      "Reckoning 5, potem Righteous Strikes 5 i Bulwark of the Righteous na koniec."
+    ],
+    "kolejnoscEn": [
+      "Improved Devotion Aura 5 and Toughness 5 — armor is the foundation of a tank in this class.",
+      "Improved Righteous Fury 3 — without it you won't hold targets against good DPS in the group.",
+      "Shield Specialization 3 and Anticipation 3 — blocks and defense.",
+      "Holy Shield as soon as you unlock it — blocking deals holy damage, so it generates threat on its own.",
+      "Reckoning 5, then Righteous Strikes 5 and Bulwark of the Righteous at the end."
+    ],
+    "uwagi": [
+      "Precision 3 w Protection wygląda na talent pod obrażenia, ale chybiony cios to zerowe zagrożenie — dla tanka to talent obronny.",
+      "Divine Intellect w Holy tylko dlatego, że mana kończy się szybciej niż zdrowie."
+    ],
+    "uwagiEn": [
+      "Precision 3 in Protection looks like a damage talent, but a missed hit is zero threat — for a tank it's a defensive talent.",
+      "Divine Intellect in Holy only because mana runs out faster than health."
+    ],
+    "pkt": {
+      "1|Improved Devotion Aura": 5,
+      "1|Redoubt": 5,
+      "1|Toughness": 5,
+      "1|Precision": 3,
+      "1|Improved Righteous Fury": 3,
+      "1|Shield Specialization": 3,
+      "1|Anticipation": 3,
+      "1|Improved Hammer of Justice": 1,
+      "1|Righteous Defense": 3,
+      "1|Holy Shield": 1,
+      "1|Reckoning": 5,
+      "1|Righteous Strikes": 5,
+      "1|Bulwark of the Righteous": 1,
+      "0|Divine Strength": 5,
+      "0|Divine Intellect": 3
+    }
+  },
+  {
+    "nazwa": "Holy",
+    "opis": "Leczenie jednego celu, najlepsze w grze na tym poziomie. Illumination zwraca manę za krytyczne uleczenia, Holy Shock daje leczenie natychmiastowe.",
+    "tryb": "PvE",
+    "opisEn": "Single-target healing, the best in the game at this level. Illumination returns mana for critical heals, Holy Shock provides an instant heal.",
+    "ikona": "spell_holy_auramastery",
+    "kolejnosc": [
+      "Divine Intellect 5 — więcej many, czyli dłuższe leczenie.",
+      "Spiritual Focus 2, żeby obrażenia nie przerywały rzucania.",
+      "Illumination 5 — najważniejszy talent leczącego paladyna, zwraca manę za krytyki.",
+      "Holy Shock jak tylko odblokujesz, potem Holy Power i Daybreak.",
+      "Blessing of Kings w Retribution — +10% statystyk dla całej drużyny."
+    ],
+    "kolejnoscEn": [
+      "Divine Intellect 5 — more mana, meaning longer healing.",
+      "Spiritual Focus 2, so damage doesn't interrupt casting.",
+      "Illumination 5 — the most important talent for a healing paladin, it returns mana for crits.",
+      "Holy Shock as soon as you unlock it, then Holy Power and Daybreak.",
+      "Blessing of Kings in Retribution — +10% stats for the whole party."
+    ],
+    "uwagi": [
+      "Sanctity Aura podnosi obrażenia święte całej drużyny — bierzesz ją nawet jako leczący.",
+      "Ironclad zamienia twój pancerz na siłę leczenia, więc nie zdejmuj ciężkiej zbroi."
+    ],
+    "uwagiEn": [
+      "Sanctity Aura raises holy damage for the whole party — you take it even as a healer.",
+      "Ironclad converts your armor into healing power, so don't take off your heavy armor."
+    ],
+    "pkt": {
+      "0|Divine Intellect": 5,
+      "0|Spiritual Focus": 2,
+      "0|Holy Judgement": 3,
+      "0|Healing Light": 3,
+      "0|Sanctity Aura": 1,
+      "0|Unyielding Faith": 2,
+      "0|Illumination": 5,
+      "0|Ironclad": 2,
+      "0|Divine Favor": 5,
+      "0|Holy Shock": 1,
+      "0|Holy Power": 3,
+      "0|Daybreak": 1,
+      "2|Improved Blessings": 5,
+      "2|Benediction": 5,
+      "2|Improved Judgement": 2,
+      "2|Deflection": 3,
+      "2|Blessing of Kings": 1,
+      "2|Pursuit of Justice": 2
+    }
+  },
+  {
+    "nazwa": "Retribution",
+    "opis": "Burst z dwuręcznej broni i kontrola. Seal of Command bije dodatkowymi obrażeniami świętymi, Repentance wyłącza cel z walki, a Hammer of Justice ogłusza w kluczowym momencie.",
+    "tryb": "PvP",
+    "opisEn": "Burst z dwuręcznej broni i kontrola. Seal of Command bije dodatkowymi obrażeniami świętymi, Repentance wyłącza cel z walki, a Hammer of Justice ogłusza w kluczowym momencie.",
+    "ikona": "spell_holy_prayerofhealing",
+    "kolejnosc": [
+      "Benediction 5 — tańsze pieczęcie i Judgement, mana jest tu wąskim gardłem.",
+      "Conviction 5 — szansa na krytyk bronią, największy pojedynczy skok obrażeń.",
+      "Seal of Command jak tylko dostępny — dodatkowe obrażenia święte z każdego uderzenia.",
+      "Vengeance 5 i Vengeful Strikes — obrażenia po krytyku i z Crusader Strike.",
+      "Repentance — 6 sek wyłączenia celu, twoje otwarcie albo ratunek.",
+      "W Holy: Unyielding Faith 2 (odporność na strach) i Divine Strength 5 (siła)."
+    ],
+    "kolejnoscEn": [
+      "Benediction 5 — tańsze pieczęcie i Judgement, mana jest tu wąskim gardłem.",
+      "Conviction 5 — szansa na krytyk bronią, największy pojedynczy skok obrażeń.",
+      "Seal of Command jak tylko dostępny — dodatkowe obrażenia święte z każdego uderzenia.",
+      "Vengeance 5 i Vengeful Strikes — obrażenia po krytyku i z Crusader Strike.",
+      "Repentance — 6 sek wyłączenia celu, twoje otwarcie albo ratunek.",
+      "W Holy: Unyielding Faith 2 (odporność na strach) i Divine Strength 5 (siła)."
+    ],
+    "uwagi": [
+      "Pursuit of Justice daje +8% ruchu — bez tego paladyn nie dogoni kitujących przeciwników.",
+      "Unyielding Faith i Repentance to odpowiedź na kontrolę: mniej strachu, a sam wyłączasz przeciwnika z walki."
+    ],
+    "uwagiEn": [
+      "Pursuit of Justice daje +8% ruchu — bez tego paladyn nie dogoni kitujących przeciwników.",
+      "Unyielding Faith i Repentance to odpowiedź na kontrolę: mniej strachu, a sam wyłączasz przeciwnika z walki."
+    ],
+    "pkt": {
+      "2|Benediction": 5,
+      "2|Deflection": 5,
+      "2|Conviction": 5,
+      "2|Pursuit of Justice": 2,
+      "2|Two-Handed Weapon Specialization": 3,
+      "2|Seal of Command": 1,
+      "2|Vengeance": 5,
+      "2|Vengeful Strikes": 4,
+      "2|Repentance": 1,
+      "0|Divine Strength": 5,
+      "0|Improved Seal of Righteousness": 5,
+      "0|Sanctity Aura": 1,
+      "0|Unyielding Faith": 2,
+      "0|Healing Light": 2,
+      "0|Improved Concentration Aura": 3,
+      "0|Ironclad": 2
+    }
+  }
+]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Octo WoW - Paladin DPS Calculator</title>
+  <title>Octo WoW - Combat &amp; DPS Calculator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,14 +13,26 @@
   <div class="app-layout">
     <header class="app-header">
       <div class="header-main">
-        <h1 class="app-title">OCTO WOW - PALADIN DPS CALCULATOR</h1>
-        <p class="app-subtitle">Level 60 Paladin Combat Simulator & Talent Tree Optimizer</p>
+        <h1 class="app-title">OCTO WOW - COMBAT &amp; DPS CALCULATOR</h1>
+        <p class="app-subtitle">Level 60 Combat Simulator, Talents &amp; Gear Optimizer</p>
       </div>
 
       <div class="top-controls">
+        <div class="class-selector-wrap">
+          <label for="class-select" class="class-select-label">Class:</label>
+          <select id="class-select" class="class-select">
+            <option value="paladin" selected>Paladin</option>
+            <option value="warrior">Warrior</option>
+            <option value="all">All Classes</option>
+          </select>
+        </div>
+        <div class="race-selector-wrap">
+          <label for="race-select" class="class-select-label">Race:</label>
+          <select id="race-select" class="class-select"></select>
+        </div>
         <div class="search-box">
           <span class="search-icon">&#9906;</span>
-          <input type="text" id="global-search" placeholder="Type to filter items across all slots (e.g. Ashbringer, Judgement, Ironfoe)..." autocomplete="off">
+          <input type="text" id="global-search" placeholder="Filter items (e.g. Ashkandi, Might, Ironfoe, Lionheart)..." autocomplete="off">
           <button id="clear-search-btn" class="clear-btn" type="button" title="Clear search">&times;</button>
           <div class="global-search-dropdown" id="global-search-dropdown" style="display: none;"></div>
         </div>
@@ -28,7 +40,7 @@
       </div>
 
       <nav class="nav-tabs">
-        <button class="nav-tab active" data-tab="equipment" id="tab-btn-equipment" type="button">Equipment & Stats</button>
+        <button class="nav-tab active" data-tab="equipment" id="tab-btn-equipment" type="button">Equipment &amp; Stats</button>
         <button class="nav-tab" data-tab="talents" id="tab-btn-talents" type="button">Talent Trees (<span id="tab-talent-count">51</span> points left)</button>
         <button class="nav-tab" data-tab="settings" id="tab-btn-settings" type="button">Combat Settings</button>
       </nav>
@@ -41,7 +53,10 @@
             <div class="slot-card" data-slot="head">
               <div class="slot-header">
                 <span class="slot-name">Head</span>
-                <span class="slot-clear" data-clear="head" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="head" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="head" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-head"></div>
@@ -56,7 +71,10 @@
             <div class="slot-card" data-slot="neck">
               <div class="slot-header">
                 <span class="slot-name">Neck</span>
-                <span class="slot-clear" data-clear="neck" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="neck" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="neck" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-neck"></div>
@@ -71,7 +89,10 @@
             <div class="slot-card" data-slot="shoulder">
               <div class="slot-header">
                 <span class="slot-name">Shoulders</span>
-                <span class="slot-clear" data-clear="shoulder" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="shoulder" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="shoulder" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-shoulder"></div>
@@ -86,7 +107,10 @@
             <div class="slot-card" data-slot="back">
               <div class="slot-header">
                 <span class="slot-name">Back</span>
-                <span class="slot-clear" data-clear="back" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="back" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="back" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-back"></div>
@@ -101,7 +125,10 @@
             <div class="slot-card" data-slot="chest">
               <div class="slot-header">
                 <span class="slot-name">Chest</span>
-                <span class="slot-clear" data-clear="chest" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="chest" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="chest" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-chest"></div>
@@ -116,7 +143,10 @@
             <div class="slot-card" data-slot="wrist">
               <div class="slot-header">
                 <span class="slot-name">Wrists</span>
-                <span class="slot-clear" data-clear="wrist" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="wrist" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="wrist" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-wrist"></div>
@@ -131,9 +161,9 @@
 
           <div class="center-col">
             <div class="character-crest">
-              <div class="crest-sigil">&#9876;</div>
-              <div class="crest-title">PALADIN</div>
-              <div class="crest-sub">Level 60 Character Sheet</div>
+              <div class="crest-sigil" id="crest-icon">&#9876;</div>
+              <div class="crest-title" id="crest-title">PALADIN</div>
+              <div class="crest-sub" id="crest-sub">Level 60 Character Sheet</div>
             </div>
 
             <div class="stats-panel">
@@ -202,6 +232,15 @@
                 </div>
               </div>
 
+              <div class="boss-hp-control">
+                <label for="cfg-boss-hp-quick" title="Boss current HP percentage">Boss HP:</label>
+                <div class="boss-hp-input-wrap">
+                  <input type="number" id="cfg-boss-hp-quick" value="100" min="1" max="100" step="5">
+                  <span>%</span>
+                </div>
+                <button type="button" class="btn-exec-phase" id="btn-toggle-exec" title="Toggle &lt;20% Execute Phase">⚡ &lt;20% Execute</button>
+              </div>
+
               <button id="btn-calculate" class="btn-calculate" type="button">
                 <span class="calc-icon">&#9876;</span>
                 <span class="calc-label">CALCULATE DPS</span>
@@ -213,7 +252,10 @@
             <div class="slot-card" data-slot="hands">
               <div class="slot-header">
                 <span class="slot-name">Hands</span>
-                <span class="slot-clear" data-clear="hands" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="hands" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="hands" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-hands"></div>
@@ -228,7 +270,10 @@
             <div class="slot-card" data-slot="waist">
               <div class="slot-header">
                 <span class="slot-name">Waist</span>
-                <span class="slot-clear" data-clear="waist" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="waist" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="waist" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-waist"></div>
@@ -243,7 +288,10 @@
             <div class="slot-card" data-slot="legs">
               <div class="slot-header">
                 <span class="slot-name">Legs</span>
-                <span class="slot-clear" data-clear="legs" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="legs" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="legs" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-legs"></div>
@@ -258,7 +306,10 @@
             <div class="slot-card" data-slot="feet">
               <div class="slot-header">
                 <span class="slot-name">Feet</span>
-                <span class="slot-clear" data-clear="feet" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="feet" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="feet" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-feet"></div>
@@ -273,7 +324,10 @@
             <div class="slot-card" data-slot="finger1">
               <div class="slot-header">
                 <span class="slot-name">Ring 1</span>
-                <span class="slot-clear" data-clear="finger1" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="finger1" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="finger1" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-finger1"></div>
@@ -288,7 +342,10 @@
             <div class="slot-card" data-slot="finger2">
               <div class="slot-header">
                 <span class="slot-name">Ring 2</span>
-                <span class="slot-clear" data-clear="finger2" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="finger2" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="finger2" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-finger2"></div>
@@ -303,7 +360,10 @@
             <div class="slot-card" data-slot="trinket1">
               <div class="slot-header">
                 <span class="slot-name">Trinket 1</span>
-                <span class="slot-clear" data-clear="trinket1" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="trinket1" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="trinket1" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-trinket1"></div>
@@ -318,7 +378,10 @@
             <div class="slot-card" data-slot="trinket2">
               <div class="slot-header">
                 <span class="slot-name">Trinket 2</span>
-                <span class="slot-clear" data-clear="trinket2" title="Unequip">&times;</span>
+                <div class="slot-actions">
+                  <button type="button" class="slot-enchant-btn" data-slot="trinket2" title="Select Enchant">+ Enchant</button>
+                  <span class="slot-clear" data-clear="trinket2" title="Unequip">&times;</span>
+                </div>
               </div>
               <div class="slot-body">
                 <div class="slot-icon quality-1" id="icon-trinket2"></div>
@@ -336,7 +399,10 @@
           <div class="slot-card weapon-card" data-slot="main_hand">
             <div class="slot-header">
               <span class="slot-name">Main Hand / Two-Hand Weapon</span>
-              <span class="slot-clear" data-clear="main_hand" title="Unequip">&times;</span>
+              <div class="slot-actions">
+                <button type="button" class="slot-enchant-btn" data-slot="main_hand" title="Select Enchant / Stone">+ Enchant</button>
+                <span class="slot-clear" data-clear="main_hand" title="Unequip">&times;</span>
+              </div>
             </div>
             <div class="slot-body">
               <div class="slot-icon quality-1" id="icon-main_hand"></div>
@@ -351,29 +417,35 @@
           <div class="slot-card weapon-card" data-slot="off_hand">
             <div class="slot-header">
               <span class="slot-name">Off Hand / Shield</span>
-              <span class="slot-clear" data-clear="off_hand" title="Unequip">&times;</span>
+              <div class="slot-actions">
+                <button type="button" class="slot-enchant-btn" data-slot="off_hand" title="Select Enchant / Stone">+ Enchant</button>
+                <span class="slot-clear" data-clear="off_hand" title="Unequip">&times;</span>
+              </div>
             </div>
             <div class="slot-body">
               <div class="slot-icon quality-1" id="icon-off_hand"></div>
               <div class="combobox-wrap" data-slot="off_hand">
-                <input type="text" class="combobox-input" id="input-off_hand" data-slot="off_hand" placeholder="Search off-hand & shields..." autocomplete="off">
+                <input type="text" class="combobox-input" id="input-off_hand" data-slot="off_hand" placeholder="Search off-hand &amp; shields..." autocomplete="off">
                 <button type="button" class="combobox-arrow" data-slot="off_hand" tabindex="-1">&#9662;</button>
                 <div class="combobox-dropdown" id="dropdown-off_hand" data-slot="off_hand" style="display: none;"></div>
               </div>
             </div>
           </div>
 
-          <div class="slot-card weapon-card" data-slot="relic">
+          <div class="slot-card weapon-card" data-slot="relic" id="slot-card-third">
             <div class="slot-header">
-              <span class="slot-name">Libram / Relic</span>
-              <span class="slot-clear" data-clear="relic" title="Unequip">&times;</span>
+              <span class="slot-name" id="third-slot-title">Libram / Relic</span>
+              <div class="slot-actions">
+                <button type="button" class="slot-enchant-btn" data-slot="relic" id="btn-ench-third" title="Select Scope / Enchant">+ Enchant</button>
+                <span class="slot-clear" data-clear="relic" id="btn-clear-third" title="Unequip">&times;</span>
+              </div>
             </div>
             <div class="slot-body">
-              <div class="slot-icon quality-1" id="icon-relic"></div>
-              <div class="combobox-wrap" data-slot="relic">
-                <input type="text" class="combobox-input" id="input-relic" data-slot="relic" placeholder="Search librams..." autocomplete="off">
-                <button type="button" class="combobox-arrow" data-slot="relic" tabindex="-1">&#9662;</button>
-                <div class="combobox-dropdown" id="dropdown-relic" data-slot="relic" style="display: none;"></div>
+              <div class="slot-icon quality-1" id="icon-third"></div>
+              <div class="combobox-wrap" data-slot="relic" id="wrap-third">
+                <input type="text" class="combobox-input" id="input-third" data-slot="relic" placeholder="Search librams..." autocomplete="off">
+                <button type="button" class="combobox-arrow" data-slot="relic" id="arrow-third" tabindex="-1">&#9662;</button>
+                <div class="combobox-dropdown" id="dropdown-third" data-slot="relic" style="display: none;"></div>
               </div>
             </div>
           </div>
@@ -395,7 +467,7 @@
 
         <div id="opisBuildu"></div>
 
-        <p class="talents-footer-note">Trees from octowow.st. Left-click to add a point, right-click to remove. A row unlocks after spending 5 points for each previous row in the same tree.</p>
+        <p class="talents-footer-note">Talent trees faithfully loaded from octowow.prv.pl. Left-click to add a point, right-click to remove. A row unlocks after spending 5 points for each previous row in the same tree.</p>
       </section>
 
       <section class="tab-content" id="content-settings">
@@ -421,38 +493,44 @@
             </div>
 
             <div class="setting-item">
+              <label for="cfg-boss-hp-settings">Boss Current HP:</label>
+              <div class="unit-wrap">
+                <input type="number" id="cfg-boss-hp-settings" value="100" min="1" max="100" step="5">
+                <span>%</span>
+              </div>
+              <div class="setting-hint">When &le; 20%, Execute &amp; Hammer of Wrath are active for entire fight</div>
+            </div>
+
+            <div class="setting-item">
+              <label for="cfg-exec-phase">Execute Phase Duration:</label>
+              <div class="unit-wrap">
+                <input type="number" id="cfg-exec-phase" value="20" min="0" max="100" step="5">
+                <span>%</span>
+              </div>
+              <div class="setting-hint">Fight duration fraction spent in execute phase (default 20%)</div>
+            </div>
+
+            <div class="setting-item" id="setting-judge-item">
               <label for="cfg-judge">Judgement Base Cooldown:</label>
               <div class="unit-wrap">
                 <input type="number" id="cfg-judge" value="10" min="5" max="30" step="1">
                 <span>sec</span>
               </div>
-              <div class="setting-hint">Reduced by Improved Judgement talent</div>
+              <div class="setting-hint">Reduced by Improved Judgement talent (Paladin)</div>
             </div>
 
-            <div class="setting-item">
+            <div class="setting-item" id="setting-exorcism-item">
               <label for="cfg-exorcism">Exorcism Interval:</label>
               <div class="unit-wrap">
                 <input type="number" id="cfg-exorcism" value="15" min="5" max="60" step="1">
                 <span>sec</span>
               </div>
-              <div class="setting-hint">Cast on cooldown against Undead/Demon targets</div>
+              <div class="setting-hint">Cast on cooldown against Undead/Demon targets (Paladin)</div>
             </div>
           </div>
 
-          <div class="checkbox-settings">
-            <label class="check-label">
-              <input type="checkbox" id="cfg-t2" checked>
-              <span class="check-custom"></span>
-              <span class="check-text">Tier 2 Judgement Set Bonus (+3 Holy damage instances per swing & judgement)</span>
-            </label>
-
-            <label class="check-label">
-              <input type="checkbox" id="cfg-lost" checked>
-              <span class="check-custom"></span>
-              <span class="check-text">Set "of the Lost" Bonus (4% chance to summon Cathedral Minion on spell hit)</span>
-            </label>
-
-            <label class="check-label">
+          <div class="checkbox-settings" id="setting-paladin-checks">
+            <label class="check-label" id="lbl-cfg-consec">
               <input type="checkbox" id="cfg-consec" checked>
               <span class="check-custom"></span>
               <span class="check-text">Consecration Active (1 Holy damage tick per second)</span>
@@ -475,13 +553,13 @@
           </div>
 
           <div class="res-card own-card">
-            <div class="card-label">PALADIN DIRECT DPS</div>
+            <div class="card-label" id="lbl-direct-dps">CHARACTER DIRECT DPS</div>
             <div class="card-value" id="res-own-dps">0.00</div>
             <div class="card-sub" id="res-own-share">100% of damage</div>
           </div>
 
           <div class="res-card minion-card" id="card-minion-dps" style="display: none;">
-            <div class="card-label">MINIONS DPS (OF THE LOST)</div>
+            <div class="card-label">PET / SUMMON DPS</div>
             <div class="card-value" id="res-minion-dps">0.00</div>
             <div class="card-sub" id="res-minion-range">Range: [0.00 - 0.00]</div>
           </div>
@@ -489,7 +567,7 @@
 
         <div class="share-bar-wrap" id="share-bar-wrap" style="display: none;">
           <div class="share-bar-labels">
-            <span>Paladin Damage: <strong id="bar-lbl-own">100%</strong></span>
+            <span>Character Damage: <strong id="bar-lbl-own">100%</strong></span>
             <span>Minion Damage: <strong id="bar-lbl-minion">0%</strong></span>
           </div>
           <div class="share-track">
@@ -500,7 +578,7 @@
 
         <div class="breakdown-cards-row">
           <div class="breakdown-card">
-            <div class="b-header">&#9876; PALADIN ATTACK BREAKDOWN</div>
+            <div class="b-header" id="breakdown-title">&#9876; CHARACTER ATTACK BREAKDOWN</div>
             <div class="b-rows" id="breakdown-list-own"></div>
           </div>
 
@@ -508,8 +586,9 @@
             <div class="b-header">&#9201; COMBAT STATISTICS</div>
             <div class="b-rows">
               <div class="b-item"><span>Total Melee Swings:</span><strong id="b-exact-swings">0</strong></div>
-              <div class="b-item"><span>Magic Damage Hits:</span><strong id="b-magic-hits">0</strong></div>
-              <div class="b-item"><span>Magic Hit Frequency:</span><strong id="b-magic-rate">0.000 / sec</strong></div>
+              <div class="b-item" id="stat-row-skill"><span>Weapon Skill:</span><strong id="b-weapon-skill">300</strong></div>
+              <div class="b-item" id="stat-row-flurry"><span>Flurry Uptime:</span><strong id="b-flurry-uptime" class="magic">0.0%</strong></div>
+              <div class="b-item" id="stat-row-magic"><span>Magic Damage Hits:</span><strong id="b-magic-hits">0</strong></div>
               <div class="b-item"><span>Boss Armor Reduction:</span><strong id="b-armor-reduc">40.4%</strong></div>
               <div class="b-item"><span>Effective Critical Chance:</span><strong id="b-sim-crit">0.0%</strong></div>
             </div>
@@ -529,6 +608,15 @@
         </div>
       </section>
     </main>
+  </div>
+
+  <div id="enchant-picker" class="enchant-picker-popover" style="display: none;">
+    <div class="ench-picker-header">
+      <span class="ench-picker-title" id="ench-picker-title">Select Enchant</span>
+      <span class="ench-picker-close" id="ench-picker-close">&times;</span>
+    </div>
+    <input type="text" id="ench-picker-search" class="ench-picker-search" placeholder="Filter enchants..." autocomplete="off">
+    <div class="ench-picker-list" id="ench-picker-list"></div>
   </div>
 
   <div id="wow-tooltip" class="wow-tooltip"></div>

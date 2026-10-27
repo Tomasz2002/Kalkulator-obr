@@ -1,0 +1,358 @@
+
+section.main {
+    min-height: 100vh;
+    width: 100%;
+    padding-left: 380px;
+    overflow: hidden;
+
+    nav {
+        width: 100%;
+        color: #ddd;
+        text-align: center;
+        margin: 10px 0 50px;
+        font-weight: bold;
+        background: #303950;
+        width: 100%;
+        margin: 0;
+        padding: 10px 0 10px;
+        border-bottom: 2px solid #333333;
+        &.loading {
+            li {
+                pointer-events: none;
+            }
+        }
+    }
+    ul {
+        position: relative;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 0;
+        display: inline-block;
+        vertical-align: top;
+        
+    }
+    li {
+        padding: 0;
+        display: inline-block;
+        vertical-align: top;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s ease-in;
+        text-shadow: 1px 1px darkblue;
+        .icon {
+            position: relative;
+            border-width: 2px;
+            &:after {
+                content: "";
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                font-size: 16px;
+                color: #adadad;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                text-shadow: 0px 3px 3px #000;
+                font-family: Arial;
+                pointer-events: none;
+            }
+            img {
+                filter: none;
+            }
+        }
+        &:hover, &.active {
+            color: white;
+            .icon {
+                border-color: $icon-border;
+            }
+        }
+        &.active .filter {
+            opacity: 1;
+            visibility: visible;
+        }
+        p {
+            margin: 0;
+            padding: 10px 14px;
+        }
+        .filter {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease-in;
+            position: absolute;
+            left: 0;
+            top: 50px;
+            li {
+                opacity: 0.5;
+                &.active {
+                    opacity: 1;
+                }
+                &:after {
+                    display: none;
+                }
+            }
+            &:before {
+                content: '';
+                width: 100%;
+                height: 1px;
+                background: #545454;
+                position: absolute;
+                display: block;
+                top: 4px;
+                left: 0;
+            }
+            @media only screen and (max-width: 1600px) {
+                opacity: 0;
+                visibility: hidden;
+                display: none;
+            }
+        }
+        &.active[data-type="profiles"],
+        &.active[data-type="mainhand"],
+        &.active[data-type="offhand"],
+        &.active[data-type="twohand"] {
+            margin-bottom: 30px;
+            @media only screen and (max-width: 1600px) {
+                margin-bottom: 0;
+            }
+        }
+        &[data-type="ranged"] {
+            margin-right: 20px;
+        }
+        &[data-type="wrist"] {
+            margin-right: 20px;
+        }
+        &:hover[data-type="mainhand"] .icon:after { content: 'MH'; }
+        &:hover[data-type="offhand"] .icon:after { content: 'OH'; }
+        &:hover[data-type="twohand"] .icon:after { content: '2H'; }
+        
+    }
+
+    [data-quality="2"] { color: $item-uncommon; }
+    [data-quality="3"] { color: $item-rare; }
+    [data-quality="4"] { color: $item-epic; }
+    [data-quality="5"] { color: $item-legendary; }
+
+    .table-container {
+        padding: 20px 40px;
+        @include mobile {
+            padding: 10px 20px 20px;
+        }
+    }
+
+    .table-container:empty + .btn {
+        display: none;
+    }
+
+    .button-container {
+        padding: 0px 40px 40px;
+        text-align: right;
+        .btn {
+            display: inline-block;
+            &:first-child {
+                float: left;
+            }
+        }
+        .js-import, .js-export {
+            float: left;
+            margin-right: 20px;
+        }
+        @include mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    // select {
+    //     display: none;
+    //     position: absolute;
+    //     bottom: -24px;
+    //     left: 0;
+    //     background: transparent;
+    //     color: white;
+    //     border: none;
+    //     width: 80px;
+    //     margin: 0px 12px;
+    //     outline: none;
+    //     cursor: pointer;
+    //     option {
+    //         background: #123;
+    //         color: white;
+    //     }
+    // }
+
+    table.enchant {
+        margin-top: 40px;
+        tbody td:first-of-type:not(.hide),
+        tbody td.hide + td {
+            width: 20%;
+            min-width: 20%;
+        }
+    }
+
+    table.gear:not([data-type="custom"]) {
+        th:first-child {
+            width: 10px;
+        }
+    }
+
+    table.runes {
+        cursor: pointer;
+    }
+
+    progress {
+        width: 80%;
+        max-width: calc(100% - 320px);
+        height: 20px;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        opacity: 0.5;
+        display: none;
+        &[value="0"], &[value="100"] {
+            display: none;
+        }
+    }
+
+    .hide {
+        width: 20px;
+        svg {
+            width: 15px;
+            height: 15px;
+            fill: #ddd;
+            vertical-align: middle;
+        }
+    }
+
+    .filtered {
+        display: none;
+    }
+
+    .profilejson {
+        height: 270px;
+        width: 600px;
+        margin-top: 40px;
+    }
+
+    .profileoption {
+        margin: 20px 0;
+        border-bottom: 1px solid white;
+        width: 282px;
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 4px;
+        @include mobile {
+            margin: 0;
+        }
+
+        input {
+            background: transparent;
+            text-align: right;
+            color: #1eff00;
+            border: 0;
+            outline: 0;
+        }
+    }
+
+    .runes {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+
+        label {
+            text-align: center;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-left: 4px;
+        }
+
+        .active .icon {
+            border-color: #ffcd45;
+            img {
+                filter: none;
+            }
+        }
+    }
+
+    
+    .search {
+        position: relative;
+        width: 222px;
+        input {
+            background: #171717;
+            color: white;
+            border-radius: 5px;
+            border: 1px solid hsla(0,0%,87%,.4);
+            padding: 5px 10px;
+            width: 200px;
+        }
+        svg {
+            position: absolute;
+            right: 6px;
+            top: 4px;
+            fill: white;
+            font-size: 12px;
+        }
+    }
+
+    .topgear {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .filters {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        label {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            &:before {
+                content: "";
+                width: 18px;
+                height: 18px;
+                line-height: 18px;
+                background: #171717;
+                border-radius: 3px;
+                border: 1px solid hsla(0,0%,87%,.4);;
+                font-size: 12px;
+                text-align: center;
+                margin-right: 6px;
+                display: block;
+            }
+            &.active:before {
+                content: "✔";
+            }
+        }
+    }
+
+
+    @include tablet {
+        th:not(:nth-child(2)):not(:first-child):not(:last-child) {
+            display: none;
+        }
+        td:not(:nth-child(2)):not(:first-child):not(:last-child) {
+            display: none;
+        }
+    }
+    @include mobile {
+        padding-bottom: 40px;
+        padding-left: 0;
+        box-sizing: border-box;
+    }
+}
+
+

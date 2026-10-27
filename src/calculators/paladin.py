@@ -18,9 +18,11 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         judgement_interval: float = 10.0,
         consecration: bool = True,
         exorcism_interval: float = 15.0,
-        t2_bonus_active: bool = True,
-        lost_set_active: bool = True,
+        boss_hp_percent: float = 100.0,
+        execute_phase_percent: float = 20.0,
+        race: str = "human",
         talents: Optional[Dict[str, int]] = None,
+        enchants: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ) -> Dict[str, Any]:
         t = talents or {}
@@ -36,10 +38,11 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         improved_judgement = int(t.get("Improved Judgement", t.get("improved_judgement", 0)))
         improved_sor = int(t.get("Improved Seal of Righteousness", t.get("improved_seal_of_righteousness", 0)))
         kings = bool(t.get("Blessing of Kings", t.get("blessing_of_kings", 0)))
-        command = bool(t.get("Seal of Command", t.get("seal_of_command", 0)))
 
         item_ids = [it if isinstance(it, (int, str)) else it.get("id") for it in equipped_items]
-        gear = calculate_gear_totals(item_ids, self.db)
+        gear = calculate_gear_totals(item_ids, self.db, enchants=enchants, race=race)
+
+        race_clean = race.lower().strip()
 
         kings_mult = 1.10 if kings else 1.0
         base_str = gear["strength"]
@@ -50,6 +53,15 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         ap = (gear["attack_power"] * kings_mult) + int(effective_str * 2)
         sp = gear["spell_power"]
 
+        active_sets = gear.get("active_sets", {})
+        t2_judgement = active_sets.get("217", {})
+        t2_pieces = t2_judgement.get("equipped_count", 0)
+
+        if t2_pieces >= 5:
+            sp += 47
+
+        has_t2_8set = t2_pieces >= 8
+
         crit_pct = gear["crit"] + (gear["agility"] / 20.0) + (1.0 * conviction)
         hit_pct = gear["hit"] + (1.0 * precision)
         spell_crit_pct = crit_pct + (1.0 * sanctified_light)
@@ -58,24 +70,11 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         effective_speed = weapon_speed / (1.0 + (haste_percent / 100.0))
         exact_melee_swings = 1 + int(fight_duration / effective_speed) if fight_duration > 0 and effective_speed > 0 else 0
 
-        min_dmg = 0.0
-        max_dmg = 0.0
-        weapon_name = "Unarmed"
-        is_two_hand = False
-        is_one_hand = False
-        for it in gear["equipped_items"]:
-            if it.get("slot") == "two_hand":
-                min_dmg = it.get("min_damage", 0.0)
-                max_dmg = it.get("max_damage", 0.0)
-                weapon_name = it.get("name", "Two-Handed Weapon")
-                is_two_hand = True
-                break
-            elif it.get("slot") in ("one_hand", "main_hand"):
-                min_dmg = it.get("min_damage", 0.0)
-                max_dmg = it.get("max_damage", 0.0)
-                weapon_name = it.get("name", "One-Handed Weapon")
-                is_one_hand = True
-                break
+        min_dmg = gear["main_weapon_min_dmg"]
+        max_dmg = gear["main_weapon_max_dmg"]
+        weapon_name = gear["main_weapon_name"]
+        is_two_hand = any(it.get("slot") == "twohand" for it in gear["equipped_items"])
+        is_one_hand = any(it.get("slot") in ("onehand", "mainhand") for it in gear["equipped_items"])
 
         avg_weapon_dmg = (min_dmg + max_dmg) / 2.0 if (min_dmg + max_dmg) > 0 else (weapon_speed * 25.0)
 
@@ -105,6 +104,7 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         white_dps = white_damage_total / fight_duration if fight_duration > 0 else 0.0
 
         spell_crit_multiplier = 1.0 + (spell_crit_pct / 100.0 * 0.5)
+
         sor_mult = 1.0 + (0.02 * improved_sor)
         sor_base = weapon_speed * 18.5
         sor_hit = (sor_base + (weapon_speed / 20.0) * sp) * spell_crit_multiplier * holy_mult * sor_mult
@@ -117,12 +117,12 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         judgement_damage_total = judgement_count * jor_hit
         judgement_dps = judgement_damage_total / fight_duration if fight_duration > 0 else 0.0
 
-        t2_instances_per_swing = 3 if t2_bonus_active else 0
-        t2_instances_per_judge = 3 if t2_bonus_active else 0
-        total_t2_instances = (exact_melee_swings * t2_instances_per_swing) + (judgement_count * t2_instances_per_judge)
-        t2_hit = (63.0 + 0.05 * sp) * spell_crit_multiplier * holy_mult
-        t2_damage_total = total_t2_instances * t2_hit
-        t2_dps = t2_damage_total / fight_duration if fight_duration > 0 else 0.0
+        t2_damage_total = 0.0
+        t2_dps = 0.0
+        if has_t2_8set:
+            t2_proc_damage = 63.5 + 0.05 * sp
+            t2_damage_total = judgement_count * t2_proc_damage * spell_crit_multiplier * holy_mult
+            t2_dps = t2_damage_total / fight_duration if fight_duration > 0 else 0.0
 
         consecration_ticks = int(fight_duration * 1.0) if consecration else 0
         consec_tick_dmg = (48.0 + 0.0416 * sp) * holy_mult
@@ -134,6 +134,20 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         exorcism_damage_total = exorcism_count * exorcism_hit
         exorcism_dps = exorcism_damage_total / fight_duration if fight_duration > 0 else 0.0
 
+        if boss_hp_percent <= 20.0:
+            exec_duration = fight_duration
+        else:
+            exec_ratio = min(1.0, max(0.0, execute_phase_percent / 100.0))
+            exec_duration = fight_duration * exec_ratio
+
+        how_damage_total = 0.0
+        how_dps = 0.0
+        if exec_duration > 0:
+            how_count = int(exec_duration / 6.0)
+            how_hit = (530.0 + 0.428 * sp) * spell_crit_multiplier * holy_mult
+            how_damage_total = how_count * how_hit
+            how_dps = how_damage_total / fight_duration if fight_duration > 0 else 0.0
+
         own_damage_total = (
             white_damage_total
             + seal_damage_total
@@ -141,41 +155,47 @@ class PaladinCombatCalculator(BaseCombatCalculator):
             + t2_damage_total
             + consec_damage_total
             + exorcism_damage_total
+            + how_damage_total
         )
         own_dps = own_damage_total / fight_duration if fight_duration > 0 else 0.0
 
-        swing_magic_hits = exact_melee_swings * (1 + t2_instances_per_swing)
-        judge_magic_hits = judgement_count * (1 + t2_instances_per_judge)
-        total_magic_hits = swing_magic_hits + judge_magic_hits + consecration_ticks + exorcism_count
-        magic_hits_per_second = total_magic_hits / fight_duration if fight_duration > 0 else 0.0
+        has_minions = gear.get("has_pet_summon", False)
+        minion_dps_avg = 0.0
+        minion_dps_min = 0.0
+        minion_dps_max = 0.0
+        minion_damage_total = 0.0
+        expected_active_minions = 0.0
 
-        lost_pieces = sum(1 for it in gear["equipped_items"] if it.get("id") in (60790, 60799, 60809) or it.get("set_id") == 882)
-        has_minions = bool(lost_set_active and lost_pieces > 0)
-
-        if has_minions:
-            proc_chance = 0.04
-            procs_per_second = magic_hits_per_second * proc_chance
-            expected_active_minions = procs_per_second * 20.0
-            minion_single_dps = 254.5 / 2.0
-            minion_dps_avg = expected_active_minions * minion_single_dps
-            minion_dps_min = expected_active_minions * (230.0 / 2.0)
-            minion_dps_max = expected_active_minions * (279.0 / 2.0)
+        if has_minions and "Spirit of Eskhandar" in gear.get("pet_summon_details", []):
+            crit_swings_per_sec = (exact_melee_swings / fight_duration if fight_duration > 0 else 0.0) * crit_chance
+            eskhandar_proc_chance = 0.01
+            procs_per_sec = crit_swings_per_sec * eskhandar_proc_chance
+            expected_active_minions = min(1.0, procs_per_sec * 120.0)
+            eskhandar_dps = 70.0 / 1.5
+            minion_dps_avg = expected_active_minions * eskhandar_dps
+            minion_dps_min = expected_active_minions * (60.0 / 1.5)
+            minion_dps_max = expected_active_minions * (80.0 / 1.5)
             minion_damage_total = minion_dps_avg * fight_duration
-        else:
-            proc_chance = 0.0
-            procs_per_second = 0.0
-            expected_active_minions = 0.0
-            minion_dps_avg = 0.0
-            minion_dps_min = 0.0
-            minion_dps_max = 0.0
-            minion_damage_total = 0.0
 
         total_dps = own_dps + minion_dps_avg
         total_damage = own_damage_total + minion_damage_total
 
+        breakdown = {
+            "white_melee_dps": round(white_dps, 2),
+            "seal_dps": round(seal_dps, 2),
+            "judgement_dps": round(judgement_dps, 2),
+            "consecration_dps": round(consec_dps, 2),
+            "exorcism_dps": round(exorcism_dps, 2),
+        }
+        if has_t2_8set:
+            breakdown["judgement_8set_holy_dps"] = round(t2_dps, 2)
+        if how_damage_total > 0:
+            breakdown["hammer_of_wrath_dps"] = round(how_dps, 2)
+
         return {
             "character_class": "paladin",
             "fight_duration": fight_duration,
+            "race": race_clean.capitalize(),
             "weapon_name": weapon_name,
             "base_weapon_speed": weapon_speed,
             "effective_weapon_speed": round(effective_speed, 2),
@@ -185,19 +205,14 @@ class PaladinCombatCalculator(BaseCombatCalculator):
             "healing_power": gear["healing"],
             "total_crit_percent": round(crit_pct, 2),
             "total_hit_percent": round(hit_pct, 2),
-            "total_magic_hits": total_magic_hits,
-            "magic_hits_per_second": round(magic_hits_per_second, 3),
-            "procs_per_second": round(procs_per_second, 4),
+            "boss_hp_percent": boss_hp_percent,
+            "execute_phase_percent": execute_phase_percent if boss_hp_percent > 20.0 else 100.0,
+            "execute_duration_seconds": round(exec_duration, 1),
+            "resistances": gear["resistances"],
             "has_minions": has_minions,
             "expected_active_minions": round(expected_active_minions, 3),
-            "own_damage_breakdown": {
-                "white_melee_dps": round(white_dps, 2),
-                "seal_dps": round(seal_dps, 2),
-                "judgement_dps": round(judgement_dps, 2),
-                "t2_holy_dps": round(t2_dps, 2),
-                "consecration_dps": round(consec_dps, 2),
-                "exorcism_dps": round(exorcism_dps, 2),
-            },
+            "active_sets": active_sets,
+            "own_damage_breakdown": breakdown,
             "own_dps": round(own_dps, 2),
             "own_damage_total": round(own_damage_total, 2),
             "minion_dps": round(minion_dps_avg, 2),
@@ -212,6 +227,7 @@ class PaladinCombatCalculator(BaseCombatCalculator):
                 "agility": gear["agility"],
                 "stamina": gear["stamina"],
                 "intellect": int(effective_int),
+                "spirit": gear["spirit"],
                 "armor": gear["armor"],
                 "equipped_count": len(gear["equipped_items"]),
             },

@@ -24,51 +24,52 @@ def api_paladin_talents():
     return jsonify({"trees": ["Holy", "Protection", "Retribution"], "talents": [], "builds": []})
 
 
+@app.route("/api/talents")
+def api_talents():
+    cls = request.args.get("class", "paladin").lower().strip()
+    filename = "warrior_talents.json" if cls == "warrior" else "paladin_talents.json"
+    path = os.path.join(os.path.dirname(__file__), "data", filename)
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return jsonify(json.load(f))
+    return jsonify({"trees": [], "talents": [], "builds": []})
+
+
+@app.route("/api/enchants")
+def api_enchants():
+    path = os.path.join(os.path.dirname(__file__), "data", "enchants.json")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return jsonify(json.load(f))
+    return jsonify({})
+
+
+@app.route("/api/races")
+def api_races():
+    path = os.path.join(os.path.dirname(__file__), "data", "races.json")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return jsonify(json.load(f))
+    return jsonify({"warrior": [], "paladin": []})
+
+
 @app.route("/api/items")
 def api_items():
-    icons_path = os.path.join(os.path.dirname(__file__), "data", "item_icons.json")
-    item_icons = {}
-    if os.path.exists(icons_path):
-        try:
-            with open(icons_path, "r", encoding="utf-8") as f:
-                item_icons = json.load(f)
-        except Exception:
-            pass
+    class_filter = request.args.get("class", "paladin").lower().strip()
+    all_items = db.get("items", [])
 
-    lightweight_items = []
-    for item in db.get("items", []):
-        if "paladin" in item.get("classes", ["paladin"]):
-            item_id_str = str(item["id"])
-            lightweight_items.append({
-                "id": item["id"],
-                "name": item["name"],
-                "slot": item["slot"],
-                "subclass": item.get("subclass", ""),
-                "quality": item.get("quality", 1),
-                "icon": item_icons.get(item_id_str, ""),
-                "item_level": item.get("item_level", 0),
-                "req_level": item.get("req_level", 0),
-                "speed": item.get("speed", 0.0),
-                "min_damage": item.get("min_damage", 0.0),
-                "max_damage": item.get("max_damage", 0.0),
-                "dps": item.get("dps", 0.0),
-                "armor": item.get("armor", 0),
-                "ap": item.get("attack_power", 0),
-                "sp": item.get("spell_power", 0),
-                "healing": item.get("healing", 0),
-                "crit": item.get("crit", 0.0),
-                "hit": item.get("hit", 0.0),
-                "strength": item.get("strength", 0),
-                "agility": item.get("agility", 0),
-                "stamina": item.get("stamina", 0),
-                "intellect": item.get("intellect", 0),
-                "spirit": item.get("spirit", 0),
-                "set_id": item.get("set_id", 0),
-            })
+    if class_filter and class_filter != "all":
+        filtered_items = [it for it in all_items if class_filter in it.get("classes", [])]
+    else:
+        filtered_items = all_items
 
     return jsonify({
-        "metadata": db.get("metadata", {}),
-        "items": lightweight_items,
+        "metadata": {
+            "total_items": len(filtered_items),
+            "class_filter": class_filter,
+            "version": db.get("metadata", {}).get("version", "faithful_v1")
+        },
+        "items": filtered_items,
         "by_slot": db.get("by_slot", {}),
     })
 
@@ -77,7 +78,16 @@ def api_items():
 def api_gear_totals():
     data = request.get_json() or {}
     equipped_ids = data.get("equipped_items", [])
-    totals = calculate_gear_totals(equipped_ids, db)
+    enchants = data.get("enchants", {})
+    race = data.get("race", "human")
+    character_class = data.get("character_class", "paladin")
+    totals = calculate_gear_totals(
+        equipped_ids=equipped_ids,
+        db=db,
+        enchants=enchants,
+        race=race,
+        character_class=character_class,
+    )
     return jsonify(totals)
 
 
@@ -91,9 +101,12 @@ def api_simulate():
     judgement_interval = float(data.get("judgement_interval", 10.0))
     consecration = bool(data.get("consecration", True))
     exorcism_interval = float(data.get("exorcism_interval", 15.0))
-    t2_bonus_active = bool(data.get("t2_bonus_active", True))
-    lost_set_active = bool(data.get("lost_set_active", True))
+    character_class = str(data.get("character_class", "paladin")).lower().strip()
     talents = data.get("talents", {})
+    boss_hp_percent = float(data.get("boss_hp_percent", 100.0))
+    execute_phase_percent = float(data.get("execute_phase_percent", 20.0))
+    race = str(data.get("race", "human")).lower().strip()
+    enchants = data.get("enchants", {})
 
     result = simulate_combat(
         equipped_items=equipped_items,
@@ -103,10 +116,12 @@ def api_simulate():
         judgement_interval=judgement_interval,
         consecration=consecration,
         exorcism_interval=exorcism_interval,
-        t2_bonus_active=t2_bonus_active,
-        lost_set_active=lost_set_active,
         talents=talents,
-        character_class="paladin",
+        boss_hp_percent=boss_hp_percent,
+        execute_phase_percent=execute_phase_percent,
+        race=race,
+        enchants=enchants,
+        character_class=character_class,
         db=db,
     )
     return jsonify(result)

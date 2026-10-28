@@ -1,60 +1,23 @@
 {
   "mainhand": [
     {
-      "id": 211845,
-      "name": "Blackfathom Sharpening Stone",
-      "hit": 2,
-      "temp": true
-    },
-    {
-      "id": 18262,
-      "name": "Elemental Sharpening Stone",
-      "crit": 2,
-      "r": 50,
-      "temp": true
-    },
-    {
-      "id": 12404,
-      "name": "Dense Stone",
-      "bonusdmg": 8,
+      "id": 22750,
+      "spellid": true,
+      "name": "Healing Power (+55)",
       "r": 41,
-      "temp": true
+      "healing": 55,
+      "sp": 29,
+      "spellpower": 29,
+      "ench": "2505"
     },
     {
-      "id": 7964,
-      "name": "Solid Sharpening Stone",
-      "bonusdmg": 6,
-      "r": 25,
-      "temp": true
-    },
-    {
-      "id": 2871,
-      "name": "Heavy Sharpening Stone",
-      "bonusdmg": 4,
-      "r": 15,
-      "temp": true
-    },
-    {
-      "id": 2863,
-      "name": "Coarse Sharpening Stone",
-      "bonusdmg": 3,
-      "r": 5,
-      "temp": true
-    },
-    {
-      "id": 23122,
-      "name": "Consecrated Sharpening Stone",
-      "ap": 108,
-      "r": 50,
-      "temp": true
-    },
-    {
-      "id": 3824,
-      "name": "Shadow Oil",
-      "temp": true,
-      "r": 24,
-      "chance": 15,
-      "magicdmg": 56.5
+      "id": 22749,
+      "spellid": true,
+      "name": "Spell Power (+30)",
+      "r": 41,
+      "sp": 30,
+      "spellpower": 30,
+      "ench": "2504"
     },
     {
       "id": 23800,
@@ -157,62 +120,6 @@
   ],
   "offhand": [
     {
-      "id": 211845,
-      "name": "Blackfathom Sharpening Stone",
-      "hit": 2,
-      "temp": true
-    },
-    {
-      "id": 18262,
-      "name": "Elemental Sharpening Stone",
-      "crit": 2,
-      "r": 50,
-      "temp": true
-    },
-    {
-      "id": 12404,
-      "name": "Dense Stone",
-      "bonusdmg": 8,
-      "r": 41,
-      "temp": true
-    },
-    {
-      "id": 7964,
-      "name": "Solid Sharpening Stone",
-      "bonusdmg": 6,
-      "r": 25,
-      "temp": true
-    },
-    {
-      "id": 2871,
-      "name": "Heavy Sharpening Stone",
-      "bonusdmg": 4,
-      "r": 15,
-      "temp": true
-    },
-    {
-      "id": 2863,
-      "name": "Coarse Sharpening Stone",
-      "bonusdmg": 3,
-      "r": 5,
-      "temp": true
-    },
-    {
-      "id": 23122,
-      "name": "Consecrated Sharpening Stone",
-      "ap": 108,
-      "r": 50,
-      "temp": true
-    },
-    {
-      "id": 3824,
-      "name": "Shadow Oil",
-      "temp": true,
-      "r": 24,
-      "chance": 15,
-      "magicdmg": 56.5
-    },
-    {
       "id": 23800,
       "spellid": true,
       "name": "Agility",
@@ -309,71 +216,59 @@
       "magicdmg": 75,
       "r": 40,
       "ench": "7210"
+    },
+    {
+      "id": 20015,
+      "spellid": true,
+      "name": "Shield - Greater Stamina (+7 Stamina)",
+      "r": 41,
+      "sta": 7,
+      "ench": "1071"
+    },
+    {
+      "id": 20017,
+      "spellid": true,
+      "name": "Shield - Superior Spirit (+9 Spirit)",
+      "r": 41,
+      "spi": 9,
+      "ench": "1890"
+    },
+    {
+      "id": 13933,
+      "spellid": true,
+      "name": "Shield - Frost Resistance (+8 Frost Res)",
+      "r": 41,
+      "frost": 8,
+      "ench": "961"
+    },
+    {
+      "id": 13689,
+      "spellid": true,
+      "name": "Shield - Lesser Block (+2% Block)",
+      "r": 41,
+      "block": 2,
+      "ench": "941"
     }
   ],
   "twohand": [
     {
-      "id": 211845,
-      "name": "Blackfathom Sharpening Stone",
-      "hit": 2,
-      "temp": true
-    },
-    {
-      "id": 18262,
-      "name": "Elemental Sharpening Stone",
-      "crit": 2,
-      "r": 50,
-      "temp": true
-    },
-    {
-      "id": 23122,
-      "name": "Consecrated Sharpening Stone",
-      "ap": 108,
-      "r": 50,
-      "temp": true
-    },
-    {
-      "id": 12404,
-      "name": "Dense Stone",
-      "bonusdmg": 8,
+      "id": 22750,
+      "spellid": true,
+      "name": "Healing Power (+55)",
       "r": 41,
-      "temp": true
+      "healing": 55,
+      "sp": 29,
+      "spellpower": 29,
+      "ench": "2505"
     },
     {
-      "id": 7964,
-      "name": "Solid Sharpening Stone",
-      "bonusdmg": 6,
-      "r": 25,
-      "temp": true
-    },
-    {
-      "id": 2871,
-      "name": "Heavy Sharpening Stone",
-      "bonusdmg": 4,
-      "r": 15,
-      "temp": true
-    },
-    {
-      "id": 2863,
-      "name": "Coarse Sharpening Stone",
-      "bonusdmg": 3,
-      "r": 5,
-      "temp": true
-    },
-    {
-      "id": 23122,
-      "name": "Consecrated Sharpening Stone",
-      "ap": 108,
-      "r": 50,
-      "temp": true
-    },
-    {
-      "id": 3824,
-      "name": "Shadow Oil",
-      "temp": true,
-      "r": 24,
-      "chance": 15,
-      "magicdmg": 56.5
+      "id": 22749,
+      "spellid": true,
+      "name": "Spell Power (+30)",
+      "r": 41,
+      "sp": 30,
+      "spellpower": 30,
+      "ench": "2504"
     },
     {
       "id": 27837,
@@ -979,6 +874,40 @@
       "id": 4406,
       "name": "Crude Scope (+1 Damage)",
       "bonusdmg": 1
+    }
+  ],
+  "shield": [
+    {
+      "id": 20015,
+      "spellid": true,
+      "name": "Shield - Greater Stamina (+7 Stamina)",
+      "r": 41,
+      "sta": 7,
+      "ench": "1071"
+    },
+    {
+      "id": 20017,
+      "spellid": true,
+      "name": "Shield - Superior Spirit (+9 Spirit)",
+      "r": 41,
+      "spi": 9,
+      "ench": "1890"
+    },
+    {
+      "id": 13933,
+      "spellid": true,
+      "name": "Shield - Frost Resistance (+8 Frost Res)",
+      "r": 41,
+      "frost": 8,
+      "ench": "961"
+    },
+    {
+      "id": 13689,
+      "spellid": true,
+      "name": "Shield - Lesser Block (+2% Block)",
+      "r": 41,
+      "block": 2,
+      "ench": "941"
     }
   ]
 }

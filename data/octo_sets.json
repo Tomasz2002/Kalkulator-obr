@@ -4468,5 +4468,573 @@
         "text": "(8) Set: Increases damage and healing done by magical spells and effects by up to 57."
       }
     ]
+  },
+  "600": {
+    "id": 600,
+    "name": "Primalist's Trappings",
+    "pieces": [
+      81061,
+      81062,
+      81063,
+      81064,
+      81065,
+      81066
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: +5 All Resistances."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Increases healing done by spells and effects by up to 24."
+      }
+    ]
+  },
+  "601": {
+    "id": 601,
+    "name": "Rune-Etched Armor",
+    "pieces": [
+      60287,
+      60288,
+      60289,
+      60290,
+      60291,
+      60292
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: Restores 6 health per 5 sec."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Immune to Disarm."
+      }
+    ]
+  },
+  "602": {
+    "id": 602,
+    "name": "Grifter's Armor",
+    "pieces": [
+      83400,
+      83401,
+      83402,
+      83403,
+      83404,
+      83405
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: +10 Strength."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Increases your chance to parry an attack by 1%."
+      }
+    ]
+  },
+  "603": {
+    "id": 603,
+    "name": "Steel Plate Armor",
+    "pieces": [
+      83415,
+      83414,
+      83413,
+      83412,
+      83411,
+      83410
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: +200 Armor."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: +30 Attack Power."
+      }
+    ]
+  },
+  "604": {
+    "id": 604,
+    "name": "Diviner's Garments",
+    "pieces": [
+      83282,
+      83281,
+      83280,
+      83285,
+      83284,
+      83283
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: +10 Spirit."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Increases healing done by spells and effects by up to 20."
+      }
+    ]
+  },
+  "605": {
+    "id": 605,
+    "name": "Augerer's Attire",
+    "pieces": [
+      83286,
+      83287,
+      83288,
+      83289,
+      83290,
+      83291
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: +10 Intellect."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: +11 Arcane Resistance."
+      }
+    ]
+  },
+  "606": {
+    "id": 606,
+    "name": "Pillager's Garb",
+    "pieces": [
+      83292,
+      83293,
+      83294,
+      83295,
+      83296,
+      83297
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: Restores 6 health per 5 sec."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Improves your chance to get a critical strike with spells by 1%."
+      }
+    ]
+  },
+  "607": {
+    "id": 607,
+    "name": "Red Dragon Mail",
+    "pieces": [
+      65000,
+      65001,
+      65002,
+      15047
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +12 Fire Resistance."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Increases healing done by spells and effects by up to 26."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Your direct healing spells have a chance to heal your target for 240 over 12 sec."
+      }
+    ]
+  },
+  "608": {
+    "id": 608,
+    "name": "Bloody Gladiator's Regalia",
+    "pieces": [
+      83428,
+      83427,
+      83426,
+      83425,
+      83420,
+      83424,
+      83423,
+      83421
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +20 Stamina."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Decreases the magical resistances of your spell targets by 20."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Increases damage and healing done by magical spells and effects by up to 23."
+      },
+      {
+        "threshold": 8,
+        "text": "(8) Set: Improves your chance to get a critical strike with spells by 2%."
+      }
+    ]
+  },
+  "609": {
+    "id": 609,
+    "name": "Bloody Gladiator's Vestments",
+    "pieces": [
+      83436,
+      83435,
+      83434,
+      83433,
+      83432,
+      83431,
+      83430,
+      83429
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +20 Stamina."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Your attacks ignore 100 of the target's armor."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: +40 Attack Power."
+      },
+      {
+        "threshold": 8,
+        "text": "(8) Set: Improves your chance to get a critical strike by 2%."
+      }
+    ]
+  },
+  "610": {
+    "id": 610,
+    "name": "Bloody Gladiator's Pursuit",
+    "pieces": [
+      60357,
+      60356,
+      60355,
+      60354,
+      60353,
+      60352,
+      60351,
+      60350
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +20 Stamina."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Increases your attack and casting speed by 2%."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Decreases the magical resistances of your spell targets by 10."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: +20 Attack Power."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Increases damage and healing done by magical spells and effects by up to 13."
+      },
+      {
+        "threshold": 8,
+        "text": "(8) Set: Improves your chance to get a critical strike by 1%."
+      },
+      {
+        "threshold": 8,
+        "text": "(8) Set: Improves your chance to get a critical strike with spells by 1%."
+      }
+    ]
+  },
+  "611": {
+    "id": 611,
+    "name": "Bloody Gladiator's Battlegear",
+    "pieces": [
+      60365,
+      60364,
+      60363,
+      60362,
+      60361,
+      60360,
+      60359,
+      60358
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +20 Stamina."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Your attacks ignore 100 of the target's armor."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: +40 Attack Power."
+      },
+      {
+        "threshold": 8,
+        "text": "(8) Set: Improves your chance to get a critical strike by 2%."
+      }
+    ]
+  },
+  "612": {
+    "id": 612,
+    "name": "Incendosaur Skin Armor",
+    "pieces": [
+      60572,
+      60568,
+      60582
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: Adds 2 fire damage to your melee attacks."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: 5% chance of dealing  Fire damage on a successful melee attack."
+      }
+    ]
+  },
+  "613": {
+    "id": 613,
+    "name": "Redemption of the Prophecy",
+    "pieces": [
+      21704,
+      21889,
+      21683
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: Increases damage and healing done by magical spells and effects by up to 14."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Increases your attack and casting speed by 2%."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Increased Defense +12."
+      }
+    ]
+  },
+  "614": {
+    "id": 614,
+    "name": "Fall of the Prophet",
+    "pieces": [
+      21705,
+      21890,
+      21684
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: Increases damage and healing done by magical spells and effects by up to 14."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Increases your attack and casting speed by 2%."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Increased Defense +12."
+      }
+    ]
+  },
+  "615": {
+    "id": 615,
+    "name": "Hateforge Armor",
+    "pieces": [
+      60573,
+      60574,
+      60575,
+      60576,
+      60577,
+      60578
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +20 Attack Power."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Your attacks ignore 100 of the target's armor."
+      },
+      {
+        "threshold": 6,
+        "text": "(6) Set: Increases your attack and casting speed by 2%."
+      }
+    ]
+  },
+  "616": {
+    "id": 616,
+    "name": "Living Armor",
+    "pieces": [
+      15059,
+      15060,
+      15061
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: Increases healing done by spells and effects by up to 24."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Allows 10% of your Mana regeneration to continue while casting."
+      }
+    ]
+  },
+  "617": {
+    "id": 617,
+    "name": "Warbear Armor",
+    "pieces": [
+      15064,
+      15065
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: Improves your chance to get a critical strike by 1%."
+      },
+      {
+        "threshold": 2,
+        "text": "(2) Set: Increases your chance to dodge an attack by 1%."
+      }
+    ]
+  },
+  "618": {
+    "id": 618,
+    "name": "Dragon Mail",
+    "pieces": [
+      8347,
+      8367,
+      65019
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +10 Stamina."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Your attacks ignore 100 of the target's armor."
+      }
+    ]
+  },
+  "619": {
+    "id": 619,
+    "name": "Bronze Dragon Mail",
+    "pieces": [
+      60579,
+      60580,
+      60581
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +250 Armor."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Increases your chance to dodge an attack by 2%."
+      }
+    ]
+  },
+  "620": {
+    "id": 620,
+    "name": "Convergence of the Elements",
+    "pieces": [
+      65024,
+      65025,
+      65026,
+      65027
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: +10 All Resistances."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Increases your chance to dodge an attack by 1%."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Improves your chance to hit by 1%."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Improves your chance to get a critical strike by 1%."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Increases your attack and casting speed by 2%."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Increased Defense +10."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: +40 Attack Power."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Minor increase to running and swimming speed."
+      }
+    ]
+  },
+  "621": {
+    "id": 621,
+    "name": "Cloudweave Raiment",
+    "pieces": [
+      60558,
+      60557,
+      60556,
+      60555
+    ],
+    "bonuses": [
+      {
+        "threshold": 2,
+        "text": "(2) Set: Increases damage and healing done by magical spells and effects by up to 24."
+      },
+      {
+        "threshold": 3,
+        "text": "(3) Set: Restores 8 mana per 5 sec."
+      },
+      {
+        "threshold": 4,
+        "text": "(4) Set: Improves your chance to hit with spells by 2%."
+      }
+    ]
+  },
+  "6001": {
+    "id": 6001,
+    "name": "Set of the Lost",
+    "pieces": [
+      60790,
+      60809,
+      60798,
+      22253
+    ],
+    "bonuses": [
+      {
+        "threshold": 3,
+        "text": "(3) Set: 4% chance on harmful spell hit to summon a Lost Soul minion."
+      }
+    ]
   }
 }

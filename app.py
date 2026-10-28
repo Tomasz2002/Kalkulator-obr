@@ -133,6 +133,8 @@ def api_simulate():
     enchants = data.get("enchants", {})
     rotation_mode = str(data.get("rotation_mode", "priority_rotation")).lower().strip()
     priority_list = data.get("priority_list", None)
+    strike_ramp_mode = str(data.get("strike_ramp_mode", "3_cs")).lower().strip()
+    strike_ramp_hs = int(data.get("strike_ramp_hs", 0))
     strike_ramp_cs = int(data.get("strike_ramp_cs", 3))
     strike_sustain_hs = int(data.get("strike_sustain_hs", 1))
     strike_sustain_cs = int(data.get("strike_sustain_cs", 1))
@@ -159,6 +161,8 @@ def api_simulate():
         paladin_build=paladin_build,
         rotation_mode=rotation_mode,
         priority_list=priority_list,
+        strike_ramp_mode=strike_ramp_mode,
+        strike_ramp_hs=strike_ramp_hs,
         strike_ramp_cs=strike_ramp_cs,
         strike_sustain_hs=strike_sustain_hs,
         strike_sustain_cs=strike_sustain_cs,

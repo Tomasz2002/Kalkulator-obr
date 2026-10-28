@@ -50,11 +50,24 @@ let activeEnchantSlot = null;
 let rotationalSpells = [];
 let rotationalSpellsByKey = {};
 let activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
+let strikeRampMode = "3_cs";
+let strikeRampHs = 0;
 let strikeRampCs = 3;
 let strikeSustainHs = 1;
 let strikeSustainCs = 1;
 let enableCrusaderStrike = true;
 let enableHolyStrike = true;
+
+function getRampModeHint(mode) {
+  if (mode === "1_hs") {
+    return "(1x Holy Strike na start: natychmiastowe wzmocnienie Si\u0142y buffem Holy Might z talentu Vengeful Strikes)";
+  } else if (mode === "1_hs_3_cs") {
+    return "(1x Holy Strike dla buffa Si\u0142y, nast\u0119pnie 3x Crusader Strike dla pe\u0142nego Haste z Zeal)";
+  } else if (mode === "custom") {
+    return "(manualna sekwencja uderze\u0144 rozgrzewkowych przed sta\u0142\u0105 rotacj\u0105)";
+  }
+  return "(budowanie 3 \u0142adunk\u00f3w Zeal: +9% Haste przed przej\u015bciem do sta\u0142ej rotacji)";
+}
 let disabledSpells = new Set();
 let currentRotationMode = "priority_rotation";
 
@@ -1462,17 +1475,32 @@ function renderPriorityList() {
           <div class="shared-strike-rot-box">
             <div class="rot-phase-row">
               <div class="phase-tag ramp-tag">1. Rozgrzewka (Ramp-up)</div>
-              <div class="phase-controls">
-                <span class="phase-txt">Na początku walki rzuć:</span>
-                <input type="number" id="input-strike-ramp-cs" class="strike-seq-input" value="${strikeRampCs}" min="0" max="10" step="1">
-                <span class="phase-unit">&times; Crusader Strike</span>
-                <span class="phase-hint">(budowanie 3 ładunków Zeal: +9% Haste)</span>
+              <div class="phase-controls ramp-controls-wrap">
+                <span class="phase-txt">Otwarcie walki:</span>
+                <select id="select-strike-ramp-mode" class="strike-seq-select">
+                  <option value="3_cs" ${strikeRampMode === "3_cs" ? "selected" : ""}>3&times; Crusader Strike (Zeal: +9% Haste)</option>
+                  <option value="1_hs" ${strikeRampMode === "1_hs" ? "selected" : ""}>1&times; Holy Strike (Holy Might: +Si\u0142a na start &rarr; Sustain)</option>
+                  <option value="1_hs_3_cs" ${strikeRampMode === "1_hs_3_cs" ? "selected" : ""}>1&times; Holy Strike &rarr; 3&times; Crusader Strike (Buff Si\u0142y + Zeal)</option>
+                  <option value="custom" ${strikeRampMode === "custom" ? "selected" : ""}>W\u0142asne warto\u015bci (manualnie)</option>
+                </select>
+                <div id="ramp-custom-inputs" class="seq-subgrid" style="display: ${strikeRampMode === 'custom' ? 'inline-flex' : 'none'};">
+                  <span class="sub-item">
+                    <input type="number" id="input-strike-ramp-hs" class="strike-seq-input" value="${strikeRampHs}" min="0" max="10" step="1">
+                    <span class="phase-unit">&times; HS</span>
+                  </span>
+                  <span class="phase-arrow">&rarr;</span>
+                  <span class="sub-item">
+                    <input type="number" id="input-strike-ramp-cs" class="strike-seq-input" value="${strikeRampCs}" min="0" max="10" step="1">
+                    <span class="phase-unit">&times; CS</span>
+                  </span>
+                </div>
+                <span class="phase-hint" id="ramp-mode-hint">${getRampModeHint(strikeRampMode)}</span>
               </div>
             </div>
             <div class="rot-phase-row">
-              <div class="phase-tag sustain-tag">2. Stała Rotacja (Pełny Haste)</div>
+              <div class="phase-tag sustain-tag">2. Sta\u0142a Rotacja (Pe\u0142ny Haste)</div>
               <div class="phase-controls">
-                <span class="phase-txt">Gdy masz pełny haste, rzucaj na przemian:</span>
+                <span class="phase-txt">Gdy masz pe\u0142ny haste, rzucaj na przemian:</span>
                 <div class="seq-subgrid">
                   <span class="sub-item">
                     <input type="number" id="input-strike-sustain-hs" class="strike-seq-input" value="${strikeSustainHs}" min="0" max="10" step="1">
@@ -1484,7 +1512,7 @@ function renderPriorityList() {
                     <span class="phase-unit">&times; Crusader Strike</span>
                   </span>
                 </div>
-                <span class="phase-hint">(cyklicznie odświeża Zeal przed wygaśnięciem)</span>
+                <span class="phase-hint">(cyklicznie od\u015bwie\u017ca Zeal przed wyga\u015bni\u0119ciem)</span>
               </div>
             </div>
           </div>
@@ -1492,12 +1520,12 @@ function renderPriorityList() {
         <div class="priority-col-cd">
           <div class="cd-line">6.0s Shared CD</div>
           <div class="cost-line">120 / 90 Mana &bull; Instant</div>
-          <div class="shared-subnote">Współdzielony timer</div>
+          <div class="shared-subnote">Wsp\u00f3\u0142dzielony timer</div>
         </div>
         <div class="priority-col-actions">
-          <button type="button" class="btn-pri-move btn-pri-up" title="Przesuń wyżej w kolejce priorytetów" ${index === 0 ? "disabled" : ""}>&uarr;</button>
-          <button type="button" class="btn-pri-move btn-pri-down" title="Przesuń niżej w kolejce priorytetów" ${index === allKeys.length - 1 ? "disabled" : ""}>&darr;</button>
-          <label class="pri-check-wrap" title="Włącz lub wyłącz uderzenia współdzielone w symulacji">
+          <button type="button" class="btn-pri-move btn-pri-up" title="Przesu\u0144 wy\u017cej w kolejce priorytet\u00f3w" ${index === 0 ? "disabled" : ""}>&uarr;</button>
+          <button type="button" class="btn-pri-move btn-pri-down" title="Przesu\u0144 ni\u017cej w kolejce priorytet\u00f3w" ${index === allKeys.length - 1 ? "disabled" : ""}>&darr;</button>
+          <label class="pri-check-wrap" title="W\u0142\u0105cz lub wy\u0142\u0105cz uderzenia wsp\u00f3\u0142dzielone w symulacji">
             <input type="checkbox" class="pri-toggle-check" ${isEnabled ? "checked" : ""}>
             <span class="pri-check-custom"></span>
           </label>
@@ -1521,9 +1549,44 @@ function renderPriorityList() {
       }
 
       // Input listeners for sequence configuration
-      const rampInp = item.querySelector("#input-strike-ramp-cs");
-      if (rampInp) {
-        rampInp.addEventListener("change", (e) => {
+      const rampSelect = item.querySelector("#select-strike-ramp-mode");
+      if (rampSelect) {
+        rampSelect.addEventListener("change", (e) => {
+          strikeRampMode = e.target.value;
+          if (strikeRampMode === "3_cs") {
+            strikeRampHs = 0;
+            strikeRampCs = 3;
+          } else if (strikeRampMode === "1_hs") {
+            strikeRampHs = 1;
+            strikeRampCs = 0;
+          } else if (strikeRampMode === "1_hs_3_cs") {
+            strikeRampHs = 1;
+            strikeRampCs = 3;
+          }
+          const customInputs = item.querySelector("#ramp-custom-inputs");
+          if (customInputs) {
+            customInputs.style.display = strikeRampMode === "custom" ? "inline-flex" : "none";
+          }
+          const hintEl = item.querySelector("#ramp-mode-hint");
+          if (hintEl) {
+            hintEl.textContent = getRampModeHint(strikeRampMode);
+          }
+          runSimulation();
+        });
+      }
+
+      const rampHsInp = item.querySelector("#input-strike-ramp-hs");
+      if (rampHsInp) {
+        rampHsInp.addEventListener("change", (e) => {
+          strikeRampHs = Math.max(0, parseInt(e.target.value, 10) || 0);
+          e.target.value = strikeRampHs;
+          runSimulation();
+        });
+      }
+
+      const rampCsInp = item.querySelector("#input-strike-ramp-cs");
+      if (rampCsInp) {
+        rampCsInp.addEventListener("change", (e) => {
           strikeRampCs = Math.max(0, parseInt(e.target.value, 10) || 0);
           e.target.value = strikeRampCs;
           runSimulation();
@@ -1743,6 +1806,8 @@ function runSimulation() {
     enchants: currentEnchants,
     rotation_mode: currentRotationMode,
     priority_list: activePriorityList.filter(k => !disabledSpells.has(k)),
+    strike_ramp_mode: strikeRampMode,
+    strike_ramp_hs: strikeRampHs,
     strike_ramp_cs: strikeRampCs,
     strike_sustain_hs: strikeSustainHs,
     strike_sustain_cs: strikeSustainCs,
@@ -1976,17 +2041,27 @@ function renderSimulationResults(data) {
         castsList.appendChild(sealRow);
       } else {
         if (data.strike_sequence) {
+          const seq = data.strike_sequence;
+          let rampTxt = "";
+          if (seq.ramp_hs > 0 && seq.ramp_cs > 0) {
+            rampTxt = `${seq.ramp_hs}x HS &rarr; ${seq.ramp_cs}x CS (Ramp: Si\u0142a + Zeal)`;
+          } else if (seq.ramp_hs > 0) {
+            rampTxt = `${seq.ramp_hs}x HS (Ramp: Holy Might +Si\u0142a)`;
+          } else {
+            rampTxt = `${seq.ramp_cs}x CS (Ramp: Zeal +Haste)`;
+          }
           const seqRow = document.createElement("div");
           seqRow.className = "b-item highlight-strike-seq";
-          seqRow.innerHTML = `<span>Sekwencja Uderzeń:</span><strong class="gold">${data.strike_sequence.ramp_cs}x CS (Ramp) &bull; ${data.strike_sequence.sustain_hs}x HS : ${data.strike_sequence.sustain_cs}x CS (Sustain)</strong>`;
+          seqRow.innerHTML = `<span>Sekwencja Uderze\u0144:</span><strong class="gold">${rampTxt} &bull; ${seq.sustain_hs}x HS : ${seq.sustain_cs}x CS (Sustain)</strong>`;
           castsList.appendChild(seqRow);
         }
 
         const casts = data.ability_casts || {};
         const zealText = data.zeal_haste_percent !== undefined ? `+${data.zeal_haste_percent}%` : "+9%";
+        const hmBonus = data.holy_might_strength_bonus_percent > 0 ? ` &bull; Holy Might: +${data.holy_might_strength_bonus_percent}% Str [${data.holy_might_uptime_percent || 0}% uptime]` : "";
         const castLabelMap = {
-          crusader_strike: `Crusader Strike (Śr. Zeal Haste: ${zealText})`,
-          holy_strike: "Holy Strike (Broń Holy Dmg)",
+          crusader_strike: `Crusader Strike (\u015ar. Zeal Haste: ${zealText})`,
+          holy_strike: `Holy Strike (Bro\u0144 Holy Dmg${hmBonus})`,
           judgement: "Judgement Casts",
           judgement_of_the_crusader: "Opener: Judgement of the Crusader (+Holy Debuff)",
           consecration: "Consecration Casts",
@@ -2666,6 +2741,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnResetRot) {
     btnResetRot.addEventListener("click", () => {
       activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
+      strikeRampMode = "3_cs";
+      strikeRampHs = 0;
       strikeRampCs = 3;
       strikeSustainHs = 1;
       strikeSustainCs = 1;

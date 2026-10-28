@@ -267,11 +267,27 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         if rot_mode not in ("priority_rotation", "auto_attack_only"):
             rot_mode = "priority_rotation"
 
+        strike_ramp_mode = str(kwargs.get("strike_ramp_mode", "3_cs")).strip().lower()
+        strike_ramp_hs = int(kwargs.get("strike_ramp_hs", 0))
         strike_ramp_cs = int(kwargs.get("strike_ramp_cs", 3))
         strike_sustain_hs = int(kwargs.get("strike_sustain_hs", 1))
         strike_sustain_cs = int(kwargs.get("strike_sustain_cs", 1))
         enable_crusader_strike = bool(kwargs.get("enable_crusader_strike", True))
         enable_holy_strike = bool(kwargs.get("enable_holy_strike", True))
+
+        if strike_ramp_mode in ("hs", "1_hs", "holy_strike"):
+            ramp_hs_target = strike_ramp_hs if strike_ramp_hs > 0 else 1
+            ramp_cs_target = 0
+        elif strike_ramp_mode in ("hs_then_cs", "1_hs_3_cs", "holy_strike_then_cs"):
+            ramp_hs_target = strike_ramp_hs if strike_ramp_hs > 0 else 1
+            ramp_cs_target = strike_ramp_cs if strike_ramp_cs > 0 else 3
+        elif strike_ramp_mode in ("custom",):
+            ramp_hs_target = strike_ramp_hs
+            ramp_cs_target = strike_ramp_cs
+        else:  # "3_cs", "cs", "crusader_strike", default
+            strike_ramp_mode = "3_cs"
+            ramp_hs_target = 0
+            ramp_cs_target = strike_ramp_cs if strike_ramp_cs > 0 else 3
 
         if priority_list is not None and isinstance(priority_list, list):
             raw_pri = [str(x).strip().lower() for x in priority_list if str(x).strip()]
@@ -308,6 +324,7 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         zeal_haste_per_stack = 1.0 + (0.4 * vengeful_strikes)
 
         # State tracking for strike sequence (Category 40 shared cooldown)
+        ramp_hs_done = 0
         ramp_cs_done = 0
         sustain_hs_done = 0
         sustain_cs_done = 0
@@ -353,15 +370,28 @@ class PaladinCombatCalculator(BaseCombatCalculator):
                         elif ab in ("crusader_holy_strike", "strike_category_40", "shared_strike", "crusader_strike", "holy_strike"):
                             # Category 40 Shared Strike Cooldown (6.0s)
                             if cur_time >= cd_ready["shared_strike"]:
-                                cs_allowed = enable_crusader_strike and (strike_ramp_cs > 0 or strike_sustain_cs > 0)
-                                hs_allowed = enable_holy_strike and (strike_sustain_hs > 0)
+                                cs_allowed = enable_crusader_strike and (ramp_cs_target > 0 or strike_sustain_cs > 0)
+                                hs_allowed = enable_holy_strike and (ramp_hs_target > 0 or strike_sustain_hs > 0)
 
                                 chosen_strike = None
-                                if cs_allowed and hs_allowed:
-                                    if ramp_cs_done < strike_ramp_cs:
-                                        chosen_strike = "crusader_strike"
-                                        ramp_cs_done += 1
-                                    else:
+                                # 1. Check Ramp-up phase first (HS opener for Holy Might, then CS for Zeal)
+                                if hs_allowed and ramp_hs_done < ramp_hs_target:
+                                    chosen_strike = "holy_strike"
+                                    ramp_hs_done += 1
+                                    # If ramp-up is complete and only HS was in ramp, initialize sustain to start with CS
+                                    if ramp_hs_done >= ramp_hs_target and ramp_cs_done >= ramp_cs_target and strike_sustain_cs > 0:
+                                        sustain_hs_done = strike_sustain_hs
+                                        sustain_cs_done = 0
+                                elif cs_allowed and ramp_cs_done < ramp_cs_target:
+                                    chosen_strike = "crusader_strike"
+                                    ramp_cs_done += 1
+                                    # If ramp-up is complete, reset sustain counters
+                                    if ramp_hs_done >= ramp_hs_target and ramp_cs_done >= ramp_cs_target:
+                                        sustain_hs_done = 0
+                                        sustain_cs_done = 0
+                                else:
+                                    # 2. Sustain phase (after ramp-up)
+                                    if cs_allowed and hs_allowed:
                                         if strike_sustain_hs > 0 and sustain_hs_done < strike_sustain_hs:
                                             chosen_strike = "holy_strike"
                                             sustain_hs_done += 1
@@ -375,10 +405,10 @@ class PaladinCombatCalculator(BaseCombatCalculator):
                                                 sustain_cs_done = 0
                                         else:
                                             chosen_strike = "crusader_strike"
-                                elif cs_allowed:
-                                    chosen_strike = "crusader_strike"
-                                elif hs_allowed:
-                                    chosen_strike = "holy_strike"
+                                    elif cs_allowed:
+                                        chosen_strike = "crusader_strike"
+                                    elif hs_allowed:
+                                        chosen_strike = "holy_strike"
 
                                 if chosen_strike == "crusader_strike":
                                     cs_count += 1
@@ -1068,7 +1098,9 @@ class PaladinCombatCalculator(BaseCombatCalculator):
             "ability_casts": ability_casts,
             "zeal_haste_percent": round(avg_zeal_haste, 1),
             "strike_sequence": {
-                "ramp_cs": strike_ramp_cs,
+                "ramp_mode": strike_ramp_mode,
+                "ramp_hs": ramp_hs_target,
+                "ramp_cs": ramp_cs_target,
                 "sustain_hs": strike_sustain_hs,
                 "sustain_cs": strike_sustain_cs,
             },

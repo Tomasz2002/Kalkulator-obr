@@ -1,0 +1,9 @@
+*.mpq
+*.wdb
+data/temp_octo_extracted/
+__pycache__/
+*.pyc
+venv/
+.env
+.vscode/
+scratch/

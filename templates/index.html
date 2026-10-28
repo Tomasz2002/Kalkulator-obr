@@ -36,6 +36,7 @@
       <nav class="nav-tabs">
         <button class="nav-tab active" data-tab="equipment" id="tab-btn-equipment" type="button">Equipment &amp; Stats</button>
         <button class="nav-tab" data-tab="talents" id="tab-btn-talents" type="button">Talent Trees (<span id="tab-talent-count">51</span> points left)</button>
+        <button class="nav-tab" data-tab="rotation" id="tab-btn-rotation" type="button">Rotation Planner</button>
         <button class="nav-tab" data-tab="settings" id="tab-btn-settings" type="button">Combat Settings</button>
       </nav>
     </header>
@@ -66,7 +67,6 @@
               <div class="slot-header">
                 <span class="slot-name">Neck</span>
                 <div class="slot-actions">
-                  <button type="button" class="slot-enchant-btn" data-slot="neck" title="Select Enchant">+ Enchant</button>
                   <span class="slot-clear" data-clear="neck" title="Unequip">&times;</span>
                 </div>
               </div>
@@ -188,6 +188,10 @@
                   <span class="s-val" id="stat-hit">0.0%</span>
                 </div>
                 <div class="stat-row">
+                  <span class="s-name">Weapon Skill: <span class="info-circle" data-info="weapon_skill" tabindex="0" title="Informacje o Weapon Skill na Turtle/Octo WoW">i</span></span>
+                  <span class="s-val" id="stat-weapon-skill">300 / 315</span>
+                </div>
+                <div class="stat-row">
                   <span class="s-name">Strength:</span>
                   <span class="s-val" id="stat-str">0</span>
                 </div>
@@ -207,6 +211,16 @@
                   <span class="s-name">Armor:</span>
                   <span class="s-val" id="stat-armor">0</span>
                 </div>
+              </div>
+            </div>
+
+            <div class="active-sets-card" id="active-sets-panel">
+              <div class="stats-header">
+                <span class="stats-title">ACTIVE ITEM SETS</span>
+                <span class="stats-sub" id="active-sets-count">0 Sets</span>
+              </div>
+              <div class="active-sets-body" id="active-sets-list">
+                <div class="no-sets-label">No set bonuses active</div>
               </div>
             </div>
 
@@ -233,7 +247,18 @@
                   <span>%</span>
                 </div>
                 <button type="button" class="btn-exec-phase" id="btn-toggle-exec" title="Toggle &lt;20% Execute Phase">⚡ &lt;20% Execute</button>
+                <span class="info-circle" data-info="execute_phase" tabindex="0" title="Informacje o fazie egzekucji">i</span>
               </div>
+
+              <div class="quick-control-row">
+                <label for="cfg-rotation-mode-quick" class="build-label">Combat Mode: <span class="info-circle" data-info="combat_mode" tabindex="0" title="Informacje o trybach walki">i</span></label>
+                <select id="cfg-rotation-mode-quick" class="build-select">
+                  <option value="priority_rotation" selected>Priority Rotation</option>
+                  <option value="auto_attack_only">Auto Attack Only</option>
+                </select>
+              </div>
+
+
 
               <button id="btn-calculate" class="btn-calculate" type="button">
                 <span class="calc-icon">&#9876;</span>
@@ -265,7 +290,6 @@
               <div class="slot-header">
                 <span class="slot-name">Waist</span>
                 <div class="slot-actions">
-                  <button type="button" class="slot-enchant-btn" data-slot="waist" title="Select Enchant">+ Enchant</button>
                   <span class="slot-clear" data-clear="waist" title="Unequip">&times;</span>
                 </div>
               </div>
@@ -319,7 +343,6 @@
               <div class="slot-header">
                 <span class="slot-name">Ring 1</span>
                 <div class="slot-actions">
-                  <button type="button" class="slot-enchant-btn" data-slot="finger1" title="Select Enchant">+ Enchant</button>
                   <span class="slot-clear" data-clear="finger1" title="Unequip">&times;</span>
                 </div>
               </div>
@@ -337,7 +360,6 @@
               <div class="slot-header">
                 <span class="slot-name">Ring 2</span>
                 <div class="slot-actions">
-                  <button type="button" class="slot-enchant-btn" data-slot="finger2" title="Select Enchant">+ Enchant</button>
                   <span class="slot-clear" data-clear="finger2" title="Unequip">&times;</span>
                 </div>
               </div>
@@ -355,7 +377,6 @@
               <div class="slot-header">
                 <span class="slot-name">Trinket 1</span>
                 <div class="slot-actions">
-                  <button type="button" class="slot-enchant-btn" data-slot="trinket1" title="Select Enchant">+ Enchant</button>
                   <span class="slot-clear" data-clear="trinket1" title="Unequip">&times;</span>
                 </div>
               </div>
@@ -373,7 +394,6 @@
               <div class="slot-header">
                 <span class="slot-name">Trinket 2</span>
                 <div class="slot-actions">
-                  <button type="button" class="slot-enchant-btn" data-slot="trinket2" title="Select Enchant">+ Enchant</button>
                   <span class="slot-clear" data-clear="trinket2" title="Unequip">&times;</span>
                 </div>
               </div>
@@ -430,7 +450,7 @@
             <div class="slot-header">
               <span class="slot-name" id="third-slot-title">Libram / Relic</span>
               <div class="slot-actions">
-                <button type="button" class="slot-enchant-btn" data-slot="relic" id="btn-ench-third" title="Select Scope / Enchant">+ Enchant</button>
+                <button type="button" class="slot-enchant-btn" data-slot="relic" id="btn-ench-third" title="Select Scope (Ranged)" style="display: none;">+ Enchant</button>
                 <span class="slot-clear" data-clear="relic" id="btn-clear-third" title="Unequip">&times;</span>
               </div>
             </div>
@@ -464,12 +484,91 @@
         <p class="talents-footer-note">Talent trees faithfully loaded from octowow.prv.pl. Left-click to add a point, right-click to remove. A row unlocks after spending 5 points for each previous row in the same tree.</p>
       </section>
 
+      <section class="tab-content" id="content-rotation">
+        <div class="rotation-planner-card">
+          <div class="rotation-header">
+            <h2 class="rotation-title">PALADIN ROTATION PLANNER &amp; SPELL PRIORITY QUEUE <span class="info-circle" data-info="rotation_planner" tabindex="0" title="Informacje o planerze i wspólnym cooldownie">i</span></h2>
+            <p class="rotation-desc">Kolejka priorytetow umiejetnosci (Spell Priority List). W kazdej turze Global Cooldown (1.5s) silnik symulacji sprawdza liste od gory do dolu i rzuca pierwsze dostepne zaklecie spelniajace warunki.</p>
+          </div>
+
+          <!-- Paladin Opener & Combat Seal Selection -->
+          <div class="paladin-seal-config-box" id="paladin-seal-config-box">
+            <div class="seal-config-header">
+              <span class="seal-cfg-title">&#128737; STRATEGIA OTWARCIA I WYBÓR PIECZĘCI (SEAL &amp; OPENER STRATEGY)</span>
+              <span class="info-circle" data-info="paladin_seals" tabindex="0" title="Informacje o otwarciu Crusaderem i wyborze pieczęci">i</span>
+            </div>
+            <div class="seal-config-grid">
+              <div class="seal-cfg-item">
+                <label class="seal-checkbox-label" for="cfg-opener-crusader">
+                  <input type="checkbox" id="cfg-opener-crusader" checked>
+                  <strong>Opener: Nałóż Judgement of the Crusader</strong>
+                </label>
+                <div class="seal-cfg-desc">
+                  Na start walki (GCD 0) postać nakłada <em>Seal of the Crusader</em> i natychmiast osądza bossa (<em>Judgement</em>). Nakłada to stały debuff na bossie <strong>+140 Holy Damage Taken</strong> do wszystkich kolejnych trafień Holy (Holy Strike, Consecration, Seal, Exorcism, Hammer of Wrath, Judgements).
+                </div>
+              </div>
+              <div class="seal-cfg-item">
+                <label for="cfg-primary-seal" class="seal-select-label">Główna Pieczęć Bojowa (Combat Seal):</label>
+                <select id="cfg-primary-seal" class="unit-select">
+                  <option value="auto" selected>Auto (Optymalna wg talentów i typu broni)</option>
+                  <option value="command" id="opt-seal-command">Seal of Command (Wymaga talentu w Retribution)</option>
+                  <option value="righteousness">Seal of Righteousness (Bazowa, stały Holy damage na cios)</option>
+                  <option value="vengeance">Seal of Vengeance (DoT 5 stacków + Holy Strike)</option>
+                </select>
+                <div class="seal-talent-warning" id="seal-talent-warning" style="display: none;">
+                  &#9888; Brak wymaganego talentu <strong>Seal of Command</strong> w drzewku Retribution! Silnik symulacji automatycznie użyje <strong>Seal of Righteousness</strong>.
+                </div>
+                <div class="seal-cfg-desc" id="seal-active-desc">
+                  Wybierz pieczęć, z którą paladyn będzie bić po otwarciu Crusaderem. Dostępność Seal of Command zależy od przydzielonych talentów w Retribution.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rotation-mode-bar">
+            <div class="mode-select-wrap">
+              <label for="cfg-rotation-mode" class="mode-label">Tryb Walki (Combat Mode):</label>
+              <select id="cfg-rotation-mode" class="rotation-mode-select">
+                <option value="priority_rotation" selected>Pelna rotacja priorytetowa (Priority Rotation)</option>
+                <option value="auto_attack_only">Tylko Auto Attacki + Pieczec (Auto Attack Only)</option>
+              </select>
+            </div>
+            <button id="btn-reset-rotation" type="button" class="btn-secondary">Resetuj kolejnosc domyslna</button>
+          </div>
+
+          <div id="rotation-auto-notice" class="rotation-notice" style="display: none;">
+            <div class="notice-icon">&#9888;</div>
+            <div class="notice-text">
+              <strong>Uproszczony tryb Auto Attack Only aktywny.</strong> Wszystkie zaklecia rotacyjne sa wylaczone. Postac wykonuje wylacznie automatyczne ataki bronia oraz aktywuje efekty wybranej pieczeci (Seal of Command / Seal of Righteousness).
+            </div>
+          </div>
+
+          <div class="priority-queue-wrap" id="priority-queue-wrap">
+            <div class="queue-header-row">
+              <span class="q-col-rank">Priorytet</span>
+              <span class="q-col-info">Umiejetnosc i Wlasciwosci</span>
+              <span class="q-col-cd">Czas Odnowienia / Koszt</span>
+              <span class="q-col-actions">Kolejnosc w Rotacji</span>
+            </div>
+            <div class="priority-list" id="priority-spells-list"></div>
+          </div>
+        </div>
+      </section>
+
       <section class="tab-content" id="content-settings">
         <div class="settings-box">
           <div class="settings-heading">SIMULATION COMBAT SETTINGS</div>
           <div class="settings-grid">
+            <div class="setting-item" id="setting-rotation-mode-item">
+              <label for="cfg-rotation-mode-settings">Combat Execution Mode:</label>
+              <select id="cfg-rotation-mode-settings" class="unit-select">
+                <option value="priority_rotation" selected>Full Priority Rotation</option>
+                <option value="auto_attack_only">Auto Attack Only (Seals Only)</option>
+              </select>
+              <div class="setting-hint">Toggle between full priority rotation queue or pure auto attacks</div>
+            </div>
             <div class="setting-item">
-              <label for="cfg-armor">Target Boss Armor:</label>
+              <label for="cfg-armor">Target Boss Armor: <span class="info-circle" data-info="boss_armor" tabindex="0" title="Informacje o pancerzu bossa">i</span></label>
               <div class="unit-wrap">
                 <input type="number" id="cfg-armor" value="3731" min="0" max="10000" step="100">
                 <span>points</span>
@@ -504,6 +603,8 @@
               <div class="setting-hint">Fight duration fraction spent in execute phase (default 20%)</div>
             </div>
 
+
+
             <div class="setting-item" id="setting-judge-item">
               <label for="cfg-judge">Judgement Base Cooldown:</label>
               <div class="unit-wrap">
@@ -535,8 +636,30 @@
 
       <section class="results-container" id="results-panel">
         <div class="results-header-row">
-          <span class="results-title">SIMULATION RESULTS</span>
+          <div class="results-header-left">
+            <span class="results-title">SIMULATION RESULTS <span class="info-circle" data-info="damage_types" tabindex="0" title="Informacje o typach obrażeń">i</span></span>
+            <span class="build-badge" id="res-build-badge" style="display: none;">Retribution</span>
+            <span class="rot-badge" id="res-rot-badge">Priority Rotation</span>
+          </div>
           <span class="results-meta" id="sim-scenario-info">Duration: 60s | Ready</span>
+        </div>
+
+        <div class="damage-types-row" id="damage-types-row" style="display: none;">
+          <div class="dtype-pill dtype-phys">
+            <span class="dtype-name">Physical Damage:</span>
+            <span class="dtype-val" id="dt-phys-val">0.00 DPS</span>
+            <span class="dtype-pct" id="dt-phys-pct">(0%)</span>
+          </div>
+          <div class="dtype-pill dtype-holy">
+            <span class="dtype-name">Holy / Spell:</span>
+            <span class="dtype-val" id="dt-holy-val">0.00 DPS</span>
+            <span class="dtype-pct" id="dt-holy-pct">(0%)</span>
+          </div>
+          <div class="dtype-pill dtype-shadow" id="dt-shadow-pill" style="display: none;">
+            <span class="dtype-name">Minions / Shadow:</span>
+            <span class="dtype-val" id="dt-shadow-val">0.00 DPS</span>
+            <span class="dtype-pct" id="dt-shadow-pct">(0%)</span>
+          </div>
         </div>
 
         <div class="results-cards-row">
@@ -571,25 +694,43 @@
         </div>
 
         <div class="breakdown-cards-row">
-          <div class="breakdown-card">
-            <div class="b-header" id="breakdown-title">&#9876; CHARACTER ATTACK BREAKDOWN</div>
-            <div class="b-rows" id="breakdown-list-own"></div>
+          <div class="breakdown-card breakdown-card-enlarged" id="breakdown-card-attacks">
+            <div class="b-header-with-toolbar">
+              <div class="b-header" id="breakdown-title">&#9876; CHARACTER ATTACK BREAKDOWN</div>
+              <div class="bd-toolbar">
+                <div class="bd-mode-group">
+                  <button type="button" class="btn-bd-pill active" id="btn-bd-mode-dps" data-mode="dps" title="Pokaż obrażenia na sekundę (DPS)">DPS</button>
+                  <button type="button" class="btn-bd-pill" id="btn-bd-mode-damage" data-mode="damage" title="Pokaż łączne zadane obrażenia (Damage Done)">Damage Done</button>
+                </div>
+                <button type="button" class="btn-bd-pill bd-sort-pill" id="btn-bd-sort-btn" title="Sortuj ataki od największych do najmniejszych">&#8693; Sort: Najwyższe &darr;</button>
+              </div>
+            </div>
+            <div class="b-rows scrollable-breakdown" id="breakdown-list-own"></div>
           </div>
 
           <div class="breakdown-card">
             <div class="b-header">&#9201; COMBAT STATISTICS</div>
             <div class="b-rows">
               <div class="b-item"><span>Total Melee Swings:</span><strong id="b-exact-swings">0</strong></div>
-              <div class="b-item" id="stat-row-skill"><span>Weapon Skill:</span><strong id="b-weapon-skill">300</strong></div>
+              <div class="b-item ws-dropdown-toggle" id="stat-row-skill" title="Kliknij, aby rozwinąć listę broni i opcję questu +5 Weapon Skill (Octo WoW)">
+                <span>Weapon Skill: <span class="ws-chevron" id="ws-chevron">&#9662;</span></span>
+                <strong id="b-weapon-skill">300</strong>
+              </div>
+              <div class="ws-dropdown-content" id="ws-dropdown-details" style="display: none;"></div>
               <div class="b-item" id="stat-row-flurry"><span>Flurry Uptime:</span><strong id="b-flurry-uptime" class="magic">0.0%</strong></div>
-              <div class="b-item" id="stat-row-magic"><span>Magic Damage Hits:</span><strong id="b-magic-hits">0</strong></div>
+              <div class="b-item" id="stat-row-magic"><span>Magic Damage Hits: <span class="info-circle" data-info="magic_hits" tabindex="0" title="Informacje o trafieniach magicznych">i</span></span><strong id="b-magic-hits">0</strong></div>
               <div class="b-item"><span>Boss Armor Reduction:</span><strong id="b-armor-reduc">40.4%</strong></div>
               <div class="b-item"><span>Effective Critical Chance:</span><strong id="b-sim-crit">0.0%</strong></div>
             </div>
           </div>
 
+          <div class="breakdown-card" id="card-rotation-breakdown">
+            <div class="b-header">&#10024; ROTATION &amp; ABILITY CASTS</div>
+            <div class="b-rows" id="breakdown-list-casts"></div>
+          </div>
+
           <div class="breakdown-card" id="card-minion-breakdown" style="display: none;">
-            <div class="b-header">&#9760; MINION MECHANICS</div>
+            <div class="b-header">&#9760; MINION MECHANICS <span class="info-circle" data-info="minion_mechanics" tabindex="0" title="Informacje o minionach z Set of the Lost">i</span></div>
             <div class="b-rows">
               <div class="b-item"><span>Active Minions Average:</span><strong id="b-active-minions" class="magic">0.00</strong></div>
               <div class="b-item"><span>Proc Chance:</span><strong>4.0% per harmful spell hit</strong></div>

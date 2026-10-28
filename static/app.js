@@ -24,6 +24,8 @@ let equippedItems = {
 let currentEnchants = {};
 let enchantsData = {};
 let racesData = {};
+let questWeaponSkills = {};
+let classEquipmentRules = {};
 
 let currentTrees = ["Holy", "Protection", "Retribution"];
 let currentTalents = [];
@@ -44,6 +46,126 @@ let currentRace = "human";
 let bossHpPercent = 100.0;
 let executePhasePercent = 20.0;
 let activeEnchantSlot = null;
+
+let rotationalSpells = [];
+let rotationalSpellsByKey = {};
+let activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
+let strikeRampCs = 3;
+let strikeSustainHs = 1;
+let strikeSustainCs = 1;
+let enableCrusaderStrike = true;
+let enableHolyStrike = true;
+let disabledSpells = new Set();
+let currentRotationMode = "priority_rotation";
+
+function showSpellTooltip(spell, e) {
+  const tip = document.getElementById("wow-tooltip");
+  if (!tip || !spell) return;
+  if (spell.tooltip_html) {
+    tip.innerHTML = spell.tooltip_html;
+  } else {
+    tip.innerHTML = `
+      <div class="tt-spell-wrap">
+        <div class="tt-spell-header">
+          <span class="tt-spell-name">${spell.name || "Spell"}</span>
+          ${spell.rank ? `<span class="tt-spell-rank">${spell.rank}</span>` : ""}
+        </div>
+        <div class="tt-spell-desc">${spell.description_clean || spell.description || ""}</div>
+      </div>
+    `;
+  }
+  tip.style.display = "block";
+  positionTooltip(e);
+}
+
+const INFO_DESCRIPTIONS = {
+  weapon_skill: {
+    title: "Weapon Skill & Glancing Blows (Turtle / Octo WoW)",
+    desc: "Mechanika biegłości broni na serwerach Turtle / Octo WoW:<br><br>" +
+          "&bull; <strong>Bazowa wartość:</strong> 300 na poziomie 60. Maksymalny twardy cap to <strong>315</strong>.<br>" +
+          "&bull; <strong>Bonus do Trafienia (+Hit):</strong> Każde 5 punktów powyżej 300 zapewnia <strong>+1.0% Hit</strong> (+0.2% za punkt). 305 = +1.0%, 310 = +2.0%, 315 = +3.0%.<br>" +
+          "&bull; <strong>Glancing Blows (Białe Ataki):</strong> Przeciwko bossom rajdowym (lvl 63) szansa na Glancing Blow wynosi stałe 40%. Przy 300 skillu uderzenie zadaje tylko 65% obrażeń (kara 35%).<br>" +
+          "&bull; <strong>Skalowanie Glancing:</strong> Każdy punkt biegłości powyżej 300 liniowo podnosi obrażenia o <strong>+2%</strong>, aż do maksymalnego pułapu <strong>95% obrażeń</strong> (kara tylko 5%) przy 315 skillu!<br>" +
+          "&bull; <strong>Unik Bossa (Dodge):</strong> Każdy punkt powyżej 300 obniża szansę na unik bossa o 0.1% (z 5.6% do 4.1%)."
+  },
+  combat_mode: {
+    title: "Tryb Walki (Combat Mode)",
+    desc: "Wybór sposobu symulacji bitewnej:<br><br>" +
+          "&bull; <strong>Priority Rotation:</strong> Pełna symulacja z uwzględnieniem Global Cooldown (1.5s), indywidualnych cooldownów skilli oraz priorytetów z planera rotacji.<br>" +
+          "&bull; <strong>Auto Attack Only:</strong> Symulacja wyłącznie uderzeń białych bronią wręcz oraz pasywnych efektów wybranej pieczęci (bez rzucania skilli)."
+  },
+  playstyle: {
+    title: "Styl Gry Paladyna (Playstyle Mode)",
+    desc: "Definiuje mechanikę, współczynniki i aktywną pieczęć:<br><br>" +
+          "&bull; <strong>Auto-Detect:</strong> Samodzielnie rozpoznaje styl na podstawie założonego ekwipunku i talentów.<br>" +
+          "&bull; <strong>Classic Retribution:</strong> Broń 2H, Strength/AP, Seal of Command (7 PPM) i Judgement of Command.<br>" +
+          "&bull; <strong>Spellret:</strong> Szybka broń (1H/2H), Spell Power, Seal of Righteousness (Holy on-hit co swing) i wysoki scaling czarów.<br>" +
+          "&bull; <strong>Nekrodyn:</strong> 4x Set of the Lost + T2. Generuje szkielety Lost Souls (230-279 Shadow Dmg) przy szkodliwych trafieniach zaklęciem."
+  },
+  execute_phase: {
+    title: "Faza Egzekucji (<20% Execute Phase)",
+    desc: "Gdy zdrowie bossa spada poniżej 20%, aktywowane są zdolności wykańczające:<br><br>" +
+          "&bull; <strong>Hammer of Wrath (Paladyn):</strong> Rzut młotem omijający pancerz (~530 Holy dmg + 42.86% SP co 6s).<br>" +
+          "&bull; <strong>Execute (Wojownik):</strong> Zamiana rage na natychmiastowe obrażenia fizyczne.<br>" +
+          "&bull; Możesz włączyć/wyłączyć tę fazę przyciskiem lub dostosować procent czasu w ustawieniach (domyślnie 20%)."
+  },
+  boss_armor: {
+    title: "Pancerz Bossa (Boss Armor)",
+    desc: "Wartość pancerza przeciwnika:<br><br>" +
+          "&bull; Standardowy boss rajdowy 63 poziomu posiada <strong>3731 pancerza</strong>, co redukuje fizyczne białe ataki oraz Crusader Strike o ok. <strong>40.4%</strong>.<br>" +
+          "&bull; <em>Ważne:</em> Wszystkie obrażenia od czarów (Holy, Shadow, Fire) <strong>całkowicie ignorują pancerz bossa</strong>!"
+  },
+  rotation_planner: {
+    title: "Planer Priorytetów i Wspólny Cooldown",
+    desc: "Kolejka priorytetów zaklęć (Priority Queue):<br><br>" +
+          "&bull; W każdym oknie GCD (1.5s) silnik sprawdza listę od góry do dołu i rzuca pierwszą gotową umiejętność.<br>" +
+          "&bull; <strong>Kategoria 40 (Wspólny CD):</strong> Crusader Strike i Holy Strike dzielą wspólny 6-sekundowy cooldown! Silnik rzuca Crusader Strike, by nabić i utrzymać 3 stacki Zeal (+9% Haste), a w pozostałych oknach bije potężniejszym Holy Strike."
+  },
+  damage_types: {
+    title: "Podział Typów Obrażeń (Damage Types)",
+    desc: "Rozbicie całkowitego DPS postaci na 3 źródła:<br><br>" +
+          "&bull; <span style='color: #e6cc80;'>Physical:</span> Białe ataki oraz Crusader Strike (redukowane pancerzem).<br>" +
+          "&bull; <span style='color: #ffd100;'>Holy / Spell:</span> Holy Strike, pieczęcie, osądy, Consecration, Exorcism (omijają pancerz).<br>" +
+          "&bull; <span style='color: #b070ff;'>Minions / Shadow:</span> Obrażenia zadawane przez szkielety z Set of the Lost."
+  },
+  magic_hits: {
+    title: "Magiczne Trafienia (Harmful Spell Hits)",
+    desc: "Łączna liczba bezpośrednich magicznych trafień w bossa.<br><br>" +
+          "Zaliczają się do nich: ticki Consecration, uderzenia z Seal of Righteousness, Holy Strike, Judgement, Exorcism oraz procki T2.<br>" +
+          "Jest to <strong>kluczowa statystyka dla Nekrodyna</strong>, ponieważ każde takie trafienie ma 4% szansy na przywołanie miniona!"
+  },
+  minion_mechanics: {
+    title: "Mechanika Minionów z Set of the Lost",
+    desc: "Zestaw 4 części <em>Set of the Lost</em> (Memento, Remains, Loop, Tome of the Lost):<br><br>" +
+          "&bull; <strong>4% szansy</strong> przy każdym szkodliwym trafieniu zaklęciem na przywołanie szkieletu.<br>" +
+          "&bull; Minion żyje <strong>20 sekund</strong> i rzuca <em>Soul Bolt</em> zadający 230-279 obrażeń Shadow (2.0s cast time).<br>" +
+          "&bull; Przy częstotliwości ~2.4 magic hits/s generuje ok. <strong>1.9 aktywnego szkieletu</strong> w tym samym czasie (~246 dodatkowego DPS)!"
+  },
+  paladin_seals: {
+    title: "Strategia Otwarcia (Opener) i Wybór Pieczęci",
+    desc: "Zasady walki Paladynem w symulatorze:<br><br>" +
+          "&bull; <strong>Opener Crusader:</strong> Zgodnie ze sztuką na początku walki Paladyn rzuca <em>Seal of the Crusader</em> i natychmiast osądza bossa (Judgement). Nakłada to stały debuff <strong>+140 Holy Damage Taken</strong> (zwiększany talentami i rękawicami), który wzmacnia wszystkie późniejsze obrażenia od magii Holy!<br>" +
+          "&bull; <strong>Seal of Command:</strong> Wymaga talentu w Retribution. 7 PPM (8.5 z Libram of Ardour). 70% weapon dmg + 29% SP jako Holy.<br>" +
+          "&bull; <strong>Seal of Righteousness:</strong> Bazowa pieczęć. Dodaje stałe Holy obrażenia przy każdym trafieniu bronią.<br>" +
+          "&bull; <strong>Seal of Vengeance:</strong> Nakłada do 5 stacków Holy DoT, a przy 5 stackach każdy cios bronią zadaje dodatkowe 33% Holy weapon damage."
+  }
+};
+
+function showInfoTooltip(key, e) {
+  const tip = document.getElementById("wow-tooltip");
+  const data = INFO_DESCRIPTIONS[key];
+  if (!tip || !data) return;
+
+  tip.innerHTML = `
+    <div class="tt-info-wrap">
+      <div class="tt-info-title">&#9432; ${data.title}</div>
+      <div class="tt-info-desc">${data.desc}</div>
+      <div class="tt-info-footer">Octo WoW Calculator Guide</div>
+    </div>
+  `;
+  tip.style.display = "block";
+  positionTooltip(e);
+}
 
 function getItemIconUrl(iconName) {
   if (!iconName) return "";
@@ -121,11 +243,34 @@ function filterItemsForSlot(slotKey, query = "") {
       if (Array.isArray(item.classes) && item.classes.length > 0 && !item.classes.includes(currentClass)) {
         return false;
       }
-      if (currentClass === "paladin" && ["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(item.subclass)) {
-        return false;
+      if (currentClass === "paladin") {
+        if (["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(item.subclass)) {
+          return false;
+        }
+        // Paladin cannot dual wield weapons in offhand
+        if (slotKey === "off_hand") {
+          const isWeapon = ["sword", "mace", "axe", "dagger", "fist", "one_hand_sword", "one_hand_mace", "one_hand_axe"].includes(item.subclass) || (item.speed > 0 && ["onehand", "one_hand", "offhand"].includes(item.slot));
+          if (isWeapon && item.slot !== "shield" && item.subclass !== "shield") {
+            return false;
+          }
+        }
+        // Paladin can only equip Librams in relic / third slot
+        if (slotKey === "relic" || slotKey === "ranged") {
+          if (item.subclass !== "libram") {
+            return false;
+          }
+        }
       }
-      if (currentClass === "warrior" && ["wand", "relic", "libram"].includes(item.subclass)) {
-        return false;
+      if (currentClass === "warrior") {
+        if (["wand", "relic", "libram", "totem", "idol"].includes(item.subclass)) {
+          return false;
+        }
+        if (slotKey === "relic") {
+          return false;
+        }
+        if (slotKey === "ranged" && !["bow", "gun", "crossbow", "thrown", "misc"].includes(item.subclass)) {
+          return false;
+        }
       }
     }
 
@@ -156,6 +301,7 @@ function determineSlotForItem(item) {
   if (item.slot === "twohand" || item.slot === "mainhand" || item.slot === "two_hand" || item.slot === "main_hand") return "main_hand";
   if (item.slot === "shield") return "off_hand";
   if (item.slot === "onehand" || item.slot === "one_hand") {
+    if (currentClass === "paladin") return "main_hand";
     if (!equippedItems.main_hand) return "main_hand";
     return "off_hand";
   }
@@ -333,13 +479,48 @@ function equipItem(slotKey, itemId) {
     if (Array.isArray(item.classes) && item.classes.length > 0 && !item.classes.includes(currentClass)) {
       return;
     }
-    if (currentClass === "paladin" && ["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(item.subclass)) {
-      return;
+    if (currentClass === "paladin") {
+      if (["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(item.subclass)) {
+        alert("Paladyn nie może używać tego typu broni (" + item.subclass + ")!");
+        return;
+      }
+      if (slotKey === "off_hand") {
+        const isWeapon = ["sword", "mace", "axe", "dagger", "fist", "one_hand_sword", "one_hand_mace", "one_hand_axe"].includes(item.subclass) || (item.speed > 0 && ["onehand", "one_hand", "offhand"].includes(item.slot));
+        if (isWeapon && item.slot !== "shield" && item.subclass !== "shield") {
+          alert("Paladyn nie posiada umiejętności walki dwiema brońmi (Dual Wield)!\nW lewej ręce dozwolona jest wyłącznie tarcza lub przedmiot trzymany (Off-hand).");
+          return;
+        }
+      }
+      if ((slotKey === "relic" || slotKey === "ranged") && item.subclass !== "libram") {
+        alert("Paladyn może używać w tym slocie wyłącznie Libramów!");
+        return;
+      }
     }
-    if (currentClass === "warrior" && ["wand", "relic", "libram"].includes(item.subclass)) {
-      return;
+    if (currentClass === "warrior") {
+      if (["wand", "relic", "libram", "totem", "idol"].includes(item.subclass)) {
+        alert("Wojownik nie może używać relikwii ani różdżek!");
+        return;
+      }
+      if (slotKey === "relic") {
+        alert("Wojownik nie posiada slotu na relikwie!");
+        return;
+      }
     }
   }
+
+  // Auto-unequip off hand if 2-Handed weapon equipped
+  if (item && (item.slot === "twohand" || item.slot === "two_hand") && slotKey === "main_hand") {
+    if (equippedItems.off_hand) {
+      equipItem("off_hand", null);
+    }
+  }
+  if (slotKey === "off_hand" && itemId) {
+    const mh = itemsById[String(equippedItems.main_hand)];
+    if (mh && (mh.slot === "twohand" || mh.slot === "two_hand")) {
+      equipItem("main_hand", null);
+    }
+  }
+
   equippedItems[slotKey] = itemId;
 
   const card = document.querySelector(`.slot-card[data-slot="${slotKey}"]`) ||
@@ -448,13 +629,17 @@ function openEnchantPicker(slotKey, btnEl) {
       category = "mainhand";
     }
   } else if (slotKey === "off_hand") {
-    category = "offhand";
-  } else if (slotKey === "relic" || slotKey === "ranged") {
+    const ohItem = itemsById[String(equippedItems.off_hand)];
+    if (ohItem && (ohItem.slot === "shield" || ohItem.subclass === "shield")) {
+      category = "shield";
+    } else {
+      category = "offhand";
+    }
+  } else if (slotKey === "relic" || slotKey === "trinket1" || slotKey === "trinket2" || slotKey === "neck" || slotKey === "waist" || slotKey === "finger1" || slotKey === "finger2") {
+    alert("Przedmioty w tym slocie (np. Trinkety, Libramy, Pierścienie) nie posiadają zaklęć (brak enchantów w grze).");
+    return;
+  } else if (slotKey === "ranged") {
     category = "ranged";
-  } else if (slotKey === "finger1" || slotKey === "finger2") {
-    category = "finger";
-  } else if (slotKey === "trinket1" || slotKey === "trinket2") {
-    category = "trinket";
   }
 
   renderEnchantPickerList(category, slotKey);
@@ -870,6 +1055,7 @@ function rysujDrzewka() {
   if (wydaneEl) wydaneEl.textContent = spent;
   if (poziomEl) poziomEl.textContent = Math.min(60, 9 + spent);
   if (countTabEl) countTabEl.textContent = remaining;
+  validatePaladinSealTalents();
 }
 
 function tipTalent(e, t) {
@@ -1019,7 +1205,8 @@ function recalculateLiveStats() {
     equipped_items: equippedIds,
     enchants: currentEnchants,
     race: currentRace,
-    character_class: currentClass
+    character_class: currentClass,
+    quest_weapon_skills: questWeaponSkills
   };
 
   fetch("/api/gear_totals", {
@@ -1044,11 +1231,411 @@ function updateStatsDisplay(totals) {
   document.getElementById("stat-healing").textContent = `${totals.healing || 0} Heal`;
   document.getElementById("stat-crit").textContent = `${(totals.total_melee_crit || totals.crit || 0).toFixed(1)}%`;
   document.getElementById("stat-hit").textContent = `${(totals.hit || 0).toFixed(1)}%`;
+  const wsEl = document.getElementById("stat-weapon-skill");
+  if (wsEl) {
+    const ws = totals.effective_weapon_skill || 300;
+    const wsHit = totals.weapon_skill_hit_bonus || 0;
+    const glance = Math.round((totals.glance_damage_factor || 0.65) * 100);
+    wsEl.textContent = `${ws} / 315 (+${wsHit.toFixed(1)}% Hit, ${glance}% Glance)`;
+  }
   document.getElementById("stat-str").textContent = totals.strength || 0;
   document.getElementById("stat-agi").textContent = totals.agility || 0;
   document.getElementById("stat-sta").textContent = totals.stamina || 0;
   document.getElementById("stat-int").textContent = totals.intellect || 0;
   document.getElementById("stat-armor").textContent = totals.armor || 0;
+
+  const setsContainer = document.getElementById("active-sets-list");
+  const countEl = document.getElementById("active-sets-count");
+  if (setsContainer && countEl) {
+    const activeSets = totals.active_sets || {};
+    const setKeys = Object.keys(activeSets);
+    let setsWithBonuses = 0;
+    setsContainer.innerHTML = "";
+    if (setKeys.length === 0) {
+      setsContainer.innerHTML = `<div class="no-sets-label">No set bonuses active</div>`;
+      countEl.textContent = "0 Sets";
+    } else {
+      setKeys.forEach(k => {
+        const s = activeSets[k];
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "active-set-item";
+        let bonusesHtml = "";
+        if (s.active_bonuses && s.active_bonuses.length > 0) {
+          setsWithBonuses++;
+          s.active_bonuses.forEach(b => {
+            bonusesHtml += `<div class="active-set-bonus-text">✦ ${b.text}</div>`;
+          });
+        } else {
+          bonusesHtml = `<div class="active-set-bonus-text" style="color: var(--text-dim); font-style: italic;">No thresholds reached</div>`;
+        }
+        itemDiv.innerHTML = `
+          <div class="active-set-header">
+            <span class="active-set-name">${s.name}</span>
+            <span class="active-set-count-tag">${s.equipped_count}/${s.total_pieces}</span>
+          </div>
+          ${bonusesHtml}
+        `;
+        setsContainer.appendChild(itemDiv);
+      });
+      countEl.textContent = `${setsWithBonuses} Active`;
+    }
+  }
+}
+
+function loadRotationalSpells() {
+  fetch("/api/spells?class=paladin")
+    .then(res => res.json())
+    .then(data => {
+      rotationalSpells = data.rotational_spells || [];
+      rotationalSpellsByKey = {};
+      rotationalSpells.forEach(s => {
+        rotationalSpellsByKey[s.key] = s;
+      });
+      renderPriorityList();
+    })
+    .catch(err => {
+      console.error("Failed to load rotational spells:", err);
+    });
+}
+
+function renderPriorityList() {
+  const container = document.getElementById("priority-spells-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const spellMap = {};
+  rotationalSpells.forEach(s => { spellMap[s.key] = s; });
+
+  // Normalize legacy keys: ensure crusader_strike and holy_strike are consolidated into crusader_holy_strike
+  const cleanedPriority = [];
+  let hasStrike = false;
+  activePriorityList.forEach(k => {
+    if (k === "crusader_strike" || k === "holy_strike" || k === "crusader_holy_strike" || k === "strike_category_40") {
+      if (!hasStrike) {
+        cleanedPriority.push("crusader_holy_strike");
+        hasStrike = true;
+      }
+    } else if (k && !cleanedPriority.includes(k)) {
+      cleanedPriority.push(k);
+    }
+  });
+  activePriorityList = cleanedPriority;
+
+  const allKeys = [...activePriorityList];
+  rotationalSpells.forEach(s => {
+    if (s.key === "crusader_strike" || s.key === "holy_strike") {
+      if (!allKeys.includes("crusader_holy_strike")) {
+        allKeys.push("crusader_holy_strike");
+      }
+    } else if (!allKeys.includes(s.key) && s.category !== "seal") {
+      allKeys.push(s.key);
+      disabledSpells.add(s.key);
+    }
+  });
+
+  allKeys.forEach((key, index) => {
+    // 1. UNIFIED ROW: Crusader Strike & Holy Strike (Shared Category 40 Cooldown)
+    if (key === "crusader_holy_strike") {
+      const csSpell = spellMap["crusader_strike"] || {
+        name: "Crusader Strike",
+        icon: "spell_holy_crusaderstrike",
+        cooldown: 6.0,
+        mana_cost: 120,
+        rank: "Rank 1"
+      };
+      const hsSpell = spellMap["holy_strike"] || {
+        name: "Holy Strike",
+        icon: "spell_holy_holysmite",
+        cooldown: 6.0,
+        mana_cost: 90,
+        rank: "Rank 1"
+      };
+
+      const isEnabled = !disabledSpells.has("crusader_holy_strike");
+      const item = document.createElement("div");
+      item.className = `priority-item shared-strike-item ${isEnabled ? "active" : "disabled"}`;
+      item.setAttribute("data-spell-key", "crusader_holy_strike");
+
+      const csIconUrl = getItemIconUrl(csSpell.icon) || getItemIconFallbackUrl(csSpell.icon);
+      const hsIconUrl = getItemIconUrl(hsSpell.icon) || getItemIconFallbackUrl(hsSpell.icon);
+
+      item.innerHTML = `
+        <div class="priority-col-rank">
+          <span class="rank-badge">${index + 1}</span>
+        </div>
+        <div class="priority-col-info shared-info-col">
+          <div class="shared-strike-header">
+            <div class="shared-icons-duo">
+              <img class="spell-thumb cs-icon-thumb" src="${csIconUrl}" onerror="this.src='${getItemIconFallbackUrl(csSpell.icon)}'" alt="Crusader Strike" title="Crusader Strike">
+              <span class="shared-plus">+</span>
+              <img class="spell-thumb hs-icon-thumb" src="${hsIconUrl}" onerror="this.src='${getItemIconFallbackUrl(hsSpell.icon)}'" alt="Holy Strike" title="Holy Strike">
+            </div>
+            <div class="spell-text-wrap">
+              <div class="spell-title-row">
+                <strong class="spell-name">Crusader Strike &amp; Holy Strike</strong>
+                <span class="shared-category-badge" title="Zdolności dzielą Kategorię 40 w Spell.dbc - użycie jednej nakłada 6.0s wspólnego cooldownu!">Wspólny Cooldown: 6.0s (Kat. 40)</span>
+              </div>
+              <div class="spell-scaling-note">
+                Crusader: 100% Wpn + 160 (Fizyczne, +3% Haste z Zeal) &bull; Holy: 100% Wpn + 137 + 20% SP (Holy, ignoruje pancerz)
+              </div>
+            </div>
+          </div>
+
+          <!-- Konfiguracja sekwencji rotacyjnej w jednym wierszu -->
+          <div class="shared-strike-rot-box">
+            <div class="rot-phase-row">
+              <div class="phase-tag ramp-tag">1. Rozgrzewka (Ramp-up)</div>
+              <div class="phase-controls">
+                <span class="phase-txt">Na początku walki rzuć:</span>
+                <input type="number" id="input-strike-ramp-cs" class="strike-seq-input" value="${strikeRampCs}" min="0" max="10" step="1">
+                <span class="phase-unit">&times; Crusader Strike</span>
+                <span class="phase-hint">(budowanie 3 ładunków Zeal: +9% Haste)</span>
+              </div>
+            </div>
+            <div class="rot-phase-row">
+              <div class="phase-tag sustain-tag">2. Stała Rotacja (Pełny Haste)</div>
+              <div class="phase-controls">
+                <span class="phase-txt">Gdy masz pełny haste, rzucaj na przemian:</span>
+                <div class="seq-subgrid">
+                  <span class="sub-item">
+                    <input type="number" id="input-strike-sustain-hs" class="strike-seq-input" value="${strikeSustainHs}" min="0" max="10" step="1">
+                    <span class="phase-unit">&times; Holy Strike</span>
+                  </span>
+                  <span class="phase-arrow">&rarr;</span>
+                  <span class="sub-item">
+                    <input type="number" id="input-strike-sustain-cs" class="strike-seq-input" value="${strikeSustainCs}" min="0" max="10" step="1">
+                    <span class="phase-unit">&times; Crusader Strike</span>
+                  </span>
+                </div>
+                <span class="phase-hint">(cyklicznie odświeża Zeal przed wygaśnięciem)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="priority-col-cd">
+          <div class="cd-line">6.0s Shared CD</div>
+          <div class="cost-line">120 / 90 Mana &bull; Instant</div>
+          <div class="shared-subnote">Współdzielony timer</div>
+        </div>
+        <div class="priority-col-actions">
+          <button type="button" class="btn-pri-move btn-pri-up" title="Przesuń wyżej w kolejce priorytetów" ${index === 0 ? "disabled" : ""}>&uarr;</button>
+          <button type="button" class="btn-pri-move btn-pri-down" title="Przesuń niżej w kolejce priorytetów" ${index === allKeys.length - 1 ? "disabled" : ""}>&darr;</button>
+          <label class="pri-check-wrap" title="Włącz lub wyłącz uderzenia współdzielone w symulacji">
+            <input type="checkbox" class="pri-toggle-check" ${isEnabled ? "checked" : ""}>
+            <span class="pri-check-custom"></span>
+          </label>
+        </div>
+      `;
+
+      // Tooltips for individual spell icons
+      const csIcon = item.querySelector(".cs-icon-thumb");
+      if (csIcon) {
+        csIcon.style.cursor = "help";
+        csIcon.addEventListener("mouseenter", (e) => showSpellTooltip(csSpell, e));
+        csIcon.addEventListener("mousemove", (e) => positionTooltip(e));
+        csIcon.addEventListener("mouseleave", hideTooltip);
+      }
+      const hsIcon = item.querySelector(".hs-icon-thumb");
+      if (hsIcon) {
+        hsIcon.style.cursor = "help";
+        hsIcon.addEventListener("mouseenter", (e) => showSpellTooltip(hsSpell, e));
+        hsIcon.addEventListener("mousemove", (e) => positionTooltip(e));
+        hsIcon.addEventListener("mouseleave", hideTooltip);
+      }
+
+      // Input listeners for sequence configuration
+      const rampInp = item.querySelector("#input-strike-ramp-cs");
+      if (rampInp) {
+        rampInp.addEventListener("change", (e) => {
+          strikeRampCs = Math.max(0, parseInt(e.target.value, 10) || 0);
+          e.target.value = strikeRampCs;
+          runSimulation();
+        });
+      }
+      const susHsInp = item.querySelector("#input-strike-sustain-hs");
+      if (susHsInp) {
+        susHsInp.addEventListener("change", (e) => {
+          strikeSustainHs = Math.max(0, parseInt(e.target.value, 10) || 0);
+          e.target.value = strikeSustainHs;
+          runSimulation();
+        });
+      }
+      const susCsInp = item.querySelector("#input-strike-sustain-cs");
+      if (susCsInp) {
+        susCsInp.addEventListener("change", (e) => {
+          strikeSustainCs = Math.max(0, parseInt(e.target.value, 10) || 0);
+          e.target.value = strikeSustainCs;
+          runSimulation();
+        });
+      }
+
+      // Actions buttons
+      const upBtn = item.querySelector(".btn-pri-up");
+      if (upBtn) {
+        upBtn.addEventListener("click", () => {
+          if (index > 0) {
+            const temp = activePriorityList[index];
+            activePriorityList[index] = activePriorityList[index - 1];
+            activePriorityList[index - 1] = temp;
+            renderPriorityList();
+            runSimulation();
+          }
+        });
+      }
+      const downBtn = item.querySelector(".btn-pri-down");
+      if (downBtn) {
+        downBtn.addEventListener("click", () => {
+          if (index < activePriorityList.length - 1) {
+            const temp = activePriorityList[index];
+            activePriorityList[index] = activePriorityList[index + 1];
+            activePriorityList[index + 1] = temp;
+            renderPriorityList();
+            runSimulation();
+          }
+        });
+      }
+      const check = item.querySelector(".pri-toggle-check");
+      if (check) {
+        check.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            disabledSpells.delete("crusader_holy_strike");
+          } else {
+            disabledSpells.add("crusader_holy_strike");
+          }
+          renderPriorityList();
+          runSimulation();
+        });
+      }
+
+      container.appendChild(item);
+      return;
+    }
+
+    // 2. STANDARD ROTATIONAL SPELL ROW
+    const s = spellMap[key];
+    if (!s) return;
+
+    const isEnabled = !disabledSpells.has(key);
+    const item = document.createElement("div");
+    item.className = `priority-item ${isEnabled ? "active" : "disabled"}`;
+    item.setAttribute("data-spell-key", key);
+
+    const iconUrl = getItemIconUrl(s.icon) || getItemIconFallbackUrl(s.icon);
+
+    let cdText = `${s.cooldown}s CD`;
+    if (key === "holy_strike") cdText = "6.0s CD (Holy Dmg)";
+    if (key === "judgement") cdText = "8-10s CD";
+    if (key === "consecration") cdText = "8.0s CD (8s AoE)";
+    if (key === "exorcism") cdText = "10-15s CD";
+    if (key === "hammer_of_wrath") cdText = "6.0s CD (<20% HP)";
+
+    let statText = "";
+    if (s.ap_coef > 0 && s.bonus_flat > 0) {
+      statText = `${Math.round(s.ap_coef * 100)}% Wpn + ${s.bonus_flat}`;
+    } else if (s.spell_power_coef > 0) {
+      statText = `${Math.round(s.avg_damage)} Base + ${(s.spell_power_coef * 100).toFixed(1)}% SP`;
+    } else {
+      statText = s.description ? s.description.substring(0, 45) + "..." : "";
+    }
+
+    item.innerHTML = `
+      <div class="priority-col-rank">
+        <span class="rank-badge">${index + 1}</span>
+      </div>
+      <div class="priority-col-info">
+        <img class="spell-thumb" src="${iconUrl}" onerror="this.src='${getItemIconFallbackUrl(s.icon)}'" alt="${s.name}">
+        <div class="spell-text-wrap">
+          <div class="spell-title-row">
+            <strong class="spell-name">${s.name}</strong>
+            ${s.rank ? `<span class="spell-rank-badge">${s.rank}</span>` : ""}
+          </div>
+          <div class="spell-scaling-note">${statText}</div>
+        </div>
+      </div>
+      <div class="priority-col-cd">
+        <div class="cd-line">${cdText}</div>
+        <div class="cost-line">${s.mana_cost ? `${s.mana_cost} Mana` : "0 Mana"} &bull; ${s.cast_time > 0 ? `${s.cast_time}s Cast` : "Instant"}</div>
+      </div>
+      <div class="priority-col-actions">
+        <button type="button" class="btn-pri-move btn-pri-up" title="Move Up in priority queue" ${index === 0 ? "disabled" : ""}>&uarr;</button>
+        <button type="button" class="btn-pri-move btn-pri-down" title="Move Down in priority queue" ${index === allKeys.length - 1 ? "disabled" : ""}>&darr;</button>
+        <label class="pri-check-wrap" title="Enable or disable ability in simulation">
+          <input type="checkbox" class="pri-toggle-check" ${isEnabled ? "checked" : ""}>
+          <span class="pri-check-custom"></span>
+        </label>
+      </div>
+    `;
+
+    const infoCol = item.querySelector(".priority-col-info");
+    if (infoCol) {
+      infoCol.style.cursor = "help";
+      infoCol.addEventListener("mouseenter", (e) => showSpellTooltip(s, e));
+      infoCol.addEventListener("mousemove", (e) => positionTooltip(e));
+      infoCol.addEventListener("mouseleave", hideTooltip);
+    }
+
+    const upBtn = item.querySelector(".btn-pri-up");
+    if (upBtn) {
+      upBtn.addEventListener("click", () => {
+        if (index > 0) {
+          const temp = activePriorityList[index];
+          activePriorityList[index] = activePriorityList[index - 1];
+          activePriorityList[index - 1] = temp;
+          renderPriorityList();
+          runSimulation();
+        }
+      });
+    }
+
+    const downBtn = item.querySelector(".btn-pri-down");
+    if (downBtn) {
+      downBtn.addEventListener("click", () => {
+        if (index < activePriorityList.length - 1) {
+          const temp = activePriorityList[index];
+          activePriorityList[index] = activePriorityList[index + 1];
+          activePriorityList[index + 1] = temp;
+          renderPriorityList();
+          runSimulation();
+        }
+      });
+    }
+
+    const check = item.querySelector(".pri-toggle-check");
+    if (check) {
+      check.addEventListener("change", (e) => {
+        if (e.target.checked) {
+          disabledSpells.delete(key);
+        } else {
+          disabledSpells.add(key);
+        }
+        renderPriorityList();
+        runSimulation();
+      });
+    }
+
+    container.appendChild(item);
+  });
+}
+
+function syncRotationMode(newMode) {
+  currentRotationMode = newMode;
+  const selMain = document.getElementById("cfg-rotation-mode");
+  const selQuick = document.getElementById("cfg-rotation-mode-quick");
+  const selSettings = document.getElementById("cfg-rotation-mode-settings");
+  if (selMain) selMain.value = newMode;
+  if (selQuick) selQuick.value = newMode;
+  if (selSettings) selSettings.value = newMode;
+
+  const autoNotice = document.getElementById("rotation-auto-notice");
+  const queueWrap = document.getElementById("priority-queue-wrap");
+  if (autoNotice) {
+    autoNotice.style.display = newMode === "auto_attack_only" ? "flex" : "none";
+  }
+  if (queueWrap) {
+    queueWrap.classList.toggle("mode-auto-dimmed", newMode === "auto_attack_only");
+  }
+
+  runSimulation();
 }
 
 function runSimulation() {
@@ -1071,11 +1658,22 @@ function runSimulation() {
     consecration: consec,
     exorcism_interval: exorcism,
     character_class: currentClass,
+    paladin_build: "auto",
     talents: allocatedTalents,
     boss_hp_percent: bossHpPercent,
     execute_phase_percent: executePhasePercent,
     race: currentRace,
-    enchants: currentEnchants
+    enchants: currentEnchants,
+    rotation_mode: currentRotationMode,
+    priority_list: activePriorityList.filter(k => !disabledSpells.has(k)),
+    strike_ramp_cs: strikeRampCs,
+    strike_sustain_hs: strikeSustainHs,
+    strike_sustain_cs: strikeSustainCs,
+    enable_crusader_strike: !disabledSpells.has("crusader_holy_strike") && enableCrusaderStrike,
+    enable_holy_strike: !disabledSpells.has("crusader_holy_strike") && enableHolyStrike,
+    quest_weapon_skills: questWeaponSkills,
+    primary_seal: document.getElementById("cfg-primary-seal")?.value || "auto",
+    apply_crusader_first: document.getElementById("cfg-opener-crusader")?.checked ?? true
   };
 
   fetch("/api/simulate", {
@@ -1092,6 +1690,150 @@ function runSimulation() {
   });
 }
 
+let breakdownViewMode = "dps";
+let breakdownSortDesc = true;
+let lastSimulationData = null;
+
+function validatePaladinSealTalents() {
+  const sealSelect = document.getElementById("cfg-primary-seal");
+  const warnEl = document.getElementById("seal-talent-warning");
+  if (!sealSelect) return;
+
+  const allocated = getTalentsAllocatedByName();
+  const hasSocTalent = (allocated["Seal of Command"] || 0) > 0;
+
+  const optCommand = document.getElementById("opt-seal-command");
+  if (optCommand) {
+    if (hasSocTalent) {
+      optCommand.textContent = "Seal of Command (Talent aktywny)";
+      optCommand.style.color = "#77ff77";
+    } else {
+      optCommand.textContent = "Seal of Command (Wymaga talentu w Retribution)";
+      optCommand.style.color = "#ff8888";
+    }
+  }
+
+  if (warnEl) {
+    if (sealSelect.value === "command" && !hasSocTalent) {
+      warnEl.style.display = "block";
+    } else {
+      warnEl.style.display = "none";
+    }
+  }
+}
+
+function setBreakdownViewMode(mode) {
+  breakdownViewMode = mode;
+  document.getElementById("btn-bd-mode-dps")?.classList.toggle("active", mode === "dps");
+  document.getElementById("btn-bd-mode-damage")?.classList.toggle("active", mode === "damage");
+  if (lastSimulationData) {
+    renderAttackBreakdown(lastSimulationData);
+  }
+}
+
+function toggleBreakdownSort() {
+  breakdownSortDesc = !breakdownSortDesc;
+  const btn = document.getElementById("btn-bd-sort-btn");
+  if (btn) {
+    if (breakdownSortDesc) {
+      btn.innerHTML = "&#8693; Sort: Najwy\u017csze &darr;";
+      btn.classList.add("active-sort");
+    } else {
+      btn.innerHTML = "&#8693; Sort: Domy\u015blne";
+      btn.classList.remove("active-sort");
+    }
+  }
+  if (lastSimulationData) {
+    renderAttackBreakdown(lastSimulationData);
+  }
+}
+
+function renderAttackBreakdown(data) {
+  const breakdownContainer = document.getElementById("breakdown-list-own");
+  if (!breakdownContainer || !data) return;
+  breakdownContainer.innerHTML = "";
+
+  let sources = [];
+  if (data.damage_sources && data.damage_sources.length > 0) {
+    sources = data.damage_sources.map(s => ({ ...s }));
+  } else {
+    const bd = data.own_damage_breakdown || {};
+    const totalDps = data.total_dps || data.own_dps || 1;
+    for (const [key, dpsVal] of Object.entries(bd)) {
+      if (dpsVal <= 0) continue;
+      const dmgVal = dpsVal * (data.fight_duration || 60);
+      const pct = Math.round((dpsVal / totalDps) * 1000) / 10;
+      sources.push({
+        id: key,
+        name: key.replace(/_/g, " ").replace("dps", "DPS"),
+        category: "General",
+        color: "#c9a227",
+        dps: dpsVal,
+        damage: dmgVal,
+        percent: pct,
+        spell_key: null,
+        is_minion: false,
+        is_proc: false
+      });
+    }
+  }
+
+  // Filter out negligible values
+  sources = sources.filter(s => (s.dps > 0.001 || s.damage > 0.001));
+
+  // Sort if requested
+  if (breakdownSortDesc) {
+    if (breakdownViewMode === "dps") {
+      sources.sort((a, b) => b.dps - a.dps);
+    } else {
+      sources.sort((a, b) => b.damage - a.damage);
+    }
+  }
+
+  const maxVal = sources.reduce((m, s) => Math.max(m, breakdownViewMode === "dps" ? s.dps : s.damage), 1);
+
+  sources.forEach(src => {
+    const row = document.createElement("div");
+    row.className = "attack-row";
+
+    const catTag = src.category ? src.category.toLowerCase() : "general";
+    const tagClass = `tag-${catTag}`;
+
+    const valDisplay = breakdownViewMode === "dps"
+      ? `${src.dps.toFixed(2)} DPS`
+      : `${Math.round(src.damage).toLocaleString()} DMG`;
+
+    const barPercent = Math.min(100, Math.max(2, (((breakdownViewMode === "dps" ? src.dps : src.damage) / maxVal) * 100)));
+
+    row.innerHTML = `
+      <div class="attack-row-main">
+        <div class="attack-row-info">
+          <span class="attack-type-tag ${tagClass}">${src.category || "Skill"}</span>
+          <span class="attack-name-text" title="${src.name}">${src.name}</span>
+        </div>
+        <div class="attack-row-values">
+          <span class="attack-val-num">${valDisplay}</span>
+          <span class="attack-val-pct">${src.percent.toFixed(1)}%</span>
+        </div>
+      </div>
+      <div class="attack-bar-bg">
+        <div class="attack-bar-fill" style="width: ${barPercent}%; background: ${src.color || '#c9a227'};"></div>
+      </div>
+    `;
+
+    const spellKey = src.spell_key;
+    if (spellKey && rotationalSpellsByKey[spellKey]) {
+      const sp = rotationalSpellsByKey[spellKey];
+      row.style.cursor = "help";
+      row.addEventListener("mouseenter", (e) => showSpellTooltip(sp, e));
+      row.addEventListener("mousemove", (e) => positionTooltip(e));
+      row.addEventListener("mouseleave", hideTooltip);
+    }
+
+    breakdownContainer.appendChild(row);
+  });
+}
+
 function renderSimulationResults(data) {
   document.getElementById("res-total-dps").textContent = data.total_dps ? data.total_dps.toFixed(2) : "0.00";
   document.getElementById("res-total-dmg").textContent = `Total Damage: ${Math.round(data.total_damage || 0).toLocaleString()}`;
@@ -1103,10 +1845,149 @@ function renderSimulationResults(data) {
 
   document.getElementById("res-own-share").textContent = `${ownShare}% of total damage`;
 
+  const wsEl = document.getElementById("stat-weapon-skill");
+  if (wsEl && (data.effective_weapon_skill || data.gear_summary?.effective_weapon_skill)) {
+    const ws = data.effective_weapon_skill || data.gear_summary.effective_weapon_skill;
+    const wsHit = data.weapon_skill_hit_bonus ?? data.gear_summary?.weapon_skill_hit_bonus ?? 0;
+    const glance = Math.round((data.glance_damage_factor ?? data.gear_summary?.glance_damage_factor ?? 0.65) * 100);
+    wsEl.textContent = `${ws} / 315 (+${wsHit.toFixed(1)}% Hit, ${glance}% Glance)`;
+  }
+
   const infoEl = document.getElementById("sim-scenario-info");
   if (infoEl) {
     const isDw = data.is_dual_wield ? " (DW)" : (data.is_two_handed ? " (2H)" : "");
     infoEl.textContent = `Duration: ${data.fight_duration}s | ${data.character_class.toUpperCase()}${isDw} (${data.race}) | Boss HP: ${data.boss_hp_percent}% | Execute: ${data.execute_duration_seconds}s`;
+  }
+
+  const buildBadge = document.getElementById("res-build-badge");
+  if (buildBadge) {
+    if (data.character_class === "paladin" && data.paladin_build_name) {
+      buildBadge.textContent = data.paladin_build_name;
+      buildBadge.style.display = "inline-flex";
+      buildBadge.className = `build-badge build-${data.paladin_build || "retribution"}`;
+    } else {
+      buildBadge.style.display = "none";
+    }
+  }
+
+  const rotBadge = document.getElementById("res-rot-badge");
+  if (rotBadge) {
+    if (data.character_class === "paladin") {
+      rotBadge.textContent = data.rotation_mode_name || "Priority Rotation";
+      rotBadge.style.display = "inline-flex";
+      rotBadge.className = `rot-badge rot-${data.rotation_mode || "priority_rotation"}`;
+    } else {
+      rotBadge.style.display = "none";
+    }
+  }
+
+  const castsCard = document.getElementById("card-rotation-breakdown");
+  const castsList = document.getElementById("breakdown-list-casts");
+  if (castsCard && castsList) {
+    if (data.character_class === "paladin") {
+      castsCard.style.display = "block";
+      castsList.innerHTML = "";
+
+      if (data.rotation_mode === "auto_attack_only") {
+        const autoRow = document.createElement("div");
+        autoRow.className = "b-item highlight-auto";
+        autoRow.innerHTML = `<span>Tryb Walki:</span><strong class="warn">Tylko Auto Attacki (Umiejetnosci wylaczone)</strong>`;
+        castsList.appendChild(autoRow);
+        const sealRow = document.createElement("div");
+        sealRow.className = "b-item";
+        sealRow.innerHTML = `<span>Aktywna Pieczec:</span><strong>${data.paladin_build === "retribution" ? "Seal of Command (7 PPM)" : "Seal of Righteousness (On-Hit)"}</strong>`;
+        castsList.appendChild(sealRow);
+      } else {
+        if (data.strike_sequence) {
+          const seqRow = document.createElement("div");
+          seqRow.className = "b-item highlight-strike-seq";
+          seqRow.innerHTML = `<span>Sekwencja Uderzeń:</span><strong class="gold">${data.strike_sequence.ramp_cs}x CS (Ramp) &bull; ${data.strike_sequence.sustain_hs}x HS : ${data.strike_sequence.sustain_cs}x CS (Sustain)</strong>`;
+          castsList.appendChild(seqRow);
+        }
+
+        const casts = data.ability_casts || {};
+        const zealText = data.zeal_haste_percent !== undefined ? `+${data.zeal_haste_percent}%` : "+9%";
+        const castLabelMap = {
+          crusader_strike: `Crusader Strike (Śr. Zeal Haste: ${zealText})`,
+          holy_strike: "Holy Strike (Broń Holy Dmg)",
+          judgement: "Judgement Casts",
+          judgement_of_the_crusader: "Opener: Judgement of the Crusader (+Holy Debuff)",
+          consecration: "Consecration Casts",
+          consecration_ticks: "Consecration Holy Ticks",
+          exorcism: "Exorcism Casts",
+          hammer_of_wrath: "Hammer of Wrath Casts (<20%)",
+          holy_shock: "Holy Shock Casts"
+        };
+
+        if (data.primary_seal_name) {
+          const sealRow = document.createElement("div");
+          sealRow.className = "b-item";
+          sealRow.innerHTML = `<span>Aktywna Piecz\u0119\u0107:</span><strong class="magic">${data.primary_seal_name}</strong>`;
+          castsList.appendChild(sealRow);
+        }
+
+        if (data.seal_fallback_reason) {
+          const fbRow = document.createElement("div");
+          fbRow.className = "b-item";
+          fbRow.innerHTML = `<span style="color: #ff9999;">Uwaga Piecz\u0119ci:</span><strong style="color: #ff9999; font-size: 11px;">${data.seal_fallback_reason}</strong>`;
+          castsList.appendChild(fbRow);
+        }
+
+        for (const [key, num] of Object.entries(casts)) {
+          if (num > 0 || ["crusader_strike", "holy_strike", "judgement", "consecration"].includes(key)) {
+            const row = document.createElement("div");
+            row.className = "b-item";
+            row.innerHTML = `<span>${castLabelMap[key] || key}:</span><strong>${num}</strong>`;
+            const sp = rotationalSpellsByKey[key];
+            if (sp) {
+              row.style.cursor = "help";
+              row.addEventListener("mouseenter", (e) => showSpellTooltip(sp, e));
+              row.addEventListener("mousemove", (e) => positionTooltip(e));
+              row.addEventListener("mouseleave", hideTooltip);
+            }
+            castsList.appendChild(row);
+          }
+        }
+
+        if (data.mana_stats) {
+          const manaRow = document.createElement("div");
+          manaRow.className = "b-item b-item-mana";
+          manaRow.innerHTML = `<span>Zuzycie many:</span><strong class="magic">${data.mana_stats.total_mana_spent} (${data.mana_stats.mana_per_second}/s)</strong>`;
+          castsList.appendChild(manaRow);
+        }
+      }
+    } else {
+      castsCard.style.display = "none";
+    }
+  }
+
+  const dtRow = document.getElementById("damage-types-row");
+  const dtb = data.damage_type_breakdown;
+  if (dtRow && dtb) {
+    dtRow.style.display = "flex";
+    const elPhysVal = document.getElementById("dt-phys-val");
+    const elPhysPct = document.getElementById("dt-phys-pct");
+    const elHolyVal = document.getElementById("dt-holy-val");
+    const elHolyPct = document.getElementById("dt-holy-pct");
+    if (elPhysVal) elPhysVal.textContent = `${dtb.physical_dps.toFixed(2)} DPS`;
+    if (elPhysPct) elPhysPct.textContent = `(${dtb.physical_percent}%)`;
+    if (elHolyVal) elHolyVal.textContent = `${dtb.holy_spell_dps.toFixed(2)} DPS`;
+    if (elHolyPct) elHolyPct.textContent = `(${dtb.holy_spell_percent}%)`;
+
+    const shadowPill = document.getElementById("dt-shadow-pill");
+    if (shadowPill) {
+      if (dtb.minion_shadow_dps > 0 || (data.has_minions && data.minion_dps > 0)) {
+        shadowPill.style.display = "inline-flex";
+        const elShadVal = document.getElementById("dt-shadow-val");
+        const elShadPct = document.getElementById("dt-shadow-pct");
+        if (elShadVal) elShadVal.textContent = `${dtb.minion_shadow_dps.toFixed(2)} DPS`;
+        if (elShadPct) elShadPct.textContent = `(${dtb.minion_shadow_percent}%)`;
+      } else {
+        shadowPill.style.display = "none";
+      }
+    }
+  } else if (dtRow) {
+    dtRow.style.display = "none";
   }
 
   const minionCard = document.getElementById("card-minion-dps");
@@ -1124,7 +2005,9 @@ function renderSimulationResults(data) {
     document.getElementById("bar-lbl-minion").textContent = `${minionShare}%`;
     document.getElementById("share-own-bar").style.width = `${ownShare}%`;
     document.getElementById("share-minion-bar").style.width = `${minionShare}%`;
-    document.getElementById("b-active-minions").textContent = data.expected_active_minions.toFixed(2);
+    document.getElementById("b-active-minions").textContent = (data.expected_active_minions || 0).toFixed(2);
+    const bProcs = document.getElementById("b-procs-sec");
+    if (bProcs) bProcs.textContent = `${(data.procs_per_second || 0).toFixed(3)} / sec`;
   } else {
     if (minionCard) minionCard.style.display = "none";
     if (minionBreakdownCard) minionBreakdownCard.style.display = "none";
@@ -1136,46 +2019,18 @@ function renderSimulationResults(data) {
     breakdownTitle.innerHTML = `&#9876; ${data.character_class.toUpperCase()} ATTACK BREAKDOWN`;
   }
 
-  const breakdownContainer = document.getElementById("breakdown-list-own");
-  if (breakdownContainer) {
-    breakdownContainer.innerHTML = "";
-    const bd = data.own_damage_breakdown || {};
-
-    const labelMap = {
-      white_melee_dps: "White Auto-Attacks",
-      bloodthirst_dps: "Bloodthirst (Instant)",
-      mortal_strike_dps: "Mortal Strike (Instant)",
-      whirlwind_dps: "Whirlwind (Cleave)",
-      heroic_strike_dps: "Heroic Strike (Queued)",
-      execute_dps: "Execute (<20% Phase)",
-      deep_wounds_bleed_dps: "Deep Wounds (Bleed)",
-      seal_dps: "Seal of Righteousness",
-      judgement_dps: "Judgement of Righteousness",
-      consecration_dps: "Consecration (Holy Tick)",
-      exorcism_dps: "Exorcism",
-      hammer_of_wrath_dps: "Hammer of Wrath (<20% Execute)",
-      judgement_8set_holy_dps: "T2 8-Piece Holy Shock Proc",
-      judgement_3set_holy_dps: "Judgement 3-Piece Holy Damage",
-      judgement_8set_smite_dps: "Judgement 8-Piece Smite Proc",
-      lawbringer_8set_holy_dps: "Lawbringer 8-Piece Holy Radiance"
-    };
-
-    for (const [key, dpsVal] of Object.entries(bd)) {
-      if (dpsVal <= 0) continue;
-      const row = document.createElement("div");
-      row.className = "b-item";
-      const lbl = labelMap[key] || key.replace(/_/g, " ").replace("dps", "DPS");
-      const share = data.own_dps > 0 ? Math.round((dpsVal / data.own_dps) * 100) : 0;
-      row.innerHTML = `<span>${lbl}:</span><strong>${dpsVal.toFixed(2)} DPS <span class="share-tag">${share}%</span></strong>`;
-      breakdownContainer.appendChild(row);
-    }
-  }
+  lastSimulationData = data;
+  renderAttackBreakdown(data);
 
   const bSwings = document.getElementById("b-exact-swings");
   if (bSwings) bSwings.textContent = data.exact_melee_swings || 0;
 
   const bSkill = document.getElementById("b-weapon-skill");
-  if (bSkill) bSkill.textContent = data.weapon_skill || 300;
+  if (bSkill) {
+    const ws = data.weapon_skill || data.effective_weapon_skill || 300;
+    bSkill.textContent = `${ws} / 315`;
+  }
+  renderWeaponSkillsDropdown(data.equipped_weapon_skills || []);
 
   const rowFlurry = document.getElementById("stat-row-flurry");
   const bFlurry = document.getElementById("b-flurry-uptime");
@@ -1208,6 +2063,94 @@ function renderSimulationResults(data) {
 
   const bSimCrit = document.getElementById("b-sim-crit");
   if (bSimCrit) bSimCrit.textContent = `${(data.total_crit_percent || 0).toFixed(1)}%`;
+}
+
+let isWsDropdownOpen = false;
+
+function toggleWeaponSkillDropdown(e) {
+  if (e && e.target && e.target.classList.contains("ws-quest-chk")) return;
+  const details = document.getElementById("ws-dropdown-details");
+  const chevron = document.getElementById("ws-chevron");
+  if (!details) return;
+  isWsDropdownOpen = !isWsDropdownOpen;
+  details.style.display = isWsDropdownOpen ? "flex" : "none";
+  if (chevron) {
+    if (isWsDropdownOpen) chevron.classList.add("open");
+    else chevron.classList.remove("open");
+  }
+}
+
+function renderWeaponSkillsDropdown(equippedSkills) {
+  const container = document.getElementById("ws-dropdown-details");
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (!equippedSkills || equippedSkills.length === 0) {
+    container.innerHTML = `<div class="ws-empty-hint">Brak założonej broni. Załóż broń wręcz lub dystansową, aby sprawdzić biegłość.</div>`;
+    return;
+  }
+
+  const slotLabels = {
+    main_hand: "Broń Główna (MH)",
+    off_hand: "Broń Druga (OH)",
+    ranged: "Broń Dystansowa (Ranged)"
+  };
+
+  equippedSkills.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "ws-item-card";
+
+    const sBadge = slotLabels[item.slot] || item.slot;
+    const isCapped = item.skill >= 315;
+    const glancePct = Math.round((item.glance_damage_factor || 0.70) * 100);
+    const hitBonus = (item.hit_bonus || 0).toFixed(1);
+
+    card.innerHTML = `
+      <div class="ws-item-header">
+        <span class="ws-slot-badge">${sBadge}</span>
+        <span class="ws-subclass-badge">${item.subclass_display || item.subclass}</span>
+        <strong class="ws-skill-val ${isCapped ? 'ws-capped' : ''}">${item.skill} / ${item.cap || 315}</strong>
+      </div>
+      <div class="ws-item-name" title="${item.item_name}">${item.item_name}</div>
+      <div class="ws-stats-row">
+        <span title="Kara Glancing Blows: ${glancePct}% obrażeń (300 skill: 70%, +2%/punkt, cap 100% przy 315)">
+          Glance dmg: <strong>${glancePct}%</strong>
+        </span>
+        <span title="+1% Hit za każde 5 pkt biegłości powyżej 300">
+          Hit Bonus: <strong>+${hitBonus}%</strong>
+        </span>
+      </div>
+      <div class="ws-breakdown-sub">
+        Bazowe: ${item.base_skill}
+        ${item.racial_bonus ? ` | Racial: +${item.racial_bonus}` : ''}
+        ${item.item_bonus ? ` | Ekwipunek: +${item.item_bonus}` : ''}
+        ${item.talent_bonus ? ` | Talenty: +${item.talent_bonus}` : ''}
+        ${item.quest_bonus ? ` | Quest: +${item.quest_bonus}` : ''}
+      </div>
+      <label class="ws-quest-toggle" title="Zaznacz, jeśli wykonałeś zadanie na +5 biegłości dla tej broni na Octo WoW">
+        <input type="checkbox" class="ws-quest-chk" data-type="${item.weapon_type_key}" data-subclass="${item.subclass}" data-slot="${item.slot}" ${item.quest_active ? 'checked' : ''}>
+        <span>⭐ +5 Quest Bonus (${item.subclass_display || item.subclass} Octo WoW)</span>
+      </label>
+    `;
+
+    const chk = card.querySelector(".ws-quest-chk");
+    if (chk) {
+      chk.addEventListener("click", (e) => e.stopPropagation());
+      chk.addEventListener("change", (e) => {
+        const typeKey = e.target.getAttribute("data-type");
+        const subKey = e.target.getAttribute("data-subclass");
+        const slotKey = e.target.getAttribute("data-slot");
+        const isChecked = e.target.checked;
+        if (typeKey) questWeaponSkills[typeKey] = isChecked;
+        if (subKey) questWeaponSkills[subKey] = isChecked;
+        if (slotKey) questWeaponSkills[slotKey] = isChecked;
+        recalculateLiveStats();
+        runSimulation();
+      });
+    }
+
+    container.appendChild(card);
+  });
 }
 
 function loadRacesForClass(cls) {
@@ -1260,11 +2203,17 @@ function switchClass(newClass) {
   if (crestIcon) crestIcon.innerHTML = currentClass === "warrior" ? "⚔" : "&#9876;";
   if (crestSub) crestSub.textContent = `Level 60 ${currentClass.charAt(0).toUpperCase() + currentClass.slice(1)} Sheet`;
 
+  const rotTabBtn = document.getElementById("tab-btn-rotation");
+  if (rotTabBtn) {
+    rotTabBtn.style.display = currentClass === "paladin" ? "inline-block" : "none";
+  }
+
   const thirdSlotCard = document.getElementById("slot-card-third");
   const thirdSlotTitle = document.getElementById("third-slot-title");
   const thirdInput = document.getElementById("input-third");
   const thirdIcon = document.getElementById("icon-third");
 
+  const btnEnchThird = document.getElementById("btn-ench-third");
   if (thirdSlotCard && thirdSlotTitle && thirdInput) {
     if (currentClass === "warrior") {
       thirdSlotCard.setAttribute("data-slot", "ranged");
@@ -1272,21 +2221,33 @@ function switchClass(newClass) {
       thirdInput.setAttribute("data-slot", "ranged");
       thirdInput.placeholder = "Search bows, guns, crossbows...";
       if (thirdIcon) thirdIcon.textContent = getSlotSymbol("ranged");
+      if (btnEnchThird) {
+        btnEnchThird.style.display = "inline-flex";
+        btnEnchThird.setAttribute("data-slot", "ranged");
+        btnEnchThird.title = "Select Scope (Ranged)";
+      }
     } else {
       thirdSlotCard.setAttribute("data-slot", "relic");
       thirdSlotTitle.textContent = "Libram / Relic";
       thirdInput.setAttribute("data-slot", "relic");
       thirdInput.placeholder = "Search librams...";
       if (thirdIcon) thirdIcon.textContent = getSlotSymbol("relic");
+      if (btnEnchThird) {
+        btnEnchThird.style.display = "none";
+        delete currentEnchants["relic"];
+        delete currentEnchants["ranged"];
+      }
     }
   }
 
   const judgeItem = document.getElementById("setting-judge-item");
   const exoItem = document.getElementById("setting-exorcism-item");
   const palChecks = document.getElementById("setting-paladin-checks");
+  const palSealBox = document.getElementById("paladin-seal-config-box");
   if (judgeItem) judgeItem.style.display = currentClass === "paladin" ? "flex" : "none";
   if (exoItem) exoItem.style.display = currentClass === "paladin" ? "flex" : "none";
   if (palChecks) palChecks.style.display = currentClass === "paladin" ? "flex" : "none";
+  if (palSealBox) palSealBox.style.display = currentClass === "paladin" ? "block" : "none";
 
   loadRacesForClass(currentClass);
   loadTalentsForClass(currentClass);
@@ -1305,7 +2266,11 @@ function switchClass(newClass) {
             unequipItem(slotKey);
           } else if (currentClass === "paladin" && ["dagger", "staff", "fist", "gun", "bow", "crossbow", "wand", "thrown"].includes(it.subclass)) {
             unequipItem(slotKey);
-          } else if (currentClass === "warrior" && ["wand", "relic", "libram"].includes(it.subclass)) {
+          } else if (currentClass === "paladin" && slotKey === "off_hand" && (it.subclass !== "shield" && it.slot !== "shield" && (it.speed > 0 || ["sword", "mace", "axe"].includes(it.subclass)))) {
+            unequipItem(slotKey);
+          } else if (currentClass === "paladin" && (slotKey === "relic" || slotKey === "ranged") && it.subclass !== "libram") {
+            unequipItem(slotKey);
+          } else if (currentClass === "warrior" && (slotKey === "relic" || ["wand", "libram", "totem", "idol"].includes(it.subclass))) {
             unequipItem(slotKey);
           }
         }
@@ -1340,7 +2305,20 @@ document.addEventListener("DOMContentLoaded", () => {
       allItems.forEach(it => { itemsById[String(it.id)] = it; });
     });
 
+  fetch("/api/class_equipment_rules")
+    .then(res => res.json())
+    .then(rules => {
+      classEquipmentRules = rules;
+    })
+    .catch(() => {});
+
   loadTalentsForClass(currentClass);
+  loadRotationalSpells();
+
+  const rowSkill = document.getElementById("stat-row-skill");
+  if (rowSkill) {
+    rowSkill.addEventListener("click", toggleWeaponSkillDropdown);
+  }
 
   const raceSelect = document.getElementById("race-select");
   if (raceSelect) {
@@ -1586,6 +2564,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const consecCheckbox = document.getElementById("cfg-consec");
   if (consecCheckbox) consecCheckbox.addEventListener("change", runSimulation);
+
+  const rotMain = document.getElementById("cfg-rotation-mode");
+  const rotQuick = document.getElementById("cfg-rotation-mode-quick");
+  const rotSettings = document.getElementById("cfg-rotation-mode-settings");
+  if (rotMain) {
+    rotMain.addEventListener("change", (e) => syncRotationMode(e.target.value));
+  }
+  if (rotQuick) {
+    rotQuick.addEventListener("change", (e) => syncRotationMode(e.target.value));
+  }
+  if (rotSettings) {
+    rotSettings.addEventListener("change", (e) => syncRotationMode(e.target.value));
+  }
+
+  const btnResetRot = document.getElementById("btn-reset-rotation");
+  if (btnResetRot) {
+    btnResetRot.addEventListener("click", () => {
+      activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
+      strikeRampCs = 3;
+      strikeSustainHs = 1;
+      strikeSustainCs = 1;
+      disabledSpells.clear();
+      renderPriorityList();
+      runSimulation();
+    });
+  }
+
+  // Attack Breakdown toolbar buttons
+  document.getElementById("btn-bd-mode-dps")?.addEventListener("click", () => setBreakdownViewMode("dps"));
+  document.getElementById("btn-bd-mode-damage")?.addEventListener("click", () => setBreakdownViewMode("damage"));
+  document.getElementById("btn-bd-sort-btn")?.addEventListener("click", toggleBreakdownSort);
+
+  // Paladin Seal & Opener controls
+  document.getElementById("cfg-primary-seal")?.addEventListener("change", () => {
+    validatePaladinSealTalents();
+    runSimulation();
+  });
+  document.getElementById("cfg-opener-crusader")?.addEventListener("change", () => {
+    runSimulation();
+  });
+
+  document.querySelectorAll(".info-circle").forEach(circle => {
+    const infoKey = circle.getAttribute("data-info");
+    if (!infoKey) return;
+    circle.addEventListener("mouseenter", (e) => showInfoTooltip(infoKey, e));
+    circle.addEventListener("mousemove", (e) => positionTooltip(e));
+    circle.addEventListener("mouseleave", hideTooltip);
+    circle.addEventListener("focus", (e) => showInfoTooltip(infoKey, e));
+    circle.addEventListener("blur", hideTooltip);
+  });
 
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".combobox-wrap") && !e.target.closest(".combobox-arrow")) {

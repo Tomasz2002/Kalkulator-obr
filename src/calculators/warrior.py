@@ -1,7 +1,7 @@
 import math
 from typing import Any, Dict, List, Optional, Union
 
-from src.items_db import calculate_gear_totals, load_items_db
+from src.items_db import calculate_gear_totals, compute_effective_weapon_skill, load_items_db
 from .base import BaseCombatCalculator
 
 
@@ -40,7 +40,15 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         deep_wounds = int(t.get("Deep Wounds", t.get("deep_wounds", 0)))
 
         item_ids = [it if isinstance(it, (int, str)) else it.get("id") for it in equipped_items]
-        gear = calculate_gear_totals(item_ids, self.db, enchants=enchants, race=race)
+        quest_ws = kwargs.get("quest_weapon_skills", None)
+        gear = calculate_gear_totals(
+            item_ids,
+            self.db,
+            enchants=enchants,
+            race=race,
+            character_class="warrior",
+            quest_weapon_skills=quest_ws
+        )
 
         active_sets = gear.get("active_sets", {})
         might_dps_pieces = active_sets.get("1003", active_sets.get("673", {})).get("equipped_count", 0)
@@ -52,6 +60,17 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         race_clean = race.lower().strip()
         str_val = gear["strength"]
         agi_val = gear["agility"]
+
+        # Weapon enchants procs: Crusader (+100 Strength, 1 PPM)
+        has_crusader = any(p.get("procspell") == "Crusader" or "crusader" in p.get("enchant_name", "").lower() for p in gear.get("weapon_procs", []))
+        if has_crusader and fight_duration > 0:
+            crusader_count = sum(1 for p in gear.get("weapon_procs", []) if p.get("procspell") == "Crusader" or "crusader" in p.get("enchant_name", "").lower())
+            mh_speed = gear["main_weapon_speed"] if gear["main_weapon_speed"] > 0 else 2.6
+            proc_chance = min(1.0, (mh_speed * 1.0) / 60.0)
+            attacks_per_sec = (1.0 / mh_speed) * (1.0 + (haste_percent / 100.0))
+            crusader_rate = attacks_per_sec * proc_chance * crusader_count
+            crusader_uptime = min(1.0, 1.0 - math.exp(-crusader_rate * 15.0))
+            str_val += 100.0 * crusader_uptime * crusader_count
 
         set_ap_bonus = 0.0
         if valor_pieces >= 4:
@@ -71,37 +90,53 @@ class WarriorCombatCalculator(BaseCombatCalculator):
         mh_subclass = gear.get("main_weapon_subclass", "sword").lower()
         oh_subclass = gear.get("off_weapon_subclass", "sword").lower()
 
-        weapon_skill = 300
-        if wrath_dps_pieces >= 5:
-            weapon_skill += 5
-        if race_clean == "human":
-            if "sword" in mh_subclass or "mace" in mh_subclass:
-                weapon_skill += 3
-        elif race_clean == "orc":
-            if "axe" in mh_subclass:
-                weapon_skill += 3
-
-        for eq in gear.get("equipped_items", []):
-            if eq.get("id") == 14551:
-                weapon_skill += 7
-
-        delta_skill = 315 - weapon_skill
-        if delta_skill <= 10:
-            special_miss_base = 0.05 + delta_skill * 0.001
-            glance_penalty = 0.15
-            dodge_chance = 0.06
+        raw_subclass = mh_subclass
+        if is_2h:
+            if "sword" in raw_subclass:
+                weapon_subclass = "two_hand_sword"
+            elif "mace" in raw_subclass:
+                weapon_subclass = "two_hand_mace"
+            elif "axe" in raw_subclass:
+                weapon_subclass = "two_hand_axe"
+            else:
+                weapon_subclass = raw_subclass
         else:
-            special_miss_base = 0.06 + (delta_skill - 10) * 0.002
-            glance_penalty = 0.30
-            dodge_chance = 0.065
+            if "sword" in raw_subclass:
+                weapon_subclass = "one_hand_sword"
+            elif "mace" in raw_subclass:
+                weapon_subclass = "one_hand_mace"
+            elif "axe" in raw_subclass:
+                weapon_subclass = "one_hand_axe"
+            else:
+                weapon_subclass = raw_subclass
 
-        hit_gear = gear["hit"] / 100.0
+        item_skills = dict(gear.get("weapon_skills", {}))
+        if wrath_dps_pieces >= 5:
+            for k in ("sword", "mace", "axe", "dagger", "two_hand_sword", "two_hand_mace", "two_hand_axe"):
+                item_skills[k] = item_skills.get(k, 0) + 5
+
+        effective_weapon_skill = compute_effective_weapon_skill(
+            weapon_subclass,
+            item_skills,
+            gear.get("racial_skills", {}),
+            talent_weapon_skill=0
+        )
+        ws_above_300 = max(0, effective_weapon_skill - 300)
+        # Turtle WoW: +1% hit chance per 5 weapon skill (+0.2% per skill)
+        weapon_skill_hit_bonus = round(ws_above_300 * 0.2, 2)
+        # Turtle WoW: glancing blow factor 0.65 -> 0.95 (linear +2% per skill above 300)
+        glance_damage_factor = min(0.95, 0.65 + (ws_above_300 * 0.02))
+        glance_penalty = 1.0 - glance_damage_factor
+        # Turtle WoW: dodge reduction 0.1% per skill above 300
+        dodge_chance = max(0.0, 0.056 - (ws_above_300 * 0.001))
+
+        hit_gear = (gear["hit"] + weapon_skill_hit_bonus) / 100.0
         if dread_dps_pieces >= 4:
             hit_gear += 0.02
-        special_miss = max(0.0, special_miss_base - hit_gear)
+        special_miss = max(0.0, 0.08 - hit_gear)
 
         if is_dw:
-            white_miss = max(0.0, (special_miss_base + 0.19) - hit_gear)
+            white_miss = max(0.0, (0.08 + 0.19) - hit_gear)
         else:
             white_miss = special_miss
 
@@ -359,7 +394,11 @@ class WarriorCombatCalculator(BaseCombatCalculator):
             "race": race_clean.capitalize(),
             "is_dual_wield": is_dw,
             "is_two_handed": is_2h,
-            "weapon_skill": weapon_skill,
+            "weapon_skill": effective_weapon_skill,
+            "effective_weapon_skill": effective_weapon_skill,
+            "weapon_skill_hit_bonus": weapon_skill_hit_bonus,
+            "glance_damage_factor": round(glance_damage_factor, 3),
+            "effective_dodge_percent": round(dodge_chance * 100.0, 2),
             "main_weapon_name": gear["main_weapon_name"],
             "base_weapon_speed": mh_speed,
             "effective_weapon_speed": round(eff_mh_speed, 2),
@@ -397,5 +436,13 @@ class WarriorCombatCalculator(BaseCombatCalculator):
                 "spirit": gear["spirit"],
                 "armor": gear["armor"],
                 "equipped_count": len(gear["equipped_items"]),
+                "effective_weapon_skill": effective_weapon_skill,
+                "weapon_skill": effective_weapon_skill,
+                "weapon_skill_hit_bonus": weapon_skill_hit_bonus,
+                "glance_damage_factor": round(glance_damage_factor, 3),
             },
+            "weapon_skill": effective_weapon_skill,
+            "effective_weapon_skill": effective_weapon_skill,
+            "equipped_weapon_skills": gear.get("equipped_weapon_skills", []),
+            "class_warnings": gear.get("class_warnings", []),
         }

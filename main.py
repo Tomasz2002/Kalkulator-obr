@@ -123,14 +123,18 @@ def build_profile_from_equipment(
 ) -> Tuple[PaladinCombatProfile, Dict]:
     gear = calculate_gear_totals(equipped_ids, db)
     weapon_speed = base_weapon_speed or (gear["main_weapon_speed"] if gear["main_weapon_speed"] > 0 else 3.8)
+    active_sets = gear.get("active_sets", {})
+    t2_tank_3pc = 1 if active_sets.get("2004", {}).get("equipped_count", 0) >= 3 else 0
+    t2_dps_3pc = 1 if active_sets.get("2005", {}).get("equipped_count", 0) >= 3 else 0
+    t2_instances = t2_tank_3pc + t2_dps_3pc
 
     profile = PaladinCombatProfile(
         weapon_speed=weapon_speed,
         haste_percent=haste_percent,
         seal_active=True,
-        t2_instances_per_swing=3,
+        t2_instances_per_swing=t2_instances,
         judgement_interval=judgement_interval,
-        t2_instances_per_judgement=3,
+        t2_instances_per_judgement=0,
         consecration_ticks_per_second=consecration_ticks_per_second,
         attack_power=gear["total_attack_power"],
         spell_power=gear["spell_power"],
@@ -153,6 +157,9 @@ def simulate_combat(
     minion_stats: Optional[MinionStats] = None,
     db: Optional[Dict] = None,
     character_class: str = "paladin",
+    paladin_build: str = "auto",
+    rotation_mode: str = "priority_rotation",
+    priority_list: Optional[List[str]] = None,
     **kwargs: Any,
 ) -> Dict[str, Any]:
     calculator = get_calculator(character_class, db=db)
@@ -166,6 +173,9 @@ def simulate_combat(
         exorcism_interval=exorcism_interval,
         t2_bonus_active=t2_bonus_active,
         lost_set_active=lost_set_active,
+        paladin_build=paladin_build,
+        rotation_mode=rotation_mode,
+        priority_list=priority_list,
         **kwargs,
     )
 
@@ -174,32 +184,83 @@ if __name__ == "__main__":
     db = load_items_db()
     print(f"Loaded items database with {db['metadata']['total_items']} items.\n")
 
-    pre_raid_loadout = [11684, 11815, 13965, 12930, 16726]
-    t2_judgement_loadout = [19364, 16955, 16953, 16958, 16957, 16956, 16952, 16954, 16951, 19379]
-    t3_naxx_loadout = [22691, 22424, 22425, 22808, 22954, 60799]
-    karazhan_loadout = [61247, 61246, 61270, 61262, 61443, 60799]
-    nekrodyn_full_lost = [60790, 60799, 60809, 11684, 16958]
+    classic_ret_gear = [19364, 16955, 16953, 16958, 16957, 16956, 16952, 16954, 16951, 19379, 11815, 13965, 19434, 19384]
+    classic_ret_talents = {
+        "Divine Strength": 5,
+        "Conviction": 5,
+        "Two-Handed Weapon Specialization": 3,
+        "Seal of Command": 1,
+        "Vengeance": 5,
+        "Sanctity Aura": 1,
+        "Blessing of Kings": 1,
+        "Improved Judgement": 2,
+        "Precision": 3,
+    }
+
+    spellret_gear = [11684, 12462, 19138, 16812, 16817, 16813, 19142, 19147, 19137, 19139, 19434, 19384]
+    spellret_talents = {
+        "Divine Strength": 5,
+        "Divine Intellect": 5,
+        "Improved Seal of Righteousness": 5,
+        "Sanctity Aura": 1,
+        "Conviction": 5,
+        "Vengeance": 5,
+        "Improved Judgement": 2,
+        "Precision": 3,
+        "One-Handed Spec": 5,
+        "Blessing of Kings": 1,
+    }
+
+    # Set of the Lost consists strictly of 4 items: Memento of the Lost (60790), Remains of the Lost (60809), Loop of the Lost (60798), Tome of the Lost (22253)
+    nekrodyn_gear = [60790, 60798, 60809, 22253, 11684, 47016, 47017, 47019, 47026, 47029, 47030, 11815, 19434]
+    nekrodyn_talents = {
+        "Divine Strength": 5,
+        "Divine Intellect": 5,
+        "Improved Seal of Righteousness": 5,
+        "Sanctity Aura": 1,
+        "Precision": 3,
+        "Conviction": 5,
+        "Vengeance": 5,
+        "Improved Judgement": 2,
+        "Blessing of Kings": 1,
+    }
 
     scenarios = [
-        ("Pre-Raid Dungeon Loadout (Ironfoe 2.4s + HoJ + BB)", pre_raid_loadout),
-        ("Tier 2 Judgement Full Set (Ashkandi 3.5s + T2 8/8)", t2_judgement_loadout),
-        ("Naxxramas End-Game Loadout (Corrupted Ashbringer 3.6s + T3)", t3_naxx_loadout),
-        ("Karazhan 40 Loadout (Shadowbringer 3.3s + Kara Plate)", karazhan_loadout),
-        ("Nekrodyn Optimal BiS (Ironfoe 2.4s + Set of the Lost + T2 Bonus)", nekrodyn_full_lost),
+        ("Czysty Build Fizyczny (Strength / Retribution) - Pełna Rotacja", classic_ret_gear, classic_ret_talents, "retribution", "priority_rotation", None),
+        ("Czysty Build Fizyczny (Strength / Retribution) - Uproszczony Tryb (Tylko Auto Attacki + Seal)", classic_ret_gear, classic_ret_talents, "retribution", "auto_attack_only", None),
+        ("Build Hybrydowy (Spellret / Spell Power & Consecration) - Pełna Rotacja", spellret_gear, spellret_talents, "spellret", "priority_rotation", None),
+        ("Build Hybrydowy (Spellret) - Wlasny Planer Priorytetow (Consecration Nr 1)", spellret_gear, spellret_talents, "spellret", "priority_rotation", ["consecration", "crusader_strike", "holy_strike", "judgement", "exorcism"]),
+        ("Build Specjalny (Nekrodyn: Set of the Lost + 3x T2 Tank + 3x T2 DPS)", nekrodyn_gear, nekrodyn_talents, "nekrodyn", "priority_rotation", None),
     ]
 
-    for title, loadout in scenarios:
-        res = simulate_combat(loadout, fight_duration=60.0, db=db)
-        print("=" * 65)
-        print(f"Scenario: {title}")
-        print(f"  Weapon: {res['weapon_name']} | Swing Timer: {res['base_weapon_speed']}s (Effective: {res['effective_weapon_speed']}s)")
-        print(f"  Exact Melee Swings (60s): {res['exact_melee_swings']}")
-        print(f"  AP: {res['total_attack_power']} | SP: {res['total_spell_power']} | Crit: {res['total_crit_percent']}% | Hit: {res['total_hit_percent']}%")
-        print(f"  Magic Hits: {res['total_magic_hits']} ({res['magic_hits_per_second']}/s) -> Procs/s: {res['procs_per_second']} -> Active Minions: {res['expected_active_minions']}")
-        print(f"  Own Damage Breakdown (DPS):")
+    for title, loadout, talents, build_type, rot_mode, custom_pri in scenarios:
+        res = simulate_combat(
+            loadout,
+            fight_duration=60.0,
+            talents=talents,
+            paladin_build=build_type,
+            rotation_mode=rot_mode,
+            priority_list=custom_pri,
+            db=db,
+        )
+        print("=" * 76)
+        print(f"SCENARIUSZ: {title}")
+        print(f"  Tryb walki: {res['rotation_mode_name']} | Build: {res['paladin_build_name']} | Broń: {res['weapon_name']} ({res['base_weapon_speed']}s)")
+        print(f"  Priorytety rotacji: {res['priority_list']}")
+        print(f"  Zeal Buff Haste (Crusader Strike): +{res.get('zeal_haste_percent', 0.0)}% haste | Efektywny Swing Speed: {res.get('effective_weapon_speed', 0.0)}s")
+        print(f"  Rzucone skille (Casts): {res['ability_casts']}")
+        print(f"  Zużycie many: {res['mana_stats']['total_mana_spent']} mana ({res['mana_stats']['mana_per_second']} mana/s)")
+        print(f"  Swings: {res['exact_melee_swings']} | AP: {res['total_attack_power']} | SP: {res['total_spell_power']} | Crit: {res['total_crit_percent']}% | Hit: {res['total_hit_percent']}%")
+        print(f"  Harmful Spell Hits: {res['total_magic_hits']} ({res['magic_hits_per_second']}/s) | Minion Procs/s: {res['procs_per_second']} | Aktywne Miniony: {res['expected_active_minions']}")
+        print(f"  PODZIAŁ TYPÓW OBRAŻEŃ (DPS):")
+        dtb = res.get("damage_type_breakdown", {})
+        print(f"    - Obrażenia fizyczne: {dtb.get('physical_dps', 0.0):.2f} DPS ({dtb.get('physical_percent', 0.0)}%)")
+        print(f"    - Obrażenia od czarów (Holy): {dtb.get('holy_spell_dps', 0.0):.2f} DPS ({dtb.get('holy_spell_percent', 0.0)}%)")
+        print(f"    - Obrażenia z minionów (Shadow): {dtb.get('minion_shadow_dps', 0.0):.2f} DPS ({dtb.get('minion_shadow_percent', 0.0)}%)")
+        print(f"  Szczegółowy rozkład ataków gracza:")
         for k, v in res["own_damage_breakdown"].items():
-            print(f"    - {k}: {v:.2f}")
-        print(f"  -> OWN DPS: {res['own_dps']:.2f}")
-        print(f"  -> MINION DPS: {res['minion_dps']:.2f} (Range: {res['minion_dps_min']:.2f} - {res['minion_dps_max']:.2f})")
-        print(f"  ==> TOTAL CHARACTER DPS: {res['total_dps']:.2f} (Total Damage: {res['total_damage']:.1f})")
+            print(f"    - {k}: {v:.2f} DPS")
+        print(f"  -> DIRECT CHARACTER DPS: {res['own_dps']:.2f}")
+        print(f"  -> MINION DPS: {res['minion_dps']:.2f} (Przedział: {res['minion_dps_min']:.2f} - {res['minion_dps_max']:.2f})")
+        print(f"  ==> CAŁKOWITY DPS POSTACI: {res['total_dps']:.2f} (Łączne obrażenia: {res['total_damage']:.1f})")
         print()

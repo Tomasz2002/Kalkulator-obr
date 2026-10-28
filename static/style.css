@@ -2908,4 +2908,40 @@ body {
   transition: width 0.3s ease;
 }
 
+/* Hunter UI Styles */
+.hunter-quick-config {
+  background: rgba(18, 48, 28, 0.45);
+  border: 1px solid rgba(82, 183, 136, 0.35);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin: 6px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.build-hunter {
+  background: rgba(45, 106, 79, 0.25);
+  border-color: #52b788;
+  color: #95d5b2;
+}
+
+.rot-hunter-pet {
+  background: rgba(82, 183, 136, 0.2);
+  border-color: #74c69d;
+  color: #d8f3dc;
+}
+
+.tag-survival-melee { background: #52b788; color: #081c15; }
+.tag-white-melee { background: #d3d3d3; color: #111; }
+.tag-ranged-white { background: #e0e0e0; color: #111; }
+.tag-ranged-skill { background: #e268a8; color: #fff; }
+.tag-nature-dot { background: #40916c; color: #fff; }
+.tag-trap-fire { background: #ff5533; color: #fff; }
+.tag-pet-melee { background: #e6cc80; color: #111; }
+.tag-pet-skill { background: #f59e0b; color: #111; }
+.tag-pet-nature { background: #00b4d8; color: #fff; }
+.tag-pet-buff { background: #d97706; color: #fff; }
+
+
 

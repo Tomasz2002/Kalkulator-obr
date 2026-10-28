@@ -23,6 +23,7 @@
           <select id="class-select" class="class-select">
             <option value="paladin" selected>Paladin</option>
             <option value="warrior">Warrior</option>
+            <option value="hunter">Hunter</option>
             <option value="all">All Classes</option>
           </select>
         </div>
@@ -257,6 +258,32 @@
                   <option value="priority_rotation" selected>Priority Rotation</option>
                   <option value="auto_attack_only">Auto Attack Only</option>
                 </select>
+              </div>
+
+              <div class="hunter-quick-config" id="hunter-quick-config" style="display: none;">
+                <div class="quick-control-row">
+                  <label for="cfg-hunter-style-quick" class="build-label">Hunter Style:</label>
+                  <select id="cfg-hunter-style-quick" class="build-select">
+                    <option value="auto" selected>Auto (Melee/Ranged)</option>
+                    <option value="survival">Survival Melee (Zwarcie)</option>
+                    <option value="ranged">Marksmanship Ranged</option>
+                  </select>
+                </div>
+                <div class="quick-control-row">
+                  <label for="cfg-pet-family-quick" class="build-label">Pet Companion:</label>
+                  <select id="cfg-pet-family-quick" class="build-select">
+                    <option value="cat" selected>Cat / Kot (+10% Dmg, Claw+Bite)</option>
+                    <option value="wind_serpent">Wind Serpent (Lightning Breath)</option>
+                    <option value="wolf">Wolf / Wilk (Furious Howl +51 Dmg)</option>
+                    <option value="raptor">Raptor (+10% Dmg, Claw+Bite)</option>
+                    <option value="owl_bat">Owl / Sowa (Screech -AP)</option>
+                    <option value="boar">Boar / Dzik (Charge+Bite)</option>
+                  </select>
+                </div>
+                <label class="seal-checkbox-label" for="cfg-pet-active-quick" style="margin-top: 4px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #e0e0e0; cursor: pointer;">
+                  <input type="checkbox" id="cfg-pet-active-quick" checked style="accent-color: var(--accent-gold);">
+                  <span>Pet aktywnie walczy (Summon Pet)</span>
+                </label>
               </div>
 
 
@@ -626,6 +653,38 @@
               </div>
               <div class="setting-hint">Cast on cooldown against Undead/Demon targets (Paladin)</div>
             </div>
+          </div>
+
+            <div class="setting-item" id="setting-hunter-style-item" style="display: none;">
+              <label for="cfg-combat-style">Hunter Combat Style:</label>
+              <select id="cfg-combat-style" class="unit-select">
+                <option value="auto" selected>Auto (Detect based on weapons &amp; talents)</option>
+                <option value="survival">Survival Melee (Raptor Strike &amp; Mongoose Bite)</option>
+                <option value="ranged">Marksmanship Ranged (Auto / Aimed / Multi-Shot)</option>
+              </select>
+              <div class="setting-hint">Choose between Melee Survival or Ranged Shot rotation</div>
+            </div>
+
+            <div class="setting-item" id="setting-pet-family-item" style="display: none;">
+              <label for="cfg-pet-family">Hunter Pet Family:</label>
+              <select id="cfg-pet-family" class="unit-select">
+                <option value="cat" selected>Cat (+10% Dmg, 1.2s Speed, Claw, Bite)</option>
+                <option value="wind_serpent">Wind Serpent (+7% Dmg, Lightning Breath - Nature, Bite)</option>
+                <option value="wolf">Wolf (1.5s Speed, Furious Howl +51 Hunter Atk, Bite)</option>
+                <option value="raptor">Raptor (+10% Dmg, 2.0s Speed, Claw, Bite)</option>
+                <option value="owl_bat">Owl / Bat (+7% Dmg, Screech AoE AP debuff, Claw)</option>
+                <option value="boar">Boar (-10% Dmg, Charge, Bite)</option>
+              </select>
+              <div class="setting-hint">Different pets provide distinct combat abilities and damage bonuses</div>
+            </div>
+          </div>
+
+          <div class="checkbox-settings" id="setting-hunter-checks" style="display: none;">
+            <label class="check-label" id="lbl-cfg-pet-active">
+              <input type="checkbox" id="cfg-pet-active" checked>
+              <span class="check-custom"></span>
+              <span class="check-text">Hunter Pet Active (Pet attacks &amp; uses focus abilities)</span>
+            </label>
           </div>
 
           <div class="checkbox-settings" id="setting-paladin-checks">

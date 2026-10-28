@@ -33,7 +33,12 @@ def api_paladin_talents():
 @app.route("/api/talents")
 def api_talents():
     cls = request.args.get("class", "paladin").lower().strip()
-    filename = "warrior_talents.json" if cls == "warrior" else "paladin_talents.json"
+    if cls == "hunter":
+        filename = "hunter_talents.json"
+    elif cls == "warrior":
+        filename = "warrior_talents.json"
+    else:
+        filename = "paladin_talents.json"
     path = os.path.join(os.path.dirname(__file__), "data", filename)
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
@@ -143,6 +148,9 @@ def api_simulate():
     quest_weapon_skills = data.get("quest_weapon_skills", {})
     primary_seal = str(data.get("primary_seal", "auto")).lower().strip()
     apply_crusader_first = bool(data.get("apply_crusader_first", True))
+    pet_family = str(data.get("pet_family", "cat")).lower().strip()
+    pet_active = bool(data.get("pet_active", True))
+    combat_style = str(data.get("combat_style", "auto")).lower().strip()
 
     result = simulate_combat(
         equipped_items=equipped_items,
@@ -171,6 +179,9 @@ def api_simulate():
         quest_weapon_skills=quest_weapon_skills,
         primary_seal=primary_seal,
         apply_crusader_first=apply_crusader_first,
+        pet_family=pet_family,
+        pet_active=pet_active,
+        combat_style=combat_style,
         db=db,
     )
     return jsonify(result)

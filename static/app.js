@@ -1231,6 +1231,56 @@ function renderBuildy() {
   });
 }
 
+const HUNTER_KUKLA_MELEE_GEAR = {
+  head: 12587,      // Eye of Rend (Leather +13 Str, +7 Agi, 2% Crit)
+  neck: 15411,      // Mark of Fordring (+26 AP, 1% Crit)
+  shoulder: 12927,  // Truestrike Shoulders (+24 AP, 2% Hit)
+  back: 13340,      // Cape of the Black Baron (+15 Agi, +20 AP)
+  chest: 11726,     // Savage Gladiator Chain (+13 Agi, 2% Crit)
+  wrist: 18375,     // Bracers of the Eclipse (+10 Str, +24 Agi)
+  hands: 15063,     // Devilsaur Gauntlets (+28 AP, 1% Crit)
+  waist: 13252,     // Cloudrunner Girdle (+15 Str, +14 Agi)
+  legs: 15062,      // Devilsaur Leggings (+46 AP, 1% Crit, 2pc Set: +2% Hit)
+  feet: 14616,      // Bloodmail Boots (+9 Str, +9 Agi, 1% Hit)
+  finger1: 19325,   // Don Julio's Band (1% Crit, 1% Hit)
+  finger2: 18500,   // Tarnished Elven Ring (+15 Agi, 1% Hit)
+  trinket1: 13965,  // Blackhand's Breadth (2% Crit)
+  trinket2: 11815,  // Hand of Justice (+20 AP, 2% Extra Swing Proc)
+  main_hand: 19364, // Ashkandi, Greatsword of the Brotherhood (3.5s 2H Sword, +86 AP)
+  off_hand: null,
+  relic: null,
+  ranged: 17069     // Striker's Mark (Bow +22 AP, 1% Hit)
+};
+
+const HUNTER_KUKLA_ENCHANTS = {
+  main_hand: 27837, // 2H Agility (+25 Agi)
+  ranged: 18282,    // Biznicks 247x Accurascope (+3% Hit)
+  head: 11647,      // Lesser Arcanum of Voracity (+8 Agi)
+  legs: 11647,      // Lesser Arcanum of Voracity (+8 Agi)
+  shoulder: 24422,  // Zandalar Signet of Might (+30 AP)
+  back: 13882,      // Lesser Agility (+3 Agi)
+  chest: 20025,     // Greater Stats (+4 Stats)
+  wrist: 20010,     // Superior Strength (+9 Str)
+  hands: 20012,     // Greater Agility (+7 Agi)
+  feet: 20023,      // Greater Agility (+7 Agi)
+  waist: 12053,     // Mithril Belt Buckle (+6 Agility)
+  finger1: 12360,   // Delicate Emerald Gemstone (+6 Agility)
+  finger2: 12360,   // Delicate Emerald Gemstone (+6 Agility)
+  neck: 12360       // Delicate Emerald Gemstone (+6 Agility)
+};
+
+function equipHunterKuklaMeleeGear() {
+  for (const [slot, id] of Object.entries(HUNTER_KUKLA_MELEE_GEAR)) {
+    equipItem(slot, id);
+  }
+  for (const [slot, enchId] of Object.entries(HUNTER_KUKLA_ENCHANTS)) {
+    currentEnchants[slot] = enchId;
+    updateEnchantButtonDisplay(slot);
+  }
+  recalculateLiveStats();
+  runSimulation();
+}
+
 function wczytajBuild(i) {
   if (!readyBuilds[i]) return;
   const b = readyBuilds[i];
@@ -1249,6 +1299,15 @@ function wczytajBuild(i) {
   rysujDrzewka();
   renderBuildy();
   renderOpisBuildu();
+
+  if (currentClass === "hunter" && i === 0) {
+    const equippedCount = Object.values(equippedItems).filter(Boolean).length;
+    if (equippedCount <= 2) {
+      equipHunterKuklaMeleeGear();
+      return;
+    }
+  }
+
   recalculateLiveStats();
   runSimulation();
 }
@@ -1269,8 +1328,11 @@ function renderOpisBuildu() {
 
   let html = `
     <div class="boxOpis">
-      <h3>${b.nazwa}</h3>
-      <p class="wstep">${opis}</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h3 style="margin: 0;">${b.nazwa}</h3>
+        ${currentClass === "hunter" ? `<button id="btn-equip-hunter-kukla" type="button" class="btn-secondary" style="font-size: 12px; padding: 6px 12px; border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 600;">⚡ Załóż ekwipunek Kukła Melee</button>` : ""}
+      </div>
+      <p class="wstep" style="margin-top: 8px;">${opis}</p>
   `;
 
   if (kol.length > 0) {
@@ -1287,6 +1349,13 @@ function renderOpisBuildu() {
 
   html += `</div>`;
   el.innerHTML = html;
+
+  const btnKukla = document.getElementById("btn-equip-hunter-kukla");
+  if (btnKukla) {
+    btnKukla.addEventListener("click", () => {
+      equipHunterKuklaMeleeGear();
+    });
+  }
 }
 
 function recalculateLiveStats() {
@@ -1789,6 +1858,18 @@ function runSimulation() {
   const exorcism = parseFloat(document.getElementById("cfg-exorcism")?.value || 15);
   const allocatedTalents = getTalentsAllocatedByName();
 
+  const petFamilyQuick = document.getElementById("cfg-pet-family-quick")?.value;
+  const petFamilySettings = document.getElementById("cfg-pet-family")?.value;
+  const petFamily = petFamilyQuick || petFamilySettings || "cat";
+
+  const petActiveChkQuick = document.getElementById("cfg-pet-active-quick");
+  const petActiveChkSettings = document.getElementById("cfg-pet-active");
+  const petActive = petActiveChkQuick ? petActiveChkQuick.checked : (petActiveChkSettings ? petActiveChkSettings.checked : true);
+
+  const hunterStyleQuick = document.getElementById("cfg-hunter-style-quick")?.value;
+  const hunterStyleSettings = document.getElementById("cfg-combat-style")?.value;
+  const combatStyle = hunterStyleQuick || hunterStyleSettings || "auto";
+
   const payload = {
     equipped_items: equippedIds,
     fight_duration: duration,
@@ -1815,7 +1896,10 @@ function runSimulation() {
     enable_holy_strike: !disabledSpells.has("crusader_holy_strike") && enableHolyStrike,
     quest_weapon_skills: questWeaponSkills,
     primary_seal: document.getElementById("cfg-primary-seal")?.value || "auto",
-    apply_crusader_first: document.getElementById("cfg-opener-crusader")?.checked ?? true
+    apply_crusader_first: document.getElementById("cfg-opener-crusader")?.checked ?? true,
+    pet_family: petFamily,
+    pet_active: petActive,
+    combat_style: combatStyle
   };
 
   fetch("/api/simulate", {
@@ -2007,6 +2091,10 @@ function renderSimulationResults(data) {
       buildBadge.textContent = data.paladin_build_name;
       buildBadge.style.display = "inline-flex";
       buildBadge.className = `build-badge build-${data.paladin_build || "retribution"}`;
+    } else if (data.character_class === "hunter") {
+      buildBadge.textContent = data.combat_style_name || "Survival Melee";
+      buildBadge.style.display = "inline-flex";
+      buildBadge.className = `build-badge build-hunter`;
     } else {
       buildBadge.style.display = "none";
     }
@@ -2018,6 +2106,10 @@ function renderSimulationResults(data) {
       rotBadge.textContent = data.rotation_mode_name || "Priority Rotation";
       rotBadge.style.display = "inline-flex";
       rotBadge.className = `rot-badge rot-${data.rotation_mode || "priority_rotation"}`;
+    } else if (data.character_class === "hunter" && data.pet_details) {
+      rotBadge.textContent = `Pet: ${data.pet_details.name}`;
+      rotBadge.style.display = "inline-flex";
+      rotBadge.className = `rot-badge rot-hunter-pet`;
     } else {
       rotBadge.style.display = "none";
     }
@@ -2108,6 +2200,48 @@ function renderSimulationResults(data) {
           castsList.appendChild(manaRow);
         }
       }
+    } else if (data.character_class === "hunter") {
+      castsCard.style.display = "block";
+      castsList.innerHTML = "";
+
+      const styleRow = document.createElement("div");
+      styleRow.className = "b-item highlight-strike-seq";
+      styleRow.innerHTML = `<span>Styl Walki:</span><strong class="gold">${data.combat_style_name || "Survival Melee"}</strong>`;
+      castsList.appendChild(styleRow);
+
+      if (data.pet_details) {
+        const p = data.pet_details;
+        const petRow = document.createElement("div");
+        petRow.className = "b-item";
+        petRow.innerHTML = `<span>Aktywny Pet:</span><strong class="magic">${p.name} (${p.dmg_modifier_percent >= 0 ? '+' : ''}${p.dmg_modifier_percent}% Dmg)</strong>`;
+        castsList.appendChild(petRow);
+      }
+
+      const casts = data.ability_casts || {};
+      const hunterLabels = {
+        raptor_strike: "Raptor Strike Casts (Broń 2H/1H)",
+        mongoose_bite: "Mongoose Bite Casts (Dodge/Parry Proc)",
+        counterattack: "Counterattack Casts (Parry Proc)",
+        immolation_trap: "Immolation Trap Casts (Ogień DoT)",
+        auto_shot: "Auto Shot Strzały",
+        aimed_shot: "Aimed Shot Casts",
+        multi_shot: "Multi-Shot Casts",
+        serpent_sting: "Serpent Sting Casts",
+        pet_swings: "Pet Auto Attack (Białe Ataki Peta)",
+        pet_claws: "Pet Claw (Focus Dump)",
+        pet_bites: "Pet Bite Casts",
+        pet_lightning_breath: "Pet Lightning Breath (Nature - Ignoruje Pancerz!)",
+        furious_howl: "Furious Howl Casts (+51 Dmg Buff)"
+      };
+
+      for (const [key, num] of Object.entries(casts)) {
+        if (num > 0) {
+          const row = document.createElement("div");
+          row.className = "b-item";
+          row.innerHTML = `<span>${hunterLabels[key] || key}:</span><strong>${num}</strong>`;
+          castsList.appendChild(row);
+        }
+      }
     } else {
       castsCard.style.display = "none";
     }
@@ -2147,9 +2281,51 @@ function renderSimulationResults(data) {
   const shareBarWrap = document.getElementById("share-bar-wrap");
 
   if (data.has_minions && data.minion_dps > 0) {
-    if (minionCard) minionCard.style.display = "block";
-    if (minionBreakdownCard) minionBreakdownCard.style.display = "block";
-    if (shareBarWrap) shareBarWrap.style.display = "block";
+    if (minionCard) {
+      minionCard.style.display = "block";
+      const lblMin = minionCard.querySelector(".card-label");
+      if (lblMin) lblMin.textContent = data.character_class === "hunter" ? "HUNTER PET DPS" : "PET / SUMMON DPS";
+    }
+    if (minionBreakdownCard) {
+      minionBreakdownCard.style.display = "block";
+      if (data.character_class === "hunter" && data.pet_details) {
+        const p = data.pet_details;
+        const bHead = minionBreakdownCard.querySelector(".b-header");
+        if (bHead) bHead.innerHTML = `&#128062; PET MECHANICS: ${p.name.toUpperCase()}`;
+        const rows = minionBreakdownCard.querySelector(".b-rows");
+        if (rows) {
+          rows.innerHTML = `
+            <div class="b-item"><span>Aktywna Rodzina Peta:</span><strong class="magic">${p.name}</strong></div>
+            <div class="b-item"><span>Modyfikator Obrażeń Peta:</span><strong>${p.dmg_modifier_percent >= 0 ? '+' : ''}${p.dmg_modifier_percent}%</strong></div>
+            <div class="b-item"><span>Umiejętności Specjalne Peta:</span><strong class="gold">${p.skills.join(", ")}</strong></div>
+            <div class="b-item"><span>Pet DPS:</span><strong class="magic">${data.minion_dps.toFixed(2)} DPS</strong></div>
+            <div class="b-item"><span>Udział Peta w DPS:</span><strong>${minionShare}% łącznego DPS</strong></div>
+            <div class="b-item"><span>Przelicznik Statystyk:</span><strong class="warn">Podstawa + 22% Ranged AP</strong></div>
+          `;
+        }
+      } else {
+        const bHead = minionBreakdownCard.querySelector(".b-header");
+        if (bHead) bHead.innerHTML = `&#9760; MINION MECHANICS <span class="info-circle" data-info="minion_mechanics" tabindex="0" title="Informacje o minionach z Set of the Lost">i</span>`;
+        const rows = minionBreakdownCard.querySelector(".b-rows");
+        if (rows) {
+          rows.innerHTML = `
+            <div class="b-item"><span>Active Minions Average:</span><strong id="b-active-minions" class="magic">${(data.expected_active_minions || 0).toFixed(2)}</strong></div>
+            <div class="b-item"><span>Proc Chance:</span><strong>4.0% per harmful spell hit</strong></div>
+            <div class="b-item"><span>Procs Rate:</span><strong id="b-procs-sec">${(data.procs_per_second || 0).toFixed(3)} / sec</strong></div>
+            <div class="b-item"><span>Minion Lifetime:</span><strong>20.0 sec</strong></div>
+            <div class="b-item"><span>Soul Bolt Spell:</span><strong>230 - 279 Shadow (2.0s Cast)</strong></div>
+            <div class="b-item"><span>AP/SP Scaling:</span><strong class="warn">None (0% stat inheritance)</strong></div>
+          `;
+        }
+      }
+    }
+    if (shareBarWrap) {
+      shareBarWrap.style.display = "block";
+      const lblShareMin = document.getElementById("bar-lbl-minion");
+      if (lblShareMin && lblShareMin.parentElement) {
+        lblShareMin.parentElement.innerHTML = (data.character_class === "hunter" ? "Pet Damage: " : "Minion Damage: ") + `<strong id="bar-lbl-minion">${minionShare}%</strong>`;
+      }
+    }
 
     document.getElementById("res-minion-dps").textContent = data.minion_dps.toFixed(2);
     document.getElementById("res-minion-range").textContent = `Range: [${data.minion_dps_min.toFixed(2)} - ${data.minion_dps_max.toFixed(2)}]`;
@@ -2157,9 +2333,6 @@ function renderSimulationResults(data) {
     document.getElementById("bar-lbl-minion").textContent = `${minionShare}%`;
     document.getElementById("share-own-bar").style.width = `${ownShare}%`;
     document.getElementById("share-minion-bar").style.width = `${minionShare}%`;
-    document.getElementById("b-active-minions").textContent = (data.expected_active_minions || 0).toFixed(2);
-    const bProcs = document.getElementById("b-procs-sec");
-    if (bProcs) bProcs.textContent = `${(data.procs_per_second || 0).toFixed(3)} / sec`;
   } else {
     if (minionCard) minionCard.style.display = "none";
     if (minionBreakdownCard) minionBreakdownCard.style.display = "none";
@@ -2352,7 +2525,11 @@ function switchClass(newClass) {
   const crestIcon = document.getElementById("crest-icon");
   const crestSub = document.getElementById("crest-sub");
   if (crestTitle) crestTitle.textContent = currentClass.toUpperCase();
-  if (crestIcon) crestIcon.innerHTML = currentClass === "warrior" ? "⚔" : "&#9876;";
+  if (crestIcon) {
+    if (currentClass === "warrior") crestIcon.innerHTML = "⚔";
+    else if (currentClass === "hunter") crestIcon.innerHTML = "🏹";
+    else crestIcon.innerHTML = "&#9876;";
+  }
   if (crestSub) crestSub.textContent = `Level 60 ${currentClass.charAt(0).toUpperCase() + currentClass.slice(1)} Sheet`;
 
   const rotTabBtn = document.getElementById("tab-btn-rotation");
@@ -2366,8 +2543,9 @@ function switchClass(newClass) {
   const thirdIcon = document.getElementById("icon-third");
 
   const btnEnchThird = document.getElementById("btn-ench-third");
+  const isRangedWeaponClass = currentClass === "warrior" || currentClass === "hunter";
   if (thirdSlotCard && thirdSlotTitle && thirdInput) {
-    if (currentClass === "warrior") {
+    if (isRangedWeaponClass) {
       thirdSlotCard.setAttribute("data-slot", "ranged");
       thirdSlotTitle.textContent = "Ranged Weapon";
       thirdInput.setAttribute("data-slot", "ranged");
@@ -2401,6 +2579,16 @@ function switchClass(newClass) {
   if (palChecks) palChecks.style.display = currentClass === "paladin" ? "flex" : "none";
   if (palSealBox) palSealBox.style.display = currentClass === "paladin" ? "block" : "none";
 
+  const hunterQuick = document.getElementById("hunter-quick-config");
+  const hunterStyleItem = document.getElementById("setting-hunter-style-item");
+  const petFamilyItem = document.getElementById("setting-pet-family-item");
+  const hunterChecks = document.getElementById("setting-hunter-checks");
+
+  if (hunterQuick) hunterQuick.style.display = currentClass === "hunter" ? "block" : "none";
+  if (hunterStyleItem) hunterStyleItem.style.display = currentClass === "hunter" ? "flex" : "none";
+  if (petFamilyItem) petFamilyItem.style.display = currentClass === "hunter" ? "flex" : "none";
+  if (hunterChecks) hunterChecks.style.display = currentClass === "hunter" ? "flex" : "none";
+
   loadRacesForClass(currentClass);
   loadTalentsForClass(currentClass);
 
@@ -2424,9 +2612,20 @@ function switchClass(newClass) {
             unequipItem(slotKey);
           } else if (currentClass === "warrior" && (slotKey === "relic" || ["wand", "libram", "totem", "idol"].includes(it.subclass))) {
             unequipItem(slotKey);
+          } else if (currentClass === "hunter" && (slotKey === "relic" || ["wand", "libram", "totem", "idol", "shield", "mace", "two_hand_mace", "one_hand_mace"].includes(it.subclass))) {
+            unequipItem(slotKey);
           }
         }
       });
+
+      if (currentClass === "hunter") {
+        const equippedCount = Object.values(equippedItems).filter(Boolean).length;
+        if (equippedCount <= 2) {
+          equipHunterKuklaMeleeGear();
+          return;
+        }
+      }
+
       recalculateLiveStats();
       runSimulation();
     })
@@ -2765,6 +2964,46 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("cfg-opener-crusader")?.addEventListener("change", () => {
     runSimulation();
   });
+
+  // Hunter Combat Style & Pet Synchronization
+  const hStyleQuick = document.getElementById("cfg-hunter-style-quick");
+  const hStyleSettings = document.getElementById("cfg-combat-style");
+  if (hStyleQuick && hStyleSettings) {
+    hStyleQuick.addEventListener("change", (e) => {
+      hStyleSettings.value = e.target.value;
+      runSimulation();
+    });
+    hStyleSettings.addEventListener("change", (e) => {
+      hStyleQuick.value = e.target.value;
+      runSimulation();
+    });
+  }
+
+  const petQuick = document.getElementById("cfg-pet-family-quick");
+  const petSettings = document.getElementById("cfg-pet-family");
+  if (petQuick && petSettings) {
+    petQuick.addEventListener("change", (e) => {
+      petSettings.value = e.target.value;
+      runSimulation();
+    });
+    petSettings.addEventListener("change", (e) => {
+      petQuick.value = e.target.value;
+      runSimulation();
+    });
+  }
+
+  const petActiveQuick = document.getElementById("cfg-pet-active-quick");
+  const petActiveSettings = document.getElementById("cfg-pet-active");
+  if (petActiveQuick && petActiveSettings) {
+    petActiveQuick.addEventListener("change", (e) => {
+      petActiveSettings.checked = e.target.checked;
+      runSimulation();
+    });
+    petActiveSettings.addEventListener("change", (e) => {
+      petActiveQuick.checked = e.target.checked;
+      runSimulation();
+    });
+  }
 
   document.querySelectorAll(".info-circle").forEach(circle => {
     const infoKey = circle.getAttribute("data-info");

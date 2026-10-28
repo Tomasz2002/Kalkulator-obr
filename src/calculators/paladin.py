@@ -107,7 +107,7 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         spell_hit_chance = max(0.20, min(0.99, spell_hit_pct / 100.0))
 
         set_haste = 2.0 if t3_dps_pieces >= 4 else 0.0
-        total_haste = haste_percent + set_haste
+        total_haste = haste_percent + set_haste + gear.get("haste", 0.0)
 
         weapon_speed = gear["main_weapon_speed"] if gear["main_weapon_speed"] > 0 else 2.0
         effective_speed = weapon_speed / (1.0 + (total_haste / 100.0))
@@ -185,7 +185,7 @@ class PaladinCombatCalculator(BaseCombatCalculator):
             str(it.get("id")) == "12462" or "embrace of the wind serpent" in str(it.get("name", "")).lower()
             for it in gear.get("equipped_items", [])
         )
-        effective_target_armor = max(0.0, target_armor - (400.0 if has_wind_serpent and fight_duration >= 10.0 else 0.0))
+        effective_target_armor = max(0.0, target_armor - gear.get("arp", 0.0) - (400.0 if has_wind_serpent and fight_duration >= 10.0 else 0.0))
         armor_reduction = effective_target_armor / (effective_target_armor + 5500.0) if effective_target_armor > 0 else 0.0
 
         # Turtle WoW: base miss against lvl 63 boss is 8.0% (no 1.12 hit suppression bug)
@@ -447,11 +447,12 @@ class PaladinCombatCalculator(BaseCombatCalculator):
 
         avg_zeal_haste = (total_zeal_haste_time / fight_duration) if fight_duration > 0 else 0.0
         effective_speed = weapon_speed / (1.0 + ((total_haste + avg_zeal_haste) / 100.0))
-        exact_melee_swings = 1 + int(fight_duration / effective_speed) if fight_duration > 0 and effective_speed > 0 else 0
+        melee_swings_count = 1.0 + (fight_duration / effective_speed) if fight_duration > 0 and effective_speed > 0 else 0.0
+        exact_melee_swings = int(round(melee_swings_count))
 
         raw_swing_dmg = avg_weapon_dmg + (ap / 14.0) * weapon_speed
         avg_white_swing = raw_swing_dmg * (1.0 - armor_reduction) * physical_mult * (white_hit_chance + (2.0 * capped_crit) + (glance_damage_factor * glance_chance))
-        white_damage_total = exact_melee_swings * avg_white_swing
+        white_damage_total = melee_swings_count * avg_white_swing
         white_dps = white_damage_total / fight_duration if fight_duration > 0 else 0.0
 
         # Check effects and procs from items
@@ -538,12 +539,12 @@ class PaladinCombatCalculator(BaseCombatCalculator):
         soc_ppm = 8.5 if has_libram_ardour else 7.0
 
         if chosen_seal == "command":
-            soc_proc_chance = min(1.0, (effective_speed * soc_ppm) / 60.0)
+            soc_proc_chance = min(1.0, (weapon_speed * soc_ppm) / 60.0)
             soc_hit_chance = max(0.0, 1.0 - effective_miss - effective_dodge)
             raw_soc = 0.70 * raw_swing_dmg + (0.29 * sp) + joc_holy_bonus
             soc_hit = raw_soc * (1.0 + crit_chance) * holy_mult
 
-            swing_soc_procs = exact_melee_swings * soc_proc_chance * soc_hit_chance
+            swing_soc_procs = melee_swings_count * soc_proc_chance * soc_hit_chance
             cs_soc_procs = cs_count * cs_special_hit_chance * soc_proc_chance * soc_hit_chance
             hs_soc_procs = holy_strike_count * hs_special_hit_chance * soc_proc_chance * soc_hit_chance
             total_soc_procs = swing_soc_procs + cs_soc_procs + hs_soc_procs
@@ -571,7 +572,7 @@ class PaladinCombatCalculator(BaseCombatCalculator):
             sov_dot_tick_dmg = ((640.0 + 0.40 * sp + joc_holy_bonus) / 5.0) * holy_mult * spell_crit_multiplier
             sov_dot_damage_total = sov_dot_ticks * sov_dot_tick_dmg
 
-            swings_at_5_stacks = max(0.0, float(exact_melee_swings) - 5.0) * landed_swing_chance
+            swings_at_5_stacks = max(0.0, melee_swings_count - 5.0) * landed_swing_chance
             sov_weapon_hit = (avg_weapon_dmg * 0.33 + 0.10 * sp + joc_holy_bonus) * holy_mult * spell_crit_multiplier
             sov_weapon_damage_total = swings_at_5_stacks * sov_weapon_hit
 
@@ -599,7 +600,7 @@ class PaladinCombatCalculator(BaseCombatCalculator):
             sor_base = weapon_speed * 18.5
             sor_sp_coef = (weapon_speed / 20.0) * (1.2 if is_two_hand else 1.0)
             sor_hit = (sor_base + sor_sp_coef * sp + (joc_holy_bonus * (weapon_speed / 2.6))) * spell_crit_multiplier * holy_mult * sor_mult
-            seal_damage_total = exact_melee_swings * landed_swing_chance * sor_hit
+            seal_damage_total = melee_swings_count * landed_swing_chance * sor_hit
             seal_dps = seal_damage_total / fight_duration if fight_duration > 0 else 0.0
 
             jor_bonus = 148.0 if t1_dps_pieces >= 3 else 0.0

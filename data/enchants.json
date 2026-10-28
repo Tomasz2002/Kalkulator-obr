@@ -515,6 +515,30 @@
       "phase": 4,
       "r": 58,
       "ench": "2606"
+    },
+    {
+      "id": 63001,
+      "spellid": true,
+      "name": "Sigil of Quickness (+2% Haste)",
+      "r": 55,
+      "haste": 2.0,
+      "ench": "63001"
+    },
+    {
+      "id": 63002,
+      "spellid": true,
+      "name": "Sigil of Penetration (+40 Armor Penetration)",
+      "r": 55,
+      "arp": 40,
+      "ench": "63002"
+    },
+    {
+      "id": 63003,
+      "spellid": true,
+      "name": "Sigil of Leeching (+2% Vampirism)",
+      "r": 55,
+      "vampirism": 2.0,
+      "ench": "63003"
     }
   ],
   "back": [
@@ -645,6 +669,77 @@
       "str": 1,
       "phase": 1,
       "ench": "847"
+    },
+    {
+      "id": 63101,
+      "spellid": true,
+      "name": "Enchanted Armor Kit (+9 Spell Damage / Healing)",
+      "r": 50,
+      "sp": 9,
+      "healing": 9,
+      "ench": "63101"
+    },
+    {
+      "id": 63102,
+      "spellid": true,
+      "name": "Dragonmaw Armor Kit (+5 Spell Power)",
+      "r": 30,
+      "sp": 5,
+      "ench": "63102"
+    },
+    {
+      "id": 63103,
+      "spellid": true,
+      "name": "Core Armor Kit (+3 Defense, +30 Armor)",
+      "r": 50,
+      "defense": 3,
+      "armor": 30,
+      "ench": "63103"
+    },
+    {
+      "id": 15564,
+      "spellid": true,
+      "name": "Rugged Armor Kit (+40 Armor, +5 Stamina)",
+      "r": 40,
+      "armor": 40,
+      "sta": 5,
+      "ench": "1891"
+    },
+    {
+      "id": 8173,
+      "spellid": true,
+      "name": "Thick Armor Kit (+32 Armor, +4 Stamina)",
+      "r": 30,
+      "armor": 32,
+      "sta": 4,
+      "ench": "866"
+    },
+    {
+      "id": 4265,
+      "spellid": true,
+      "name": "Heavy Armor Kit (+24 Armor, +3 Stamina)",
+      "r": 20,
+      "armor": 24,
+      "sta": 3,
+      "ench": "249"
+    },
+    {
+      "id": 2313,
+      "spellid": true,
+      "name": "Medium Armor Kit (+16 Armor, +2 Stamina)",
+      "r": 10,
+      "armor": 16,
+      "sta": 2,
+      "ench": "18"
+    },
+    {
+      "id": 2304,
+      "spellid": true,
+      "name": "Light Armor Kit (+8 Armor, +1 Stamina)",
+      "r": 1,
+      "armor": 8,
+      "sta": 1,
+      "ench": "16"
     }
   ],
   "wrist": [
@@ -697,6 +792,14 @@
       "str": 1,
       "phase": 1,
       "ench": "248"
+    },
+    {
+      "id": 63004,
+      "spellid": true,
+      "name": "Enchant Bracer - Greater Deflection (+5 Defense)",
+      "r": 55,
+      "defense": 5,
+      "ench": "63004"
     }
   ],
   "hands": [
@@ -750,6 +853,77 @@
       "haste": 1,
       "phase": 1,
       "ench": "931"
+    },
+    {
+      "id": 63101,
+      "spellid": true,
+      "name": "Enchanted Armor Kit (+9 Spell Damage / Healing)",
+      "r": 50,
+      "sp": 9,
+      "healing": 9,
+      "ench": "63101"
+    },
+    {
+      "id": 63102,
+      "spellid": true,
+      "name": "Dragonmaw Armor Kit (+5 Spell Power)",
+      "r": 30,
+      "sp": 5,
+      "ench": "63102"
+    },
+    {
+      "id": 63103,
+      "spellid": true,
+      "name": "Core Armor Kit (+3 Defense, +30 Armor)",
+      "r": 50,
+      "defense": 3,
+      "armor": 30,
+      "ench": "63103"
+    },
+    {
+      "id": 15564,
+      "spellid": true,
+      "name": "Rugged Armor Kit (+40 Armor, +5 Stamina)",
+      "r": 40,
+      "armor": 40,
+      "sta": 5,
+      "ench": "1891"
+    },
+    {
+      "id": 8173,
+      "spellid": true,
+      "name": "Thick Armor Kit (+32 Armor, +4 Stamina)",
+      "r": 30,
+      "armor": 32,
+      "sta": 4,
+      "ench": "866"
+    },
+    {
+      "id": 4265,
+      "spellid": true,
+      "name": "Heavy Armor Kit (+24 Armor, +3 Stamina)",
+      "r": 20,
+      "armor": 24,
+      "sta": 3,
+      "ench": "249"
+    },
+    {
+      "id": 2313,
+      "spellid": true,
+      "name": "Medium Armor Kit (+16 Armor, +2 Stamina)",
+      "r": 10,
+      "armor": 16,
+      "sta": 2,
+      "ench": "18"
+    },
+    {
+      "id": 2304,
+      "spellid": true,
+      "name": "Light Armor Kit (+8 Armor, +1 Stamina)",
+      "r": 1,
+      "armor": 8,
+      "sta": 1,
+      "ench": "16"
     }
   ],
   "legs": [
@@ -804,6 +978,77 @@
       "defense": 7,
       "block": 15,
       "ench": "7633"
+    },
+    {
+      "id": 63101,
+      "spellid": true,
+      "name": "Enchanted Armor Kit (+9 Spell Damage / Healing)",
+      "r": 50,
+      "sp": 9,
+      "healing": 9,
+      "ench": "63101"
+    },
+    {
+      "id": 63102,
+      "spellid": true,
+      "name": "Dragonmaw Armor Kit (+5 Spell Power)",
+      "r": 30,
+      "sp": 5,
+      "ench": "63102"
+    },
+    {
+      "id": 63103,
+      "spellid": true,
+      "name": "Core Armor Kit (+3 Defense, +30 Armor)",
+      "r": 50,
+      "defense": 3,
+      "armor": 30,
+      "ench": "63103"
+    },
+    {
+      "id": 15564,
+      "spellid": true,
+      "name": "Rugged Armor Kit (+40 Armor, +5 Stamina)",
+      "r": 40,
+      "armor": 40,
+      "sta": 5,
+      "ench": "1891"
+    },
+    {
+      "id": 8173,
+      "spellid": true,
+      "name": "Thick Armor Kit (+32 Armor, +4 Stamina)",
+      "r": 30,
+      "armor": 32,
+      "sta": 4,
+      "ench": "866"
+    },
+    {
+      "id": 4265,
+      "spellid": true,
+      "name": "Heavy Armor Kit (+24 Armor, +3 Stamina)",
+      "r": 20,
+      "armor": 24,
+      "sta": 3,
+      "ench": "249"
+    },
+    {
+      "id": 2313,
+      "spellid": true,
+      "name": "Medium Armor Kit (+16 Armor, +2 Stamina)",
+      "r": 10,
+      "armor": 16,
+      "sta": 2,
+      "ench": "18"
+    },
+    {
+      "id": 2304,
+      "spellid": true,
+      "name": "Light Armor Kit (+8 Armor, +1 Stamina)",
+      "r": 1,
+      "armor": 8,
+      "sta": 1,
+      "ench": "16"
     }
   ],
   "feet": [
@@ -847,6 +1092,85 @@
       "name": "Minor Speed",
       "phase": 1,
       "ench": "911"
+    },
+    {
+      "id": 63005,
+      "spellid": true,
+      "name": "Enchant Boots - Greater Spirit (+12 Spirit)",
+      "r": 55,
+      "spi": 12,
+      "ench": "63005"
+    },
+    {
+      "id": 63101,
+      "spellid": true,
+      "name": "Enchanted Armor Kit (+9 Spell Damage / Healing)",
+      "r": 50,
+      "sp": 9,
+      "healing": 9,
+      "ench": "63101"
+    },
+    {
+      "id": 63102,
+      "spellid": true,
+      "name": "Dragonmaw Armor Kit (+5 Spell Power)",
+      "r": 30,
+      "sp": 5,
+      "ench": "63102"
+    },
+    {
+      "id": 63103,
+      "spellid": true,
+      "name": "Core Armor Kit (+3 Defense, +30 Armor)",
+      "r": 50,
+      "defense": 3,
+      "armor": 30,
+      "ench": "63103"
+    },
+    {
+      "id": 15564,
+      "spellid": true,
+      "name": "Rugged Armor Kit (+40 Armor, +5 Stamina)",
+      "r": 40,
+      "armor": 40,
+      "sta": 5,
+      "ench": "1891"
+    },
+    {
+      "id": 8173,
+      "spellid": true,
+      "name": "Thick Armor Kit (+32 Armor, +4 Stamina)",
+      "r": 30,
+      "armor": 32,
+      "sta": 4,
+      "ench": "866"
+    },
+    {
+      "id": 4265,
+      "spellid": true,
+      "name": "Heavy Armor Kit (+24 Armor, +3 Stamina)",
+      "r": 20,
+      "armor": 24,
+      "sta": 3,
+      "ench": "249"
+    },
+    {
+      "id": 2313,
+      "spellid": true,
+      "name": "Medium Armor Kit (+16 Armor, +2 Stamina)",
+      "r": 10,
+      "armor": 16,
+      "sta": 2,
+      "ench": "18"
+    },
+    {
+      "id": 2304,
+      "spellid": true,
+      "name": "Light Armor Kit (+8 Armor, +1 Stamina)",
+      "r": 1,
+      "armor": 8,
+      "sta": 1,
+      "ench": "16"
     }
   ],
   "ranged": [

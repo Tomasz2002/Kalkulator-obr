@@ -619,11 +619,14 @@ def calculate_gear_totals(
                 totals["hit"] += ench_obj.get("hit", 0.0)
                 totals["crit"] += ench_obj.get("crit", 0.0)
                 totals["haste"] += ench_obj.get("haste", 0.0)
-                totals["armor"] += ench_obj.get("armor", 0) + ench_obj.get("defense", 0)
+                totals["armor"] += ench_obj.get("armor", 0)
                 totals["spell_power"] += ench_obj.get("sp", ench_obj.get("spellpower", 0))
                 totals["healing"] += ench_obj.get("healing", 0)
                 totals["arp"] += ench_obj.get("arp", 0)
                 totals["block"] += ench_obj.get("block", 0)
+                totals["vampirism"] = totals.get("vampirism", 0) + ench_obj.get("vampirism", 0)
+                if ench_obj.get("defense"):
+                    totals["weapon_skills"]["defense"] = totals["weapon_skills"].get("defense", 0) + ench_obj["defense"]
                 for res_key in ("arcane", "fire", "frost", "nature", "shadow", "holy"):
                     if res_key in ench_obj and res_key in totals["resistances"]:
                         totals["resistances"][res_key] += ench_obj[res_key]

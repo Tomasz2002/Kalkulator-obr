@@ -170,9 +170,9 @@ class WarriorCombatCalculator(BaseCombatCalculator):
 
         ap = base_ap + racial_ap_bonus
 
-        total_haste = (haste_percent / 100.0) + effective_flurry_haste + troll_haste + nelf_haste + wrath_haste
+        total_haste = (haste_percent / 100.0) + (gear.get("haste", 0.0) / 100.0) + effective_flurry_haste + troll_haste + nelf_haste + wrath_haste
 
-        arp = 0.0
+        arp = gear.get("arp", 0.0)
         for sp in gear.get("spells", []):
             if sp.get("spell_id") == 48030:
                 arp += 25.0
@@ -195,7 +195,7 @@ class WarriorCombatCalculator(BaseCombatCalculator):
 
         mh_speed = gear["main_weapon_speed"] if gear["main_weapon_speed"] > 0 else 2.6
         eff_mh_speed = mh_speed / (1.0 + total_haste)
-        mh_swings = int(fight_duration / eff_mh_speed) if eff_mh_speed > 0 and fight_duration > 0 else 0
+        mh_swings = float(fight_duration / eff_mh_speed) if eff_mh_speed > 0 and fight_duration > 0 else 0.0
 
         mh_min = gear["main_weapon_min_dmg"]
         mh_max = gear["main_weapon_max_dmg"]
@@ -210,14 +210,14 @@ class WarriorCombatCalculator(BaseCombatCalculator):
             + (effective_crit * 2.0)
         ) * raw_mh_hit * armor_mult * general_phys_mult * weapon_damage_mult
 
-        oh_swings = 0
+        oh_swings = 0.0
         oh_white_avg = 0.0
         oh_white_total = 0.0
         eff_oh_speed = 0.0
         if is_dw:
             oh_speed = gear.get("off_weapon_speed", 2.0)
             eff_oh_speed = oh_speed / (1.0 + total_haste)
-            oh_swings = int(fight_duration / eff_oh_speed) if eff_oh_speed > 0 and fight_duration > 0 else 0
+            oh_swings = float(fight_duration / eff_oh_speed) if eff_oh_speed > 0 and fight_duration > 0 else 0.0
 
             oh_min = gear.get("off_weapon_min_dmg", 0.0)
             oh_max = gear.get("off_weapon_max_dmg", 0.0)
@@ -404,7 +404,7 @@ class WarriorCombatCalculator(BaseCombatCalculator):
             "effective_weapon_speed": round(eff_mh_speed, 2),
             "off_weapon_name": gear.get("off_weapon_name", ""),
             "off_weapon_speed": round(eff_oh_speed, 2) if is_dw else 0.0,
-            "exact_melee_swings": mh_swings + oh_swings,
+            "exact_melee_swings": int(round(mh_swings + oh_swings)),
             "total_attack_power": int(ap),
             "total_crit_percent": round(effective_crit * 100.0, 2),
             "total_hit_percent": round(gear["hit"], 2),

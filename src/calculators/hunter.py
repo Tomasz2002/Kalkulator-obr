@@ -21,7 +21,17 @@ class HunterCombatCalculator(BaseCombatCalculator):
         **kwargs: Any,
     ) -> Dict[str, Any]:
         item_ids = [it if isinstance(it, (int, str)) else it.get("id") for it in equipped_items]
-        gear = calculate_gear_totals(item_ids, self.db)
+        enchants = kwargs.get("enchants")
+        race = kwargs.get("race", "night_elf")
+        quest_weapon_skills = kwargs.get("quest_weapon_skills")
+        gear = calculate_gear_totals(
+            item_ids,
+            self.db,
+            enchants=enchants,
+            race=race,
+            character_class="hunter",
+            quest_weapon_skills=quest_weapon_skills
+        )
 
         ranged_weapon = None
         for it in gear["equipped_items"]:
@@ -35,21 +45,24 @@ class HunterCombatCalculator(BaseCombatCalculator):
         max_dmg = ranged_weapon.get("max_damage", 140.0) if ranged_weapon else 140.0
         avg_ranged_dmg = (min_dmg + max_dmg) / 2.0
 
-        total_haste = haste_percent + quiver_haste
+        total_haste = haste_percent + quiver_haste + gear.get("haste", 0.0)
         effective_speed = base_speed / (1.0 + (total_haste / 100.0))
 
         rap = gear.get("ranged_attack_power", 0) + gear["attack_power"] + (gear["agility"] * 2)
         ranged_crit = gear["crit"] + (gear["agility"] / 53.0)
         hit_pct = gear["hit"]
 
-        exact_shots = 1 + int(fight_duration / effective_speed) if fight_duration > 0 and effective_speed > 0 else 0
+        # Support continuous shot calculation to avoid discrete 1-shot step cliffs
+        shots_count = (fight_duration / effective_speed) if fight_duration > 0 and effective_speed > 0 else 0.0
+        exact_shots = int(round(shots_count))
 
-        armor_reduction = target_armor / (target_armor + 5500.0) if target_armor > 0 else 0.0
+        effective_target_armor = max(0.0, target_armor - gear.get("arp", 0.0))
+        armor_reduction = effective_target_armor / (effective_target_armor + 5500.0) if effective_target_armor > 0 else 0.0
         crit_multiplier = 1.0 + (ranged_crit / 100.0)
 
         raw_auto_shot = avg_ranged_dmg + (rap / 14.0) * base_speed + (ammo_dps * base_speed)
         avg_auto_hit = raw_auto_shot * (1.0 - armor_reduction) * crit_multiplier
-        auto_shot_damage = exact_shots * avg_auto_hit
+        auto_shot_damage = shots_count * avg_auto_hit
         auto_shot_dps = auto_shot_damage / fight_duration if fight_duration > 0 else 0.0
 
         aimed_cooldown = 6.0

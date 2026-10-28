@@ -619,6 +619,19 @@ function shortenEnchantName(name) {
   s = s.replace(/Resilient Arcane Gemstone \(\+30 Armor\)/i, "Resilient (+30 Arm)");
   s = s.replace(/Gloomy Diamond Gemstone \(\+5 Fire Resistance\)/i, "Diamond (+5 FR)");
   s = s.replace(/Unstable Arcane Gemstone \(\+5 Arcane Resistance\)/i, "Arcane (+5 AR)");
+  s = s.replace(/Sigil of Quickness \(\+2% Haste\)/i, "Quickness (+2% Haste)");
+  s = s.replace(/Sigil of Penetration \(\+40 Armor Penetration\)/i, "Penetration (+40 ArP)");
+  s = s.replace(/Sigil of Leeching \(\+2% Vampirism\)/i, "Leeching (+2% Vamp)");
+  s = s.replace(/Enchant Bracer - Greater Deflection \(\+5 Defense\)/i, "Deflection (+5 Def)");
+  s = s.replace(/Enchant Boots - Greater Spirit \(\+12 Spirit\)/i, "Greater Spirit (+12 Spi)");
+  s = s.replace(/Enchanted Armor Kit \(\+9 Spell Damage \/ Healing\)/i, "Enchanted Kit (+9 SP)");
+  s = s.replace(/Dragonmaw Armor Kit \(\+5 Spell Power\)/i, "Dragonmaw Kit (+5 SP)");
+  s = s.replace(/Core Armor Kit \(\+3 Defense, \+30 Armor\)/i, "Core Kit (+3 Def)");
+  s = s.replace(/Rugged Armor Kit \(\+40 Armor, \+5 Stamina\)/i, "Rugged Kit (+40 Arm)");
+  s = s.replace(/Thick Armor Kit \(\+32 Armor, \+4 Stamina\)/i, "Thick Kit (+32 Arm)");
+  s = s.replace(/Heavy Armor Kit \(\+24 Armor, \+3 Stamina\)/i, "Heavy Kit (+24 Arm)");
+  s = s.replace(/Medium Armor Kit \(\+16 Armor, \+2 Stamina\)/i, "Medium Kit (+16 Arm)");
+  s = s.replace(/Light Armor Kit \(\+8 Armor, \+1 Stamina\)/i, "Light Kit (+8 Arm)");
   return s;
 }
 
@@ -762,6 +775,7 @@ function renderEnchantPickerList(category, slotKey, filterText = "") {
     if (ench.healing) desc += `+${ench.healing} Heal `;
     if (ench.arp) desc += `+${ench.arp} ArP `;
     if (ench.armor) desc += `+${ench.armor} Armor `;
+    if (ench.defense) desc += `+${ench.defense} Def `;
     if (ench.block) desc += `+${ench.block}% Block `;
     if (ench.resilience) desc += `-${ench.resilience}% Dmg Taken `;
     if (ench.vampirism) desc += `+${ench.vampirism}% Vampirism `;

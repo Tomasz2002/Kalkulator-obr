@@ -2943,5 +2943,85 @@ body {
 .tag-pet-nature { background: #00b4d8; color: #fff; }
 .tag-pet-buff { background: #d97706; color: #fff; }
 
+/* Hunter Spec Selector in Rotation Planner */
+.hunter-spec-nav-box {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  background: rgba(18, 28, 20, 0.7);
+  border: 1px solid rgba(82, 183, 136, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.hunter-spec-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  background: rgba(10, 18, 12, 0.8);
+  border: 1px solid rgba(82, 183, 136, 0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  color: var(--text-dim);
+}
+
+.hunter-spec-btn:hover {
+  background: rgba(28, 48, 34, 0.9);
+  border-color: rgba(82, 183, 136, 0.6);
+  color: #fff;
+}
+
+.hunter-spec-btn.active {
+  background: rgba(34, 76, 52, 0.95);
+  border-color: #52b788;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(82, 183, 136, 0.35);
+}
+
+.hunter-spec-btn-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #d8f3dc;
+  font-family: var(--font-serif);
+}
+
+.hunter-spec-btn.active .hunter-spec-btn-title {
+  color: #74c69d;
+}
+
+.hunter-spec-btn-desc {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #a7c4bc;
+}
+
+.hunter-notes-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: #e0f2fe;
+}
+
+.hunter-notes-banner strong {
+  color: #38bdf8;
+}
+
+.tag-ranged-filler { background: #38bdf8; color: #082f49; }
+.tag-arcane-magic { background: #818cf8; color: #1e1b4b; }
+.tag-burst-cd { background: #f43f5e; color: #fff; }
+
 
 

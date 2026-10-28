@@ -1,0 +1,387 @@
+
+<html>
+<head>
+    	<title>OctoWow Database</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<link rel="SHORTCUT ICON" href="templates/wowhead/images/favicon.ico">
+
+	<script src="templates/wowhead/js/locale_enus.js" type="text/javascript"></script>
+
+	<link href="templates/wowhead/css/locale_enus.css" type="text/css" rel="stylesheet">
+	<link href="templates/wowhead/css/global.css" type="text/css" rel="stylesheet">
+
+	<script src="templates/wowhead/js/global.js" type="text/javascript"></script>
+	<script src="templates/wowhead/js/Markup.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var g_serverTime = new Date('2026/10/28 17:23:51');
+		g_locale = { id: 0, name: 'enus' };
+	</script>    <style type="text/css">
+        
+        .menu-buttons a {
+            border-color: black
+        }
+
+        .news {
+            position: relative;
+            text-align: left;
+            width: 415px;
+            height: 191px;
+            margin: 30px auto 0 auto;
+            background: url(templates/wowhead/images/mainpage-bg-news-enus.jpg) no-repeat
+        }
+
+        .news-list {
+            padding: 26px 0 0 26px;
+            margin: 0
+        }
+
+        .news-list li {
+            line-height: 2em
+        }
+
+        .news-img1 {
+            position: absolute;
+            left: 60px;
+            top: 155px;
+            width: 172px;
+            height: 17px
+        }
+
+        .news-img2 {
+            position: absolute;
+            left: 246px;
+            top: 48px;
+            width: 145px;
+            height: 127px
+        }
+
+        .news-talent {
+            position: absolute;
+            left: 240px;
+            top: 29px;
+            width: 152px;
+            height: 146px
+        }
+
+        .mp-comments {
+            position: relative;
+            text-align: left;
+            width: 415px;
+            margin: 26px auto 0 auto;
+            padding: 10px 14px 12px;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, .35);
+            border: 1px solid #3a3a3a;
+            border-radius: 4px
+        }
+
+        .mp-comments-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #3a3a3a
+        }
+
+        .mp-comments-title {
+            color: #ffd100;
+            font-weight: bold
+        }
+
+        .mp-comments-tabs {
+            font-size: 11px
+        }
+
+        .mp-tab {
+            margin-left: 10px;
+            color: #7d7d7d;
+            text-decoration: none
+        }
+
+        .mp-tab:hover {
+            color: #fff
+        }
+
+        .mp-tab-active {
+            color: #fff;
+            text-decoration: underline
+        }
+
+        .mp-comments-list {
+            margin: 0;
+            padding: 0;
+            list-style: none
+        }
+
+        .mp-comments-list li {
+            display: flex;
+            align-items: baseline;
+            line-height: 1.75em
+        }
+
+        .mp-comments-list li a {
+            flex: 1 1 auto;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis
+        }
+
+        .mp-type {
+            flex: 0 0 auto;
+            margin: 0 8px;
+            color: #7d7d7d;
+            font-size: 10px;
+            text-transform: uppercase
+        }
+
+        .mp-count {
+            flex: 0 0 auto;
+            min-width: 2.2em;
+            color: #ffd100;
+            font-size: 11px;
+            text-align: right
+        }
+
+        .mp-empty {
+            color: #7d7d7d
+        }
+
+        
+    </style>
+</head>
+<body>
+<div id="layers"></div>
+<noscript>
+    <div id="noscript-bg"></div>
+    <div id="noscript-text"><b>Please make sure you have javascript enabled.</div>
+</noscript>
+<div id="home">
+    <h1></h1>
+    <span id="menu-buttons-generic" class="menu-buttons"></span>
+    <script type="text/javascript">
+        // Menu.addButtons(ge('menu-buttons-generic'), mn_path);
+    </script>
+    <div class="pad"></div>
+
+                    
+    
+    <div class="pad"></div>
+
+
+    <form method="get" action="?" onsubmit="this.elements[0].value = trim(this.elements[0].value).trim(); if(trim(this.elements[0].value) == '' || trim(this.elements[0].value).length <= 2) return false">
+        <input type="text" name="search" size="38" id="search-generic"/><input type="submit" value="Search"/>
+    </form>
+
+
+    <script type="text/javascript">
+        var _ = ge('search-generic');
+        LiveSearch.attach(_);
+        _.focus()
+    </script>
+
+            <div id="mp-comments" class="mp-comments">
+            <div class="mp-comments-head">
+                <span class="mp-comments-title">Popular comments</span>
+                <span class="mp-comments-tabs">
+                    <a href="javascript:;" id="mp-tab-most" class="mp-tab mp-tab-active"
+                       onclick="mpShowComments('most')">Most comments</a>
+                    <a href="javascript:;" id="mp-tab-new" class="mp-tab"
+                       onclick="mpShowComments('new')">Newest comments</a>
+                </span>
+            </div>
+
+            <ol id="mp-list-most" class="mp-comments-list">
+                                    <li>
+                        <a href="?item=33146" class="q3">Facetted Crystal Scope </a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="5 Comments">5</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=41983">The Great Iqa’quluk</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="4 Comments">4</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=41912">An Ill Omen</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="3 Comments">3</span>
+                    </li>
+                                    <li>
+                        <a href="?item=60001" class="q1">Cleaning Cloth</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="3 Comments">3</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=40130">A Profitable Acquisition</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="3 Comments">3</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=41920">Fallen One Cargo</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=41689">A Good Samaritan</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?npc=60713">Peculiar Broodling</a>
+                        <span class="mp-type">NPC</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=40004">Winterax Champion</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?npc=61387">Brother Elias</a>
+                        <span class="mp-type">NPC</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?item=33145" class="q3">Schematic: Facetted Crystal Scope</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=1950">Get the Scoop</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=41804">Memories of Dark Iron</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=41948">Wanted: Growlpaw</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?item=42112" class="q2">Sharpened Herb Sickle</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                            </ol>
+
+            <ol id="mp-list-new" class="mp-comments-list" style="display:none">
+                                    <li>
+                        <a href="?quest=41920">Fallen One Cargo</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="2 Comments">2</span>
+                    </li>
+                                    <li>
+                        <a href="?item=51609" class="q1">Barthilas&#039; Copper Coin</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?item=61662" class="q3">Stillward Amulet</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?npc=60066">quest_41643_dummy_triger_1</a>
+                        <span class="mp-type">NPC</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?npc=60068">quest_41643_dummy_triger_3</a>
+                        <span class="mp-type">NPC</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?npc=60067">quest_41643_dummy_triger_2</a>
+                        <span class="mp-type">NPC</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?item=33146" class="q3">Facetted Crystal Scope </a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="5 Comments">5</span>
+                    </li>
+                                    <li>
+                        <a href="?npc=61552">Duskskitterer</a>
+                        <span class="mp-type">NPC</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?item=4180" class="q1">Tablet of Ethereal Form II</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?item=5708" class="q1">Tablet of Ethereal Form</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?quest=9052">Bloodpetal Poison</a>
+                        <span class="mp-type">Quest</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?item=19019" class="q5">Thunderfury, Blessed Blade of the Windseeker</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?item=58175" class="q3">Blood-etched Fetish</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?item=41935" class="q1">Sweet &#039;N Crunchy Fruit Bread</a>
+                        <span class="mp-type">Item</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                                    <li>
+                        <a href="?npc=7770">Winkey</a>
+                        <span class="mp-type">NPC</span>
+                        <span class="mp-count" title="1 Comments">1</span>
+                    </li>
+                            </ol>
+        </div>
+
+        <script type="text/javascript">
+            
+            function mpShowComments(which) {
+                var most = document.getElementById('mp-list-most'),
+                    neu = document.getElementById('mp-list-new'),
+                    tMost = document.getElementById('mp-tab-most'),
+                    tNew = document.getElementById('mp-tab-new');
+                if (!most || !neu) return;
+                if (which === 'new') {
+                    most.style.display = 'none';
+                    neu.style.display = '';
+                    tNew.className = 'mp-tab mp-tab-active';
+                    tMost.className = 'mp-tab';
+                } else {
+                    neu.style.display = 'none';
+                    most.style.display = '';
+                    tMost.className = 'mp-tab mp-tab-active';
+                    tNew.className = 'mp-tab';
+                }
+            }
+            
+        </script>
+    
+    	<div id="footer">
+	</div>
+</div>
+</div>
+<!--[if lte IE 6]></td><th class="ie6layout-th"></th></tr></table><![endif]-->
+
+</body>
+</html>
+    <div id="footer">
+                                <br/>Based on <span style="color: #8dc63f;">AoWoW</span>
+    </div>
+
+</body>
+</html>

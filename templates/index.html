@@ -518,8 +518,31 @@
       <section class="tab-content" id="content-rotation">
         <div class="rotation-planner-card">
           <div class="rotation-header">
-            <h2 class="rotation-title">PALADIN ROTATION PLANNER &amp; SPELL PRIORITY QUEUE <span class="info-circle" data-info="rotation_planner" tabindex="0" title="Informacje o planerze i wspólnym cooldownie">i</span></h2>
-            <p class="rotation-desc">Kolejka priorytetow umiejetnosci (Spell Priority List). W kazdej turze Global Cooldown (1.5s) silnik symulacji sprawdza liste od gory do dolu i rzuca pierwsze dostepne zaklecie spelniajace warunki.</p>
+            <h2 class="rotation-title" id="rotation-title-text">PALADIN ROTATION PLANNER &amp; SPELL PRIORITY QUEUE <span class="info-circle" data-info="rotation_planner" tabindex="0" title="Informacje o planerze i wspólnym cooldownie">i</span></h2>
+            <p class="rotation-desc" id="rotation-desc-text">Kolejka priorytetow umiejetnosci (Spell Priority List). W kazdej turze Global Cooldown (1.5s) silnik symulacji sprawdza liste od gory do dolu i rzuca pierwsze dostepne zaklecie spelniajace warunki.</p>
+          </div>
+
+          <!-- Hunter Spec Selection Box (Marksmanship 1.18 / Survival / Beast Mastery) -->
+          <div class="hunter-spec-nav-box" id="hunter-spec-nav-box" style="display: none;">
+            <button type="button" class="hunter-spec-btn active" data-hunter-spec="marksmanship" id="spec-btn-mm">
+              <span class="hunter-spec-btn-title">🏹 Marksmanship (1.18 Rework)</span>
+              <span class="hunter-spec-btn-desc">Steady Shot filler, 2.0s Aimed Shot, -40% Cast Rapid Fire, Multi &amp; Arcane Shot</span>
+            </button>
+            <button type="button" class="hunter-spec-btn" data-hunter-spec="survival" id="spec-btn-survival">
+              <span class="hunter-spec-btn-title">⚔️ Survival (Melee &amp; Traps)</span>
+              <span class="hunter-spec-btn-desc">Mongoose Bite &amp; Counterattack, 5s Raptor Strike (-1s Superior Strikes), Immolation Trap</span>
+            </button>
+            <button type="button" class="hunter-spec-btn" data-hunter-spec="beast_mastery" id="spec-btn-bm">
+              <span class="hunter-spec-btn-title">🐾 Beast Mastery (Pet Synergy)</span>
+              <span class="hunter-spec-btn-desc">Bestial Wrath (+20% Pet Dmg), Intimidation, Pet Focus Dump (Claw/Bite/Breath) &amp; Strzały</span>
+            </button>
+          </div>
+
+          <div class="hunter-notes-banner" id="hunter-notes-banner" style="display: none;">
+            <span style="font-size: 16px;">💡</span>
+            <div id="hunter-notes-text">
+              <strong>Patch 1.18 Rework:</strong> <em>Steady Shot</em> (1.5s cast) jest fillerem wplatanym w okna Auto Shot. Czas rzucania <em>Aimed Shot</em> został skrócony do <strong>2.0s</strong> z <strong>niezależnym 6.0s CD</strong> od Arcane Shot. <em>Rapid Fire</em> skraca czas rzucania obu tych strzałów o <strong>40%</strong>!
+            </div>
           </div>
 
           <!-- Paladin Opener & Combat Seal Selection -->

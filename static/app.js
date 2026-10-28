@@ -47,6 +47,13 @@ let bossHpPercent = 100.0;
 let executePhasePercent = 20.0;
 let activeEnchantSlot = null;
 
+let currentHunterSpec = "marksmanship";
+const HUNTER_SPEC_DEFAULTS = {
+  marksmanship: ["rapid_fire", "aimed_shot", "multi_shot", "arcane_shot", "serpent_sting", "steady_shot", "auto_shot"],
+  survival: ["mongoose_bite", "counterattack", "raptor_strike", "immolation_trap", "wing_clip", "white_melee"],
+  beast_mastery: ["bestial_wrath", "intimidation", "multi_shot", "arcane_shot", "serpent_sting", "auto_shot", "pet_focus_dump"]
+};
+
 let rotationalSpells = [];
 let rotationalSpellsByKey = {};
 let activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
@@ -188,6 +195,12 @@ function getItemIconUrl(iconName) {
 function getItemIconFallbackUrl(iconName) {
   if (!iconName) return "";
   return `https://wow.zamimg.com/images/wow/icons/large/${iconName.toLowerCase()}.jpg`;
+}
+
+function getSpellIconUrl(iconName) {
+  if (!iconName) return "";
+  const clean = iconName.toLowerCase().replace(/\.png$/, "").replace(/\.jpg$/, "");
+  return `/static/icons/talents/${clean}.png`;
 }
 
 function getQualityColor(quality) {
@@ -1442,7 +1455,11 @@ function updateStatsDisplay(totals) {
 }
 
 function loadRotationalSpells() {
-  fetch("/api/spells?class=paladin")
+  const url = currentClass === "hunter"
+    ? `/api/spells?class=hunter&spec=${currentHunterSpec}`
+    : `/api/spells?class=${currentClass}`;
+
+  fetch(url)
     .then(res => res.json())
     .then(data => {
       rotationalSpells = data.rotational_spells || [];
@@ -1465,36 +1482,52 @@ function renderPriorityList() {
   const spellMap = {};
   rotationalSpells.forEach(s => { spellMap[s.key] = s; });
 
-  // Normalize legacy keys: ensure crusader_strike and holy_strike are consolidated into crusader_holy_strike
-  const cleanedPriority = [];
-  let hasStrike = false;
-  activePriorityList.forEach(k => {
-    if (k === "crusader_strike" || k === "holy_strike" || k === "crusader_holy_strike" || k === "strike_category_40") {
-      if (!hasStrike) {
-        cleanedPriority.push("crusader_holy_strike");
-        hasStrike = true;
-      }
-    } else if (k && !cleanedPriority.includes(k)) {
-      cleanedPriority.push(k);
-    }
-  });
-  activePriorityList = cleanedPriority;
+  let allKeys = [];
 
-  const allKeys = [...activePriorityList];
-  rotationalSpells.forEach(s => {
-    if (s.key === "crusader_strike" || s.key === "holy_strike") {
-      if (!allKeys.includes("crusader_holy_strike")) {
-        allKeys.push("crusader_holy_strike");
+  if (currentClass === "paladin") {
+    // Normalize legacy keys: ensure crusader_strike and holy_strike are consolidated into crusader_holy_strike
+    const cleanedPriority = [];
+    let hasStrike = false;
+    activePriorityList.forEach(k => {
+      if (k === "crusader_strike" || k === "holy_strike" || k === "crusader_holy_strike" || k === "strike_category_40") {
+        if (!hasStrike) {
+          cleanedPriority.push("crusader_holy_strike");
+          hasStrike = true;
+        }
+      } else if (k && !cleanedPriority.includes(k)) {
+        cleanedPriority.push(k);
       }
-    } else if (!allKeys.includes(s.key) && s.category !== "seal") {
-      allKeys.push(s.key);
-      disabledSpells.add(s.key);
-    }
-  });
+    });
+    activePriorityList = cleanedPriority;
+
+    allKeys = [...activePriorityList];
+    rotationalSpells.forEach(s => {
+      if (s.key === "crusader_strike" || s.key === "holy_strike") {
+        if (!allKeys.includes("crusader_holy_strike")) {
+          allKeys.push("crusader_holy_strike");
+        }
+      } else if (!allKeys.includes(s.key) && s.category !== "seal") {
+        allKeys.push(s.key);
+        disabledSpells.add(s.key);
+      }
+    });
+  } else if (currentClass === "hunter") {
+    const validKeys = new Set(rotationalSpells.map(s => s.key));
+    const cleanedPriority = activePriorityList.filter(k => validKeys.has(k));
+    rotationalSpells.forEach(s => {
+      if (!cleanedPriority.includes(s.key)) {
+        cleanedPriority.push(s.key);
+      }
+    });
+    activePriorityList = cleanedPriority;
+    allKeys = [...activePriorityList];
+  } else {
+    allKeys = [...activePriorityList];
+  }
 
   allKeys.forEach((key, index) => {
-    // 1. UNIFIED ROW: Crusader Strike & Holy Strike (Shared Category 40 Cooldown)
-    if (key === "crusader_holy_strike") {
+    // 1. UNIFIED ROW: Crusader Strike & Holy Strike (Shared Category 40 Cooldown - Paladin Only)
+    if (currentClass === "paladin" && key === "crusader_holy_strike") {
       const csSpell = spellMap["crusader_strike"] || {
         name: "Crusader Strike",
         icon: "spell_holy_crusaderstrike",
@@ -1729,7 +1762,7 @@ function renderPriorityList() {
     item.className = `priority-item ${isEnabled ? "active" : "disabled"}`;
     item.setAttribute("data-spell-key", key);
 
-    const iconUrl = getItemIconUrl(s.icon) || getItemIconFallbackUrl(s.icon);
+    const iconUrl = getSpellIconUrl(s.icon) || getItemIconFallbackUrl(s.icon);
 
     let cdText = `${s.cooldown}s CD`;
     if (key === "holy_strike") cdText = "6.0s CD (Holy Dmg)";
@@ -1737,9 +1770,25 @@ function renderPriorityList() {
     if (key === "consecration") cdText = "8.0s CD (8s AoE)";
     if (key === "exorcism") cdText = "10-15s CD";
     if (key === "hammer_of_wrath") cdText = "6.0s CD (<20% HP)";
+    if (key === "aimed_shot") cdText = "6.0s CD (2.0s Cast)";
+    if (key === "multi_shot") cdText = "10.0s CD";
+    if (key === "arcane_shot") cdText = "6.0s CD (Instant)";
+    if (key === "rapid_fire") cdText = "180s CD (-40% Cast)";
+    if (key === "bestial_wrath") cdText = "120s CD (+20% Pet)";
+    if (key === "intimidation") cdText = "60s CD (Stun & Burst)";
+    if (key === "mongoose_bite") cdText = "4.0s CD (Dodge/Parry)";
+    if (key === "counterattack") cdText = "5.0s CD (Parry Proc)";
+    if (key === "raptor_strike") cdText = "5.0s CD (Next Melee)";
+    if (key === "immolation_trap") cdText = "15.0s CD (Fire DoT)";
+    if (key === "wing_clip") cdText = "1.5s GCD (Melee Proc)";
+    if (key === "steady_shot") cdText = "1.5s Cast (Filler)";
+    if (key === "auto_shot" || key === "white_melee") cdText = "Auto Swing";
+    if (key === "pet_focus_dump") cdText = "Focus Dump";
 
     let statText = "";
-    if (s.ap_coef > 0 && s.bonus_flat > 0) {
+    if (s.scaling_note) {
+      statText = s.scaling_note;
+    } else if (s.ap_coef > 0 && s.bonus_flat > 0) {
       statText = `${Math.round(s.ap_coef * 100)}% Wpn + ${s.bonus_flat}`;
     } else if (s.spell_power_coef > 0) {
       statText = `${Math.round(s.avg_damage)} Base + ${(s.spell_power_coef * 100).toFixed(1)}% SP`;
@@ -1752,7 +1801,7 @@ function renderPriorityList() {
         <span class="rank-badge">${index + 1}</span>
       </div>
       <div class="priority-col-info">
-        <img class="spell-thumb" src="${iconUrl}" onerror="this.src='${getItemIconFallbackUrl(s.icon)}'" alt="${s.name}">
+        <img class="spell-thumb" src="${iconUrl}" onerror="this.onerror=null;this.src='${getItemIconFallbackUrl(s.icon)}'" alt="${s.name}">
         <div class="spell-text-wrap">
           <div class="spell-title-row">
             <strong class="spell-name">${s.name}</strong>
@@ -1824,6 +1873,72 @@ function renderPriorityList() {
 
     container.appendChild(item);
   });
+}
+
+function selectHunterRotationSpec(spec) {
+  if (!HUNTER_SPEC_DEFAULTS[spec]) return;
+  currentHunterSpec = spec;
+
+  document.querySelectorAll(".hunter-spec-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-hunter-spec") === spec);
+  });
+
+  const notesText = document.getElementById("hunter-notes-text");
+  const descText = document.getElementById("rotation-desc-text");
+
+  if (spec === "marksmanship") {
+    if (notesText) {
+      notesText.innerHTML = "<strong>Patch 1.18 Rework:</strong> <em>Steady Shot</em> (1.5s cast) jest fizycznym fillerem wplatanym w okna Auto Shot. Czas rzucania <em>Aimed Shot</em> został skrócony do <strong>2.0s</strong> (z 3.0s) i posiada <strong>niezależny 6.0s cooldown</strong> od Arcane Shot. <em>Rapid Fire</em> skraca czas rzucania obu tych strzałów o <strong>40%</strong>!";
+    }
+    if (descText) {
+      descText.textContent = "Marksmanship (Patch 1.18 Rework): Skrócony do 2.0s Aimed Shot, niezależny 6.0s CD od Arcane Shot, potężny Rapid Fire dający -40% cast time oraz nowy fizyczny filler Steady Shot (1.5s cast).";
+    }
+  } else if (spec === "survival") {
+    if (notesText) {
+      notesText.innerHTML = "<strong>Survival Melee (Octo/Turtle WoW):</strong> Ciosy wręcz oparte o proce <em>Mongoose Bite</em> (po Dodge/Parry) oraz <em>Counterattack</em> (po Parry), wzmocnione 5-sekundowym <em>Raptor Strike</em> (Superior Strikes 5/5) oraz pułapkami <em>Immolation Trap</em> i <em>Wing Clip</em>.";
+    }
+    if (descText) {
+      descText.textContent = "Survival Melee: Rotacja uderzeń wręcz z procami Mongoose Bite i Counterattack, 5.0s Raptor Strike (-1s z Superior Strikes) oraz podpalającą pułapką Immolation Trap.";
+    }
+  } else if (spec === "beast_mastery") {
+    if (notesText) {
+      notesText.innerHTML = "<strong>Beast Mastery & Pet Synergy:</strong> <em>Bestial Wrath</em> (+20% obrażeń pupila i niewrażliwość na CC na 18s), <em>Intimidation</em> (ogłuszenie i impuls burstu), dump focusu peta (<em>Claw / Bite / Lightning Breath / Furious Howl</em>) oraz wspierające strzały.";
+    }
+    if (descText) {
+      descText.textContent = "Beast Mastery: Rotacja skupiona na Bestial Wrath (+20% obrażeń bestii), Intimidation, automatycznych atakach peta z dumpem focusu oraz dystansowych strzałach myśliwego.";
+    }
+  }
+
+  activePriorityList = [...HUNTER_SPEC_DEFAULTS[spec]];
+  disabledSpells.clear();
+
+  loadRotationalSpells();
+  runSimulation();
+}
+
+function updateRotationPlannerUI() {
+  const rotTitle = document.getElementById("rotation-title-text");
+  const rotDesc = document.getElementById("rotation-desc-text");
+  const palSealBox = document.getElementById("paladin-seal-config-box");
+  const hunterSpecNav = document.getElementById("hunter-spec-nav-box");
+  const hunterNotes = document.getElementById("hunter-notes-banner");
+
+  if (currentClass === "hunter") {
+    if (rotTitle) rotTitle.innerHTML = `HUNTER ROTATION PLANNER &amp; SPELL PRIORITY QUEUE <span class="info-circle" data-info="rotation_planner" tabindex="0" title="Informacje o planerze i rotacjach">i</span>`;
+    if (palSealBox) palSealBox.style.display = "none";
+    if (hunterSpecNav) hunterSpecNav.style.display = "flex";
+    if (hunterNotes) hunterNotes.style.display = "flex";
+    selectHunterRotationSpec(currentHunterSpec);
+  } else if (currentClass === "paladin") {
+    if (rotTitle) rotTitle.innerHTML = `PALADIN ROTATION PLANNER &amp; SPELL PRIORITY QUEUE <span class="info-circle" data-info="rotation_planner" tabindex="0" title="Informacje o planerze i wspólnym cooldownie">i</span>`;
+    if (rotDesc) rotDesc.textContent = "Kolejka priorytetow umiejetnosci (Spell Priority List). W kazdej turze Global Cooldown (1.5s) silnik symulacji sprawdza liste od gory do dolu i rzuca pierwsze dostepne zaklecie spelniajace warunki.";
+    if (palSealBox) palSealBox.style.display = "block";
+    if (hunterSpecNav) hunterSpecNav.style.display = "none";
+    if (hunterNotes) hunterNotes.style.display = "none";
+    activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
+    disabledSpells.clear();
+    loadRotationalSpells();
+  }
 }
 
 function syncRotationMode(newMode) {
@@ -1899,7 +2014,8 @@ function runSimulation() {
     apply_crusader_first: document.getElementById("cfg-opener-crusader")?.checked ?? true,
     pet_family: petFamily,
     pet_active: petActive,
-    combat_style: combatStyle
+    combat_style: combatStyle,
+    hunter_spec: currentHunterSpec
   };
 
   fetch("/api/simulate", {
@@ -2206,7 +2322,7 @@ function renderSimulationResults(data) {
 
       const styleRow = document.createElement("div");
       styleRow.className = "b-item highlight-strike-seq";
-      styleRow.innerHTML = `<span>Styl Walki:</span><strong class="gold">${data.combat_style_name || "Survival Melee"}</strong>`;
+      styleRow.innerHTML = `<span>Styl Walki / Spec:</span><strong class="gold">${data.hunter_spec_name || data.combat_style_name || "Survival Melee"}</strong>`;
       castsList.appendChild(styleRow);
 
       if (data.pet_details) {
@@ -2219,14 +2335,20 @@ function renderSimulationResults(data) {
 
       const casts = data.ability_casts || {};
       const hunterLabels = {
-        raptor_strike: "Raptor Strike Casts (Broń 2H/1H)",
-        mongoose_bite: "Mongoose Bite Casts (Dodge/Parry Proc)",
-        counterattack: "Counterattack Casts (Parry Proc)",
+        rapid_fire: "Rapid Fire (Burst: -40% Cast Reduction na 15s)",
+        aimed_shot: "Aimed Shot Casts (2.0s Cast, 6.0s CD, 1.18)",
+        steady_shot: "Steady Shot Casts (1.18 Rework Filler 1.5s)",
+        multi_shot: "Multi-Shot Casts (10.0s CD)",
+        arcane_shot: "Arcane Shot Casts (Magia Arcane, 6.0s CD)",
+        serpent_sting: "Serpent Sting Casts (Nature DoT 15s)",
+        auto_shot: "Auto Shot Strzały (Woven Weaving)",
+        raptor_strike: "Raptor Strike Casts (Broń 2H/1H, 5s CD)",
+        mongoose_bite: "Mongoose Bite Casts (Dodge/Parry Proc, 4s CD)",
+        counterattack: "Counterattack Casts (Parry Proc, 5s CD)",
         immolation_trap: "Immolation Trap Casts (Ogień DoT)",
-        auto_shot: "Auto Shot Strzały",
-        aimed_shot: "Aimed Shot Casts",
-        multi_shot: "Multi-Shot Casts",
-        serpent_sting: "Serpent Sting Casts",
+        wing_clip: "Wing Clip Casts (Melee Filler / Procs)",
+        bestial_wrath: "Bestial Wrath Casts (+20% Pet Dmg)",
+        intimidation: "Intimidation Casts (Pet Stun & Burst)",
         pet_swings: "Pet Auto Attack (Białe Ataki Peta)",
         pet_claws: "Pet Claw (Focus Dump)",
         pet_bites: "Pet Bite Casts",
@@ -2239,6 +2361,13 @@ function renderSimulationResults(data) {
           const row = document.createElement("div");
           row.className = "b-item";
           row.innerHTML = `<span>${hunterLabels[key] || key}:</span><strong>${num}</strong>`;
+          const sp = rotationalSpellsByKey[key];
+          if (sp) {
+            row.style.cursor = "help";
+            row.addEventListener("mouseenter", (e) => showSpellTooltip(sp, e));
+            row.addEventListener("mousemove", (e) => positionTooltip(e));
+            row.addEventListener("mouseleave", hideTooltip);
+          }
           castsList.appendChild(row);
         }
       }
@@ -2534,8 +2663,9 @@ function switchClass(newClass) {
 
   const rotTabBtn = document.getElementById("tab-btn-rotation");
   if (rotTabBtn) {
-    rotTabBtn.style.display = currentClass === "paladin" ? "inline-block" : "none";
+    rotTabBtn.style.display = (currentClass === "paladin" || currentClass === "hunter") ? "inline-block" : "none";
   }
+  updateRotationPlannerUI();
 
   const thirdSlotCard = document.getElementById("slot-card-third");
   const thirdSlotTitle = document.getElementById("third-slot-title");
@@ -2939,17 +3069,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnResetRot = document.getElementById("btn-reset-rotation");
   if (btnResetRot) {
     btnResetRot.addEventListener("click", () => {
-      activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
-      strikeRampMode = "3_cs";
-      strikeRampHs = 0;
-      strikeRampCs = 3;
-      strikeSustainHs = 1;
-      strikeSustainCs = 1;
-      disabledSpells.clear();
-      renderPriorityList();
-      runSimulation();
+      if (currentClass === "hunter") {
+        activePriorityList = [...(HUNTER_SPEC_DEFAULTS[currentHunterSpec] || HUNTER_SPEC_DEFAULTS.marksmanship)];
+        disabledSpells.clear();
+        renderPriorityList();
+        runSimulation();
+      } else {
+        activePriorityList = ["hammer_of_wrath", "crusader_holy_strike", "judgement", "consecration", "exorcism"];
+        strikeRampMode = "3_cs";
+        strikeRampHs = 0;
+        strikeRampCs = 3;
+        strikeSustainHs = 1;
+        strikeSustainCs = 1;
+        disabledSpells.clear();
+        renderPriorityList();
+        runSimulation();
+      }
     });
   }
+
+  // Hunter Spec Selector Buttons
+  document.querySelectorAll(".hunter-spec-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const spec = btn.getAttribute("data-hunter-spec");
+      if (spec) selectHunterRotationSpec(spec);
+    });
+  });
 
   // Attack Breakdown toolbar buttons
   document.getElementById("btn-bd-mode-dps")?.addEventListener("click", () => setBreakdownViewMode("dps"));

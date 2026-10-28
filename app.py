@@ -76,6 +76,23 @@ def api_spells():
             "canonical_rotational": {s["key"]: s for s in rotational if "key" in s},
             "all_spells": s_db.get("paladin_spells", []),
         })
+    elif cls == "hunter":
+        hunter_spells_path = os.path.join(os.path.dirname(__file__), "data", "hunter_spells.json")
+        h_data = {}
+        if os.path.exists(hunter_spells_path):
+            with open(hunter_spells_path, "r", encoding="utf-8") as f:
+                h_data = json.load(f)
+        spec = request.args.get("spec", "marksmanship").lower().strip()
+        rotational = h_data.get(spec, h_data.get("marksmanship", []))
+        return jsonify({
+            "character_class": "hunter",
+            "spec": spec,
+            "specs": list(h_data.keys()),
+            "specs_data": h_data,
+            "rotational_spells": rotational,
+            "canonical_rotational": {s["key"]: s for s in rotational if "key" in s},
+            "all_spells": rotational,
+        })
     return jsonify({"character_class": cls, "rotational_spells": [], "canonical_rotational": {}, "all_spells": []})
 
 
@@ -151,6 +168,7 @@ def api_simulate():
     pet_family = str(data.get("pet_family", "cat")).lower().strip()
     pet_active = bool(data.get("pet_active", True))
     combat_style = str(data.get("combat_style", "auto")).lower().strip()
+    hunter_spec = str(data.get("hunter_spec", data.get("spec", "marksmanship"))).lower().strip()
 
     result = simulate_combat(
         equipped_items=equipped_items,
@@ -182,6 +200,7 @@ def api_simulate():
         pet_family=pet_family,
         pet_active=pet_active,
         combat_style=combat_style,
+        hunter_spec=hunter_spec,
         db=db,
     )
     return jsonify(result)

@@ -2,7 +2,9 @@
 *.wdb
 data/temp_octo_extracted/
 __pycache__/
-*.pyc
+**/__pycache__/
+*.py[cod]
+*$py.class
 venv/
 .env
 .vscode/

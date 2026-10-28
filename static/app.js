@@ -592,6 +592,33 @@ function shortenEnchantName(name) {
   s = s.replace(/Superior Strength/i, "+9 Str");
   s = s.replace(/Greater Agility/i, "+7 Agi");
   s = s.replace(/Crusader/i, "Crusader");
+  s = s.replace(/Dreamsteel Belt Buckle \(\+10 Intellect\)/i, "Dreamsteel (+10 Int)");
+  s = s.replace(/Mithril Belt Buckle \(\+6 Agility\)/i, "Mithril (+6 Agi)");
+  s = s.replace(/Iron Belt Buckle \(\+25 Armor Penetration\)/i, "Iron (+25 ArP)");
+  s = s.replace(/Truesilver Belt Buckle \(\+10 Healing \/ \+6 Spell Power\)/i, "Truesilver (+6 SP)");
+  s = s.replace(/Thorium Belt Buckle \(\+4 All Resistances\)/i, "Thorium (+4 Res)");
+  s = s.replace(/Dragonscale Belt Buckle \(\+10 Fire Resistance\)/i, "Dragonscale (+10 FR)");
+  s = s.replace(/Bloody Belt Buckle \(-3% Crit\/DoT Dmg Taken\)/i, "Bloody (-3% Resil)");
+  s = s.replace(/Ceremonial Belt Buckle \(\+4 Intellect\)/i, "Ceremonial (+4 Int)");
+  s = s.replace(/Bronze Belt Buckle \(\+2 Stamina\)/i, "Bronze (+2 Sta)");
+  s = s.replace(/Copper Belt Buckle \(\+1 Stamina\)/i, "Copper (+1 Sta)");
+  s = s.replace(/Azerothian Ruby Gemstone \(\+6 Strength\)/i, "Ruby (+6 Str)");
+  s = s.replace(/Delicate Emerald Gemstone \(\+6 Agility\)/i, "Emerald (+6 Agi)");
+  s = s.replace(/Bold Ruby Gemstone \(\+12 Attack Power\)/i, "Bold Ruby (+12 AP)");
+  s = s.replace(/Arcane Emerald Gemstone \(\+5 Spell Damage\)/i, "Arcane (+5 SP)");
+  s = s.replace(/Shining Sapphire Gemstone \(\+6 Intellect\)/i, "Sapphire (+6 Int)");
+  s = s.replace(/Tempered Azerothian Gemstone \(\+6 Stamina\)/i, "Tempered (+6 Sta)");
+  s = s.replace(/Stunning Imperial Gemstone \(\+3 All Stats\)/i, "Imperial (+3 Stats)");
+  s = s.replace(/Beautiful Diamond Gemstone \(\+12 Healing\)/i, "Diamond (+12 Heal)");
+  s = s.replace(/Gleaming Jade Gemstone \(\+7 Healing\)/i, "Jade (+7 Heal)");
+  s = s.replace(/Crystalized Topaz Gemstone \(\+9 Arcane Spell Damage\)/i, "Topaz (+9 Arc)");
+  s = s.replace(/Graceful Agate Gemstone \(\+6 Spell Penetration\)/i, "Agate (+6 Pen)");
+  s = s.replace(/Gorgeous Mountain Gemstone \(\+1% Block Chance\)/i, "Mountain (+1% Blk)");
+  s = s.replace(/Glowing Ruby Gemstone \(\+1% Vampirism\)/i, "Ruby (+1% Vamp)");
+  s = s.replace(/Pristine Quartz \(\+3 Stamina\)/i, "Quartz (+3 Sta)");
+  s = s.replace(/Resilient Arcane Gemstone \(\+30 Armor\)/i, "Resilient (+30 Arm)");
+  s = s.replace(/Gloomy Diamond Gemstone \(\+5 Fire Resistance\)/i, "Diamond (+5 FR)");
+  s = s.replace(/Unstable Arcane Gemstone \(\+5 Arcane Resistance\)/i, "Arcane (+5 AR)");
   return s;
 }
 
@@ -612,9 +639,17 @@ function updateEnchantButtonDisplay(slotKey) {
     btn.className = "slot-enchant-btn has-enchant";
     btn.title = enchObj ? `${enchObj.name} (Click to change/remove)` : "Click to change/remove";
   } else {
-    btn.textContent = "+ Enchant";
+    if (slotKey === "waist") {
+      btn.textContent = "+ Buckle";
+      btn.title = "Select Belt Buckle (Blacksmithing)";
+    } else if (slotKey === "neck" || slotKey === "finger1" || slotKey === "finger2") {
+      btn.textContent = "+ Gem";
+      btn.title = "Select Gemstone (Jewelcrafting)";
+    } else {
+      btn.textContent = "+ Enchant";
+      btn.title = "Select enchant";
+    }
     btn.className = "slot-enchant-btn";
-    btn.title = "Select enchant";
   }
 }
 
@@ -635,9 +670,15 @@ function openEnchantPicker(slotKey, btnEl) {
     } else {
       category = "offhand";
     }
-  } else if (slotKey === "relic" || slotKey === "trinket1" || slotKey === "trinket2" || slotKey === "neck" || slotKey === "waist" || slotKey === "finger1" || slotKey === "finger2") {
-    alert("Przedmioty w tym slocie (np. Trinkety, Libramy, Pierścienie) nie posiadają zaklęć (brak enchantów w grze).");
+  } else if (slotKey === "relic" || slotKey === "trinket1" || slotKey === "trinket2") {
+    alert("Przedmioty w tym slocie (np. Trinkety, Libramy, Totemy, Idole) nie posiadają zaklęć ani gemów w grze.");
     return;
+  } else if (slotKey === "finger1" || slotKey === "finger2") {
+    category = "finger";
+  } else if (slotKey === "neck") {
+    category = "neck";
+  } else if (slotKey === "waist") {
+    category = "waist";
   } else if (slotKey === "ranged") {
     category = "ranged";
   }
@@ -647,7 +688,15 @@ function openEnchantPicker(slotKey, btnEl) {
   const popover = document.getElementById("enchant-picker");
   popover.style.display = "flex";
   const titleEl = document.getElementById("ench-picker-title");
-  if (titleEl) titleEl.textContent = `Enchant: ${getSlotDisplayTitle(slotKey)}`;
+  if (titleEl) {
+    if (slotKey === "waist") {
+      titleEl.textContent = `Belt Buckle: ${getSlotDisplayTitle(slotKey)}`;
+    } else if (slotKey === "neck" || slotKey === "finger1" || slotKey === "finger2") {
+      titleEl.textContent = `Gemstone: ${getSlotDisplayTitle(slotKey)}`;
+    } else {
+      titleEl.textContent = `Enchant: ${getSlotDisplayTitle(slotKey)}`;
+    }
+  }
 
   const rect = btnEl.getBoundingClientRect();
   let left = rect.left + window.scrollX;
@@ -706,13 +755,27 @@ function renderEnchantPickerList(category, slotKey, filterText = "") {
     if (ench.str) desc += `+${ench.str} Str `;
     if (ench.agi) desc += `+${ench.agi} Agi `;
     if (ench.sta) desc += `+${ench.sta} Sta `;
+    if (ench.int) desc += `+${ench.int} Int `;
+    if (ench.spi) desc += `+${ench.spi} Spi `;
     if (ench.ap) desc += `+${ench.ap} AP `;
+    if (ench.sp) desc += `+${ench.sp} SP `;
+    if (ench.healing) desc += `+${ench.healing} Heal `;
+    if (ench.arp) desc += `+${ench.arp} ArP `;
+    if (ench.armor) desc += `+${ench.armor} Armor `;
+    if (ench.block) desc += `+${ench.block}% Block `;
+    if (ench.resilience) desc += `-${ench.resilience}% Dmg Taken `;
+    if (ench.vampirism) desc += `+${ench.vampirism}% Vampirism `;
     if (ench.crit) desc += `+${ench.crit}% Crit `;
     if (ench.hit) desc += `+${ench.hit}% Hit `;
     if (ench.haste) desc += `+${ench.haste}% Haste `;
     if (ench.bonusdmg) desc += `+${ench.bonusdmg} Dmg `;
     if (ench.ppm) desc += `${ench.ppm} PPM Proc `;
     if (ench.magicdmg) desc += `+${ench.magicdmg} Magic Dmg `;
+    if (ench.fire) desc += `+${ench.fire} FR `;
+    if (ench.frost) desc += `+${ench.frost} Frost `;
+    if (ench.nature) desc += `+${ench.nature} Nature `;
+    if (ench.shadow) desc += `+${ench.shadow} Shadow `;
+    if (ench.arcane) desc += `+${ench.arcane} Arcane `;
 
     item.innerHTML = `
       <div style="font-weight: 600;">${ench.name}</div>
@@ -2436,9 +2499,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const mhItem = itemsById[String(equippedItems.main_hand)];
         category = (mhItem && (mhItem.slot === "twohand" || mhItem.slot === "two_hand")) ? "twohand" : "mainhand";
       } else if (activeEnchantSlot === "off_hand") {
-        category = "offhand";
+        const ohItem = itemsById[String(equippedItems.off_hand)];
+        category = (ohItem && (ohItem.slot === "shield" || ohItem.subclass === "shield")) ? "shield" : "offhand";
       } else if (activeEnchantSlot === "relic" || activeEnchantSlot === "ranged") {
         category = "ranged";
+      } else if (activeEnchantSlot === "finger1" || activeEnchantSlot === "finger2") {
+        category = "finger";
+      } else if (activeEnchantSlot === "neck") {
+        category = "neck";
+      } else if (activeEnchantSlot === "waist") {
+        category = "waist";
       }
       renderEnchantPickerList(category, activeEnchantSlot, e.target.value);
     });

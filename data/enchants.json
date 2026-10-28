@@ -909,5 +909,382 @@
       "block": 2,
       "ench": "941"
     }
+  ],
+  "waist": [
+    {
+      "id": 61801,
+      "spellid": true,
+      "name": "Dreamsteel Belt Buckle (+10 Intellect)",
+      "r": 60,
+      "int": 10,
+      "ench": "61801"
+    },
+    {
+      "id": 61804,
+      "spellid": true,
+      "name": "Mithril Belt Buckle (+6 Agility)",
+      "r": 40,
+      "agi": 6,
+      "ench": "61804"
+    },
+    {
+      "id": 61805,
+      "spellid": true,
+      "name": "Iron Belt Buckle (+25 Armor Penetration)",
+      "r": 30,
+      "arp": 25,
+      "ench": "61805"
+    },
+    {
+      "id": 61806,
+      "spellid": true,
+      "name": "Truesilver Belt Buckle (+10 Healing / +6 Spell Power)",
+      "r": 45,
+      "sp": 6,
+      "healing": 10,
+      "ench": "61806"
+    },
+    {
+      "id": 61803,
+      "spellid": true,
+      "name": "Thorium Belt Buckle (+4 All Resistances)",
+      "r": 50,
+      "arcane": 4,
+      "fire": 4,
+      "frost": 4,
+      "nature": 4,
+      "shadow": 4,
+      "ench": "61803"
+    },
+    {
+      "id": 61807,
+      "spellid": true,
+      "name": "Dragonscale Belt Buckle (+10 Fire Resistance)",
+      "r": 40,
+      "fire": 10,
+      "ench": "61807"
+    },
+    {
+      "id": 61802,
+      "spellid": true,
+      "name": "Bloody Belt Buckle (-3% Crit/DoT Dmg Taken)",
+      "r": 60,
+      "resilience": 3,
+      "ench": "61802"
+    },
+    {
+      "id": 61808,
+      "spellid": true,
+      "name": "Ceremonial Belt Buckle (+4 Intellect)",
+      "r": 25,
+      "int": 4,
+      "ench": "61808"
+    },
+    {
+      "id": 61809,
+      "spellid": true,
+      "name": "Bronze Belt Buckle (+2 Stamina)",
+      "r": 15,
+      "sta": 2,
+      "ench": "61809"
+    },
+    {
+      "id": 61810,
+      "spellid": true,
+      "name": "Copper Belt Buckle (+1 Stamina)",
+      "r": 5,
+      "sta": 1,
+      "ench": "61810"
+    }
+  ],
+  "finger": [
+    {
+      "id": 62801,
+      "spellid": true,
+      "name": "Azerothian Ruby Gemstone (+6 Strength)",
+      "r": 60,
+      "str": 6,
+      "ench": "62801"
+    },
+    {
+      "id": 62804,
+      "spellid": true,
+      "name": "Delicate Emerald Gemstone (+6 Agility)",
+      "r": 60,
+      "agi": 6,
+      "ench": "62804"
+    },
+    {
+      "id": 62805,
+      "spellid": true,
+      "name": "Bold Ruby Gemstone (+12 Attack Power)",
+      "r": 60,
+      "ap": 12,
+      "ench": "62805"
+    },
+    {
+      "id": 62806,
+      "spellid": true,
+      "name": "Arcane Emerald Gemstone (+5 Spell Damage)",
+      "r": 60,
+      "sp": 5,
+      "spellpower": 5,
+      "ench": "62806"
+    },
+    {
+      "id": 62802,
+      "spellid": true,
+      "name": "Shining Sapphire Gemstone (+6 Intellect)",
+      "r": 60,
+      "int": 6,
+      "ench": "62802"
+    },
+    {
+      "id": 62803,
+      "spellid": true,
+      "name": "Tempered Azerothian Gemstone (+6 Stamina)",
+      "r": 60,
+      "sta": 6,
+      "ench": "62803"
+    },
+    {
+      "id": 62809,
+      "spellid": true,
+      "name": "Stunning Imperial Gemstone (+3 All Stats)",
+      "r": 60,
+      "str": 3,
+      "agi": 3,
+      "sta": 3,
+      "int": 3,
+      "spi": 3,
+      "ench": "62809"
+    },
+    {
+      "id": 62807,
+      "spellid": true,
+      "name": "Beautiful Diamond Gemstone (+12 Healing)",
+      "r": 60,
+      "healing": 12,
+      "sp": 4,
+      "ench": "62807"
+    },
+    {
+      "id": 62808,
+      "spellid": true,
+      "name": "Gleaming Jade Gemstone (+7 Healing)",
+      "r": 45,
+      "healing": 7,
+      "sp": 2,
+      "ench": "62808"
+    },
+    {
+      "id": 62810,
+      "spellid": true,
+      "name": "Crystalized Topaz Gemstone (+9 Arcane Spell Damage)",
+      "r": 50,
+      "sp": 9,
+      "ench": "62810"
+    },
+    {
+      "id": 62811,
+      "spellid": true,
+      "name": "Graceful Agate Gemstone (+6 Spell Penetration)",
+      "r": 50,
+      "spell_pen": 6,
+      "ench": "62811"
+    },
+    {
+      "id": 62812,
+      "spellid": true,
+      "name": "Gorgeous Mountain Gemstone (+1% Block Chance)",
+      "r": 50,
+      "block": 1,
+      "ench": "62812"
+    },
+    {
+      "id": 62813,
+      "spellid": true,
+      "name": "Glowing Ruby Gemstone (+1% Vampirism)",
+      "r": 50,
+      "vampirism": 1,
+      "ench": "62813"
+    },
+    {
+      "id": 62814,
+      "spellid": true,
+      "name": "Pristine Quartz (+3 Stamina)",
+      "r": 35,
+      "sta": 3,
+      "ench": "62814"
+    },
+    {
+      "id": 62815,
+      "spellid": true,
+      "name": "Resilient Arcane Gemstone (+30 Armor)",
+      "r": 50,
+      "armor": 30,
+      "ench": "62815"
+    },
+    {
+      "id": 62816,
+      "spellid": true,
+      "name": "Gloomy Diamond Gemstone (+5 Fire Resistance)",
+      "r": 50,
+      "fire": 5,
+      "ench": "62816"
+    },
+    {
+      "id": 62817,
+      "spellid": true,
+      "name": "Unstable Arcane Gemstone (+5 Arcane Resistance)",
+      "r": 50,
+      "arcane": 5,
+      "ench": "62817"
+    }
+  ],
+  "neck": [
+    {
+      "id": 62801,
+      "spellid": true,
+      "name": "Azerothian Ruby Gemstone (+6 Strength)",
+      "r": 60,
+      "str": 6,
+      "ench": "62801"
+    },
+    {
+      "id": 62804,
+      "spellid": true,
+      "name": "Delicate Emerald Gemstone (+6 Agility)",
+      "r": 60,
+      "agi": 6,
+      "ench": "62804"
+    },
+    {
+      "id": 62805,
+      "spellid": true,
+      "name": "Bold Ruby Gemstone (+12 Attack Power)",
+      "r": 60,
+      "ap": 12,
+      "ench": "62805"
+    },
+    {
+      "id": 62806,
+      "spellid": true,
+      "name": "Arcane Emerald Gemstone (+5 Spell Damage)",
+      "r": 60,
+      "sp": 5,
+      "spellpower": 5,
+      "ench": "62806"
+    },
+    {
+      "id": 62802,
+      "spellid": true,
+      "name": "Shining Sapphire Gemstone (+6 Intellect)",
+      "r": 60,
+      "int": 6,
+      "ench": "62802"
+    },
+    {
+      "id": 62803,
+      "spellid": true,
+      "name": "Tempered Azerothian Gemstone (+6 Stamina)",
+      "r": 60,
+      "sta": 6,
+      "ench": "62803"
+    },
+    {
+      "id": 62809,
+      "spellid": true,
+      "name": "Stunning Imperial Gemstone (+3 All Stats)",
+      "r": 60,
+      "str": 3,
+      "agi": 3,
+      "sta": 3,
+      "int": 3,
+      "spi": 3,
+      "ench": "62809"
+    },
+    {
+      "id": 62807,
+      "spellid": true,
+      "name": "Beautiful Diamond Gemstone (+12 Healing)",
+      "r": 60,
+      "healing": 12,
+      "sp": 4,
+      "ench": "62807"
+    },
+    {
+      "id": 62808,
+      "spellid": true,
+      "name": "Gleaming Jade Gemstone (+7 Healing)",
+      "r": 45,
+      "healing": 7,
+      "sp": 2,
+      "ench": "62808"
+    },
+    {
+      "id": 62810,
+      "spellid": true,
+      "name": "Crystalized Topaz Gemstone (+9 Arcane Spell Damage)",
+      "r": 50,
+      "sp": 9,
+      "ench": "62810"
+    },
+    {
+      "id": 62811,
+      "spellid": true,
+      "name": "Graceful Agate Gemstone (+6 Spell Penetration)",
+      "r": 50,
+      "spell_pen": 6,
+      "ench": "62811"
+    },
+    {
+      "id": 62812,
+      "spellid": true,
+      "name": "Gorgeous Mountain Gemstone (+1% Block Chance)",
+      "r": 50,
+      "block": 1,
+      "ench": "62812"
+    },
+    {
+      "id": 62813,
+      "spellid": true,
+      "name": "Glowing Ruby Gemstone (+1% Vampirism)",
+      "r": 50,
+      "vampirism": 1,
+      "ench": "62813"
+    },
+    {
+      "id": 62814,
+      "spellid": true,
+      "name": "Pristine Quartz (+3 Stamina)",
+      "r": 35,
+      "sta": 3,
+      "ench": "62814"
+    },
+    {
+      "id": 62815,
+      "spellid": true,
+      "name": "Resilient Arcane Gemstone (+30 Armor)",
+      "r": 50,
+      "armor": 30,
+      "ench": "62815"
+    },
+    {
+      "id": 62816,
+      "spellid": true,
+      "name": "Gloomy Diamond Gemstone (+5 Fire Resistance)",
+      "r": 50,
+      "fire": 5,
+      "ench": "62816"
+    },
+    {
+      "id": 62817,
+      "spellid": true,
+      "name": "Unstable Arcane Gemstone (+5 Arcane Resistance)",
+      "r": 50,
+      "arcane": 5,
+      "ench": "62817"
+    }
   ]
 }

@@ -380,6 +380,8 @@ def calculate_gear_totals(
         "spirit": 0,
         "armor": 0,
         "haste": 0.0,
+        "arp": 0,
+        "block": 0,
         "resistances": {
             "holy": 0,
             "fire": 0,
@@ -510,6 +512,8 @@ def calculate_gear_totals(
         totals["intellect"] += item.get("intellect", 0)
         totals["spirit"] += item.get("spirit", 0)
         totals["armor"] += item.get("armor", 0)
+        totals["arp"] += item.get("arp", 0)
+        totals["block"] += item.get("block", 0)
 
         res = item.get("resistances", {})
         for r_key, r_val in res.items():
@@ -582,6 +586,10 @@ def calculate_gear_totals(
                     candidate_slots = ["finger"]
                 elif slot_key in ("trinket1", "trinket2"):
                     candidate_slots = ["trinket"]
+                elif slot_key == "waist":
+                    candidate_slots = ["waist"]
+                elif slot_key == "neck":
+                    candidate_slots = ["neck"]
 
                 for c_slot in candidate_slots:
                     for e_item in all_enchants.get(c_slot, []):
@@ -614,6 +622,11 @@ def calculate_gear_totals(
                 totals["armor"] += ench_obj.get("armor", 0) + ench_obj.get("defense", 0)
                 totals["spell_power"] += ench_obj.get("sp", ench_obj.get("spellpower", 0))
                 totals["healing"] += ench_obj.get("healing", 0)
+                totals["arp"] += ench_obj.get("arp", 0)
+                totals["block"] += ench_obj.get("block", 0)
+                for res_key in ("arcane", "fire", "frost", "nature", "shadow", "holy"):
+                    if res_key in ench_obj and res_key in totals["resistances"]:
+                        totals["resistances"][res_key] += ench_obj[res_key]
 
                 # Weapon bonus damage (Superior Striking, scopes, etc.)
                 bonusdmg = ench_obj.get("bonusdmg", 0)

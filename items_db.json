@@ -2277,8 +2277,16 @@
         ],
         "bonuses": [
           {
+            "threshold": 2,
+            "text": "(2) Set: Increases your pet's damage by 3%."
+          },
+          {
             "threshold": 3,
-            "text": "(3) Set: Increases your pet's damage by 3%."
+            "text": "(3) Set: Increases the critical strike chance of Steady Shot, Raptor Strike and Mongoose Bite by 2%."
+          },
+          {
+            "threshold": 3,
+            "text": "(3) Set: Increases pet Focus regeneration by 2."
           }
         ]
       },
@@ -13447,7 +13455,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -30191,7 +30199,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -31133,7 +31141,8 @@
         "paladin",
         "hunter",
         "shaman"
-      ]
+      ],
+      "pet_dmg_percent": 3.0
     },
     {
       "id": 21995,
@@ -31453,7 +31462,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_dmg_percent": 3.0
     },
     {
       "id": 22107,
@@ -46055,8 +46065,16 @@
         ],
         "bonuses": [
           {
+            "threshold": 2,
+            "text": "(2) Set: Increases your pet's damage by 3%."
+          },
+          {
             "threshold": 3,
-            "text": "(3) Set: Increases your pet's damage by 3%."
+            "text": "(3) Set: Increases the critical strike chance of Steady Shot, Raptor Strike and Mongoose Bite by 2%."
+          },
+          {
+            "threshold": 3,
+            "text": "(3) Set: Increases pet Focus regeneration by 2."
           }
         ]
       },
@@ -56969,7 +56987,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -57861,7 +57879,7 @@
       "attack_power": 0,
       "spell_power": 0,
       "healing": 0,
-      "crit": 4.0,
+      "crit": 0.0,
       "hit": 1.0,
       "spells": [
         {
@@ -57913,7 +57931,8 @@
         "paladin",
         "hunter",
         "shaman"
-      ]
+      ],
+      "pet_crit": 2.0
     },
     {
       "id": 22006,
@@ -58012,7 +58031,7 @@
       "attack_power": 0,
       "spell_power": 14,
       "healing": 14,
-      "crit": 4.0,
+      "crit": 0.0,
       "hit": 1.0,
       "spells": [
         {
@@ -58074,7 +58093,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_crit": 2.0
     },
     {
       "id": 21998,
@@ -73978,7 +73998,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -89880,7 +89900,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -108726,7 +108746,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_dmg_percent": 3.0
     },
     {
       "id": 19588,
@@ -109034,11 +109055,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -113690,7 +113711,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_dmg_percent": 5.0
     },
     {
       "id": 19142,
@@ -117497,8 +117519,16 @@
         ],
         "bonuses": [
           {
+            "threshold": 2,
+            "text": "(2) Set: Increases your pet's damage by 3%."
+          },
+          {
             "threshold": 3,
-            "text": "(3) Set: Increases your pet's damage by 3%."
+            "text": "(3) Set: Increases the critical strike chance of Steady Shot, Raptor Strike and Mongoose Bite by 2%."
+          },
+          {
+            "threshold": 3,
+            "text": "(3) Set: Increases pet Focus regeneration by 2."
           }
         ]
       },
@@ -138466,11 +138496,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -139257,7 +139287,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -149169,7 +149199,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 150,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -149267,7 +149297,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 260,
+      "attack_power": 64,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -149281,7 +149311,7 @@
         {
           "spell_id": 28777,
           "trigger": 0,
-          "text": "Use: Increases Attack Power by 260 for ."
+          "text": "Use: Increases Attack Power by 260 for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -149322,7 +149352,7 @@
       "spirit": 0,
       "resistances": {},
       "attack_power": 0,
-      "spell_power": 170,
+      "spell_power": 40,
       "healing": 0,
       "crit": 0.0,
       "hit": 0.0,
@@ -149335,7 +149365,7 @@
         {
           "spell_id": 28779,
           "trigger": 0,
-          "text": "Use: Increases damage and healing done by magical spells and effects by up to 130 for ."
+          "text": "Use: Increases damage and healing done by magical spells and effects by up to 130 for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -149556,7 +149586,7 @@
         {
           "spell_id": 28866,
           "trigger": 0,
-          "text": "Use: Increases your attack speed by 20% for ."
+          "text": "Use: Increases your attack speed by 20% for 15 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -149822,7 +149852,7 @@
         {
           "spell_id": 29602,
           "trigger": 0,
-          "text": "Use: Increases attack power by  and an additional  every  sec.  Lasts ."
+          "text": "Use: Increases attack power by 65 and an additional 65 every 2 sec for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -150120,7 +150150,7 @@
         {
           "spell_id": 23721,
           "trigger": 0,
-          "text": "Use: Infuses you with Arcane energy, causing your next  Arcane Shots, Mongoose Bites or Raptor Strikes within  to detonate at the target. The Arcane Detonation deals  damage to enemies within  yards of the target."
+          "text": "Use: Infuses you with Arcane energy, causing your next 6 Arcane Shots, Mongoose Bites or Raptor Strikes within 15 sec to detonate for 185 Arcane damage. (5 Min Cooldown)"
         }
       ],
       "set": null,
@@ -150161,7 +150191,7 @@
         {
           "spell_id": 26480,
           "trigger": 0,
-          "text": "Use: Gives a chance on melee or ranged attack to apply an armor penetration effect on you for , lowering the target's physical armor by  to your own attacks. The armor penetration effect can be applied up to 6 times."
+          "text": "Use: Gives a chance on melee or ranged attack to apply an armor penetration effect on you for 30 sec, lowering the target's physical armor by 200 (up to 6 stacks / 1200 ArP). (3 Min Cooldown)"
         }
       ],
       "set": null,
@@ -150677,7 +150707,7 @@
         {
           "spell_id": 23720,
           "trigger": 0,
-          "text": "Use: Empowers your pet, increasing all damage it deals by 50% and its armor by 50% for ."
+          "text": "Use: Empowers your pet, increasing all damage it deals by 50% and its armor by 50% for 30 sec. (5 Min Cooldown)"
         }
       ],
       "set": null,
@@ -150743,7 +150773,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 2.0
     },
     {
       "id": 19342,
@@ -150809,7 +150840,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 56,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -151292,7 +151323,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 2.0
     },
     {
       "id": 84501,
@@ -151673,7 +151705,7 @@
         {
           "spell_id": 24661,
           "trigger": 0,
-          "text": "Use: Increases your melee and ranged damage by 40 for . Every time you hit a target, this bonus is reduced by 2."
+          "text": "Use: Increases your melee and ranged damage by 40 for 20 sec. Every time you hit a target, this bonus is reduced by 2. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -151909,7 +151941,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 280,
+      "attack_power": 0,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -151918,7 +151950,7 @@
         {
           "spell_id": 25891,
           "trigger": 0,
-          "text": "Use: Increases your melee and ranged attack power by 280.  Effect lasts for ."
+          "text": "Use: Increases your melee and ranged attack power by 280 for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -152007,7 +152039,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 200,
+      "attack_power": 0,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -152016,7 +152048,7 @@
         {
           "spell_id": 45080,
           "trigger": 0,
-          "text": "Use: Increases your melee and ranged attack power by 200 for ."
+          "text": "Use: Increases your melee and ranged attack power by 200 for 15 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -152160,7 +152192,7 @@
       "spirit": 0,
       "resistances": {},
       "attack_power": 0,
-      "spell_power": 175,
+      "spell_power": 0,
       "healing": 175,
       "crit": 0.0,
       "hit": 0.0,
@@ -152168,7 +152200,7 @@
         {
           "spell_id": 23271,
           "trigger": 0,
-          "text": "Use: Increases damage and healing done by magical spells and effects by up to 175 for ."
+          "text": "Use: Increases damage and healing done by magical spells and effects by up to 175 for 15 sec. (1.5 Min Cooldown)"
         }
       ],
       "set": null,
@@ -152656,11 +152688,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -153854,7 +153886,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "arp": 50
     },
     {
       "id": 61700,
@@ -154172,7 +154205,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 1.0
     },
     {
       "id": 83450,
@@ -154277,7 +154311,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 3.0
     },
     {
       "id": 61564,
@@ -154405,7 +154440,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 34,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -154509,7 +154544,7 @@
       "spirit": 0,
       "resistances": {},
       "attack_power": 0,
-      "spell_power": 100,
+      "spell_power": 0,
       "healing": 190,
       "crit": 0.0,
       "hit": 0.0,
@@ -154517,7 +154552,7 @@
         {
           "spell_id": 27675,
           "trigger": 0,
-          "text": "Use: Increases your spell damage by up to 100 and your healing by up to 190 for ."
+          "text": "Use: Increases your spell damage by up to 100 and your healing by up to 190 for 15 sec. (1.25 Min Cooldown)"
         }
       ],
       "set": null,
@@ -155326,7 +155361,7 @@
     },
     {
       "id": 18473,
-      "name": "Royal Seal of Eldre'Thalas",
+      "name": "Royal Seal of Eldre'Thalas (Hunter +48 RAP)",
       "icon": "inv_jewelry_talisman_10",
       "slot": "trinket",
       "subclass": "misc",
@@ -155365,7 +155400,8 @@
       "set_id": 0,
       "classes": [
         "hunter"
-      ]
+      ],
+      "ranged_attack_power": 48
     },
     {
       "id": 18370,
@@ -155844,7 +155880,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 81,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -155963,7 +155999,8 @@
       "set_id": 0,
       "classes": [
         "hunter"
-      ]
+      ],
+      "pet_dmg_percent": 4.0
     },
     {
       "id": 11810,
@@ -156653,7 +156690,7 @@
     },
     {
       "id": 42232,
-      "name": "Prospector\u2019s Magnifying Lens",
+      "name": "Prospector’s Magnifying Lens",
       "icon": "prospectors_magnifying_lens_3",
       "slot": "trinket",
       "subclass": "misc",
@@ -158830,7 +158867,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 224,
+      "attack_power": 0,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -158853,7 +158890,8 @@
         "warrior",
         "paladin",
         "hunter"
-      ]
+      ],
+      "feral_attack_power": 224
     },
     {
       "id": 18609,
@@ -170418,7 +170456,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -172137,11 +172175,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -183475,7 +183513,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -185436,11 +185474,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -191974,6 +192012,569 @@
         "warlock",
         "druid"
       ]
+    },
+    {
+      "id": 60784,
+      "name": "Breastplate of Beast Mastery",
+      "icon": "INV_Chest_Leather_08",
+      "slot": "chest",
+      "subclass": "mail",
+      "quality": 4,
+      "item_level": 58,
+      "req_level": 53,
+      "armor": 377,
+      "durability": 140,
+      "unique": false,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 25,
+      "stamina": 18,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "pet_dmg_percent": 3.0,
+      "pet_crit": 2.0,
+      "spells": [
+        {
+          "spell_id": 47355,
+          "trigger": 1,
+          "text": "Equip: Increases your pet's damage by 3%, maximum health by 5% and critical strike chance by 2%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "shaman"
+      ]
+    },
+    {
+      "id": 80787,
+      "name": "Pendant of Eternal Servitute",
+      "icon": "INV_Jewelry_Necklace_11",
+      "slot": "neck",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 43,
+      "req_level": 38,
+      "armor": 0,
+      "durability": 0,
+      "unique": false,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 7,
+      "intellect": 7,
+      "spirit": 5,
+      "resistances": {},
+      "attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "pet_dmg_percent": 3.0,
+      "spells": [
+        {
+          "spell_id": 27205,
+          "trigger": 1,
+          "text": "Equip: Increases your pet's damage by 3%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    {
+      "id": 19991,
+      "name": "Devilsaur Eye",
+      "icon": "INV_Misc_Eye_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 52,
+      "req_level": 50,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 0.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 24352,
+          "trigger": 0,
+          "text": "Use: Increases your attack power by 150 and your chance to hit by 2% for 20 sec. (2 Min Cooldown)"
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "hunter"
+      ]
+    },
+    {
+      "id": 19992,
+      "name": "Devilsaur Tooth",
+      "icon": "INV_Misc_MonsterFang_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 52,
+      "req_level": 50,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 0.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 24353,
+          "trigger": 0,
+          "text": "Use: Your pet's next attack is guaranteed to critically strike if that attack is capable of striking critically. (2 Min Cooldown)"
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "hunter"
+      ]
+    },
+    {
+      "id": 19120,
+      "name": "Rune of the Guard Captain",
+      "icon": "INV_Misc_Rune_07",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 2,
+      "item_level": 51,
+      "req_level": 46,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 20,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 1.0,
+      "haste": 0.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 9331,
+          "trigger": 1,
+          "text": "Equip: +20 Attack Power."
+        },
+        {
+          "spell_id": 15464,
+          "trigger": 1,
+          "text": "Equip: Improves your chance to hit by 1%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    {
+      "id": 61517,
+      "name": "Chimaera's Eye",
+      "icon": "INV_Misc_Eye_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 53,
+      "req_level": 48,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 0.0,
+      "arp": 50,
+      "spells": [
+        {
+          "spell_id": 48034,
+          "trigger": 1,
+          "text": "Equip: Your attacks ignore 50 of the target's armor."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    {
+      "id": 80674,
+      "name": "Corrosive Core",
+      "icon": "Spell_Nature_Acid_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 53,
+      "req_level": 48,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 1.0,
+      "haste": 0.0,
+      "arp": 40,
+      "spells": [
+        {
+          "spell_id": 15464,
+          "trigger": 1,
+          "text": "Equip: Improves your chance to hit by 1%."
+        },
+        {
+          "spell_id": 48033,
+          "trigger": 1,
+          "text": "Equip: Your attacks ignore 40 of the target's armor."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    {
+      "id": 84006,
+      "name": "Banner of the Scarlet Crusade",
+      "icon": "INV_Banner_02",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 4,
+      "item_level": 76,
+      "req_level": 60,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 30,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 4.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 9336,
+          "trigger": 1,
+          "text": "Equip: +30 Attack Power."
+        },
+        {
+          "spell_id": 13681,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 4%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    {
+      "id": 60715,
+      "name": "Taskmaster Whip",
+      "icon": "INV_Misc_MonsterTail_03",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 2,
+      "item_level": 63,
+      "req_level": 55,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 2.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 8815,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 2%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    {
+      "id": 61095,
+      "name": "Boon of Niremius",
+      "icon": "INV_Jewelry_Talisman_05",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 2,
+      "item_level": 60,
+      "req_level": 52,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 2.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 8815,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 2%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    {
+      "id": 60559,
+      "name": "Hatereaver Cog",
+      "icon": "INV_Misc_Gear_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 57,
+      "req_level": 52,
+      "armor": 120,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 12,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 1.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 13679,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 1%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
     }
   ],
   "by_id": {
@@ -194250,8 +194851,16 @@
         ],
         "bonuses": [
           {
+            "threshold": 2,
+            "text": "(2) Set: Increases your pet's damage by 3%."
+          },
+          {
             "threshold": 3,
-            "text": "(3) Set: Increases your pet's damage by 3%."
+            "text": "(3) Set: Increases the critical strike chance of Steady Shot, Raptor Strike and Mongoose Bite by 2%."
+          },
+          {
+            "threshold": 3,
+            "text": "(3) Set: Increases pet Focus regeneration by 2."
           }
         ]
       },
@@ -205420,7 +206029,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -222164,7 +222773,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -223106,7 +223715,8 @@
         "paladin",
         "hunter",
         "shaman"
-      ]
+      ],
+      "pet_dmg_percent": 3.0
     },
     "21995": {
       "id": 21995,
@@ -223426,7 +224036,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_dmg_percent": 3.0
     },
     "22107": {
       "id": 22107,
@@ -238028,8 +238639,16 @@
         ],
         "bonuses": [
           {
+            "threshold": 2,
+            "text": "(2) Set: Increases your pet's damage by 3%."
+          },
+          {
             "threshold": 3,
-            "text": "(3) Set: Increases your pet's damage by 3%."
+            "text": "(3) Set: Increases the critical strike chance of Steady Shot, Raptor Strike and Mongoose Bite by 2%."
+          },
+          {
+            "threshold": 3,
+            "text": "(3) Set: Increases pet Focus regeneration by 2."
           }
         ]
       },
@@ -248942,7 +249561,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -249834,7 +250453,7 @@
       "attack_power": 0,
       "spell_power": 0,
       "healing": 0,
-      "crit": 4.0,
+      "crit": 0.0,
       "hit": 1.0,
       "spells": [
         {
@@ -249886,7 +250505,8 @@
         "paladin",
         "hunter",
         "shaman"
-      ]
+      ],
+      "pet_crit": 2.0
     },
     "22006": {
       "id": 22006,
@@ -249985,7 +250605,7 @@
       "attack_power": 0,
       "spell_power": 14,
       "healing": 14,
-      "crit": 4.0,
+      "crit": 0.0,
       "hit": 1.0,
       "spells": [
         {
@@ -250047,7 +250667,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_crit": 2.0
     },
     "21998": {
       "id": 21998,
@@ -265951,7 +266572,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -281853,7 +282474,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -300699,7 +301320,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_dmg_percent": 3.0
     },
     "19588": {
       "id": 19588,
@@ -301007,11 +301629,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -305663,7 +306285,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "pet_dmg_percent": 5.0
     },
     "19142": {
       "id": 19142,
@@ -309470,8 +310093,16 @@
         ],
         "bonuses": [
           {
+            "threshold": 2,
+            "text": "(2) Set: Increases your pet's damage by 3%."
+          },
+          {
             "threshold": 3,
-            "text": "(3) Set: Increases your pet's damage by 3%."
+            "text": "(3) Set: Increases the critical strike chance of Steady Shot, Raptor Strike and Mongoose Bite by 2%."
+          },
+          {
+            "threshold": 3,
+            "text": "(3) Set: Increases pet Focus regeneration by 2."
           }
         ]
       },
@@ -330439,11 +331070,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -331230,7 +331861,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -341142,7 +341773,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 150,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -341240,7 +341871,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 260,
+      "attack_power": 64,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -341254,7 +341885,7 @@
         {
           "spell_id": 28777,
           "trigger": 0,
-          "text": "Use: Increases Attack Power by 260 for ."
+          "text": "Use: Increases Attack Power by 260 for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -341295,7 +341926,7 @@
       "spirit": 0,
       "resistances": {},
       "attack_power": 0,
-      "spell_power": 170,
+      "spell_power": 40,
       "healing": 0,
       "crit": 0.0,
       "hit": 0.0,
@@ -341308,7 +341939,7 @@
         {
           "spell_id": 28779,
           "trigger": 0,
-          "text": "Use: Increases damage and healing done by magical spells and effects by up to 130 for ."
+          "text": "Use: Increases damage and healing done by magical spells and effects by up to 130 for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -341529,7 +342160,7 @@
         {
           "spell_id": 28866,
           "trigger": 0,
-          "text": "Use: Increases your attack speed by 20% for ."
+          "text": "Use: Increases your attack speed by 20% for 15 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -341795,7 +342426,7 @@
         {
           "spell_id": 29602,
           "trigger": 0,
-          "text": "Use: Increases attack power by  and an additional  every  sec.  Lasts ."
+          "text": "Use: Increases attack power by 65 and an additional 65 every 2 sec for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -342093,7 +342724,7 @@
         {
           "spell_id": 23721,
           "trigger": 0,
-          "text": "Use: Infuses you with Arcane energy, causing your next  Arcane Shots, Mongoose Bites or Raptor Strikes within  to detonate at the target. The Arcane Detonation deals  damage to enemies within  yards of the target."
+          "text": "Use: Infuses you with Arcane energy, causing your next 6 Arcane Shots, Mongoose Bites or Raptor Strikes within 15 sec to detonate for 185 Arcane damage. (5 Min Cooldown)"
         }
       ],
       "set": null,
@@ -342134,7 +342765,7 @@
         {
           "spell_id": 26480,
           "trigger": 0,
-          "text": "Use: Gives a chance on melee or ranged attack to apply an armor penetration effect on you for , lowering the target's physical armor by  to your own attacks. The armor penetration effect can be applied up to 6 times."
+          "text": "Use: Gives a chance on melee or ranged attack to apply an armor penetration effect on you for 30 sec, lowering the target's physical armor by 200 (up to 6 stacks / 1200 ArP). (3 Min Cooldown)"
         }
       ],
       "set": null,
@@ -342650,7 +343281,7 @@
         {
           "spell_id": 23720,
           "trigger": 0,
-          "text": "Use: Empowers your pet, increasing all damage it deals by 50% and its armor by 50% for ."
+          "text": "Use: Empowers your pet, increasing all damage it deals by 50% and its armor by 50% for 30 sec. (5 Min Cooldown)"
         }
       ],
       "set": null,
@@ -342716,7 +343347,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 2.0
     },
     "19342": {
       "id": 19342,
@@ -342782,7 +343414,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 56,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -343265,7 +343897,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 2.0
     },
     "84501": {
       "id": 84501,
@@ -343646,7 +344279,7 @@
         {
           "spell_id": 24661,
           "trigger": 0,
-          "text": "Use: Increases your melee and ranged damage by 40 for . Every time you hit a target, this bonus is reduced by 2."
+          "text": "Use: Increases your melee and ranged damage by 40 for 20 sec. Every time you hit a target, this bonus is reduced by 2. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -343882,7 +344515,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 280,
+      "attack_power": 0,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -343891,7 +344524,7 @@
         {
           "spell_id": 25891,
           "trigger": 0,
-          "text": "Use: Increases your melee and ranged attack power by 280.  Effect lasts for ."
+          "text": "Use: Increases your melee and ranged attack power by 280 for 20 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -343980,7 +344613,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 200,
+      "attack_power": 0,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -343989,7 +344622,7 @@
         {
           "spell_id": 45080,
           "trigger": 0,
-          "text": "Use: Increases your melee and ranged attack power by 200 for ."
+          "text": "Use: Increases your melee and ranged attack power by 200 for 15 sec. (2 Min Cooldown)"
         }
       ],
       "set": null,
@@ -344133,7 +344766,7 @@
       "spirit": 0,
       "resistances": {},
       "attack_power": 0,
-      "spell_power": 175,
+      "spell_power": 0,
       "healing": 175,
       "crit": 0.0,
       "hit": 0.0,
@@ -344141,7 +344774,7 @@
         {
           "spell_id": 23271,
           "trigger": 0,
-          "text": "Use: Increases damage and healing done by magical spells and effects by up to 175 for ."
+          "text": "Use: Increases damage and healing done by magical spells and effects by up to 175 for 15 sec. (1.5 Min Cooldown)"
         }
       ],
       "set": null,
@@ -344629,11 +345262,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -345827,7 +346460,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "arp": 50
     },
     "61700": {
       "id": 61700,
@@ -346145,7 +346779,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 1.0
     },
     "83450": {
       "id": 83450,
@@ -346250,7 +346885,8 @@
         "mage",
         "warlock",
         "druid"
-      ]
+      ],
+      "haste": 3.0
     },
     "61564": {
       "id": 61564,
@@ -346378,7 +347014,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 34,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -346482,7 +347118,7 @@
       "spirit": 0,
       "resistances": {},
       "attack_power": 0,
-      "spell_power": 100,
+      "spell_power": 0,
       "healing": 190,
       "crit": 0.0,
       "hit": 0.0,
@@ -346490,7 +347126,7 @@
         {
           "spell_id": 27675,
           "trigger": 0,
-          "text": "Use: Increases your spell damage by up to 100 and your healing by up to 190 for ."
+          "text": "Use: Increases your spell damage by up to 100 and your healing by up to 190 for 15 sec. (1.25 Min Cooldown)"
         }
       ],
       "set": null,
@@ -347299,7 +347935,7 @@
     },
     "18473": {
       "id": 18473,
-      "name": "Royal Seal of Eldre'Thalas",
+      "name": "Royal Seal of Eldre'Thalas (Hunter +48 RAP)",
       "icon": "inv_jewelry_talisman_10",
       "slot": "trinket",
       "subclass": "misc",
@@ -347338,7 +347974,8 @@
       "set_id": 0,
       "classes": [
         "hunter"
-      ]
+      ],
+      "ranged_attack_power": 48
     },
     "18370": {
       "id": 18370,
@@ -347817,7 +348454,7 @@
       "intellect": 0,
       "spirit": 0,
       "resistances": {},
-      "attack_power": 0,
+      "attack_power": 81,
       "spell_power": 0,
       "healing": 0,
       "crit": 0.0,
@@ -347936,7 +348573,8 @@
       "set_id": 0,
       "classes": [
         "hunter"
-      ]
+      ],
+      "pet_dmg_percent": 4.0
     },
     "11810": {
       "id": 11810,
@@ -348626,7 +349264,7 @@
     },
     "42232": {
       "id": 42232,
-      "name": "Prospector\u2019s Magnifying Lens",
+      "name": "Prospector’s Magnifying Lens",
       "icon": "prospectors_magnifying_lens_3",
       "slot": "trinket",
       "subclass": "misc",
@@ -362391,7 +363029,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -364110,11 +364748,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -375448,7 +376086,7 @@
           },
           {
             "threshold": 8,
-            "text": "(8) Set: Increases the damage of Multi-shot and Volley by 15%."
+            "text": "(8) Set: Increases the damage of Carve, Multi-shot and Volley by 15%."
           }
         ]
       },
@@ -377409,11 +378047,11 @@
           },
           {
             "threshold": 3,
-            "text": "(3) Set: Decreases the cooldown of Concussive Shot by 1 sec."
+            "text": "(3) Set: Decreases the cooldown of Concussive Shot and Wing Clip by 1 sec."
           },
           {
             "threshold": 5,
-            "text": "(5) Set: Increases the duration of Serpent Sting by 3 sec."
+            "text": "(5) Set: Reduces the time between periodic ticks and duration of Serpent Sting by 20%."
           }
         ]
       },
@@ -383992,6 +384630,569 @@
         "shaman",
         "druid"
       ]
+    },
+    "60784": {
+      "id": 60784,
+      "name": "Breastplate of Beast Mastery",
+      "icon": "INV_Chest_Leather_08",
+      "slot": "chest",
+      "subclass": "mail",
+      "quality": 4,
+      "item_level": 58,
+      "req_level": 53,
+      "armor": 377,
+      "durability": 140,
+      "unique": false,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 25,
+      "stamina": 18,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "pet_dmg_percent": 3.0,
+      "pet_crit": 2.0,
+      "spells": [
+        {
+          "spell_id": 47355,
+          "trigger": 1,
+          "text": "Equip: Increases your pet's damage by 3%, maximum health by 5% and critical strike chance by 2%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "shaman"
+      ]
+    },
+    "80787": {
+      "id": 80787,
+      "name": "Pendant of Eternal Servitute",
+      "icon": "INV_Jewelry_Necklace_11",
+      "slot": "neck",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 43,
+      "req_level": 38,
+      "armor": 0,
+      "durability": 0,
+      "unique": false,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 7,
+      "intellect": 7,
+      "spirit": 5,
+      "resistances": {},
+      "attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "pet_dmg_percent": 3.0,
+      "spells": [
+        {
+          "spell_id": 27205,
+          "trigger": 1,
+          "text": "Equip: Increases your pet's damage by 3%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    "19991": {
+      "id": 19991,
+      "name": "Devilsaur Eye",
+      "icon": "INV_Misc_Eye_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 52,
+      "req_level": 50,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 0.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 24352,
+          "trigger": 0,
+          "text": "Use: Increases your attack power by 150 and your chance to hit by 2% for 20 sec. (2 Min Cooldown)"
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "hunter"
+      ]
+    },
+    "19992": {
+      "id": 19992,
+      "name": "Devilsaur Tooth",
+      "icon": "INV_Misc_MonsterFang_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 52,
+      "req_level": 50,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 0.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 24353,
+          "trigger": 0,
+          "text": "Use: Your pet's next attack is guaranteed to critically strike if that attack is capable of striking critically. (2 Min Cooldown)"
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "hunter"
+      ]
+    },
+    "19120": {
+      "id": 19120,
+      "name": "Rune of the Guard Captain",
+      "icon": "INV_Misc_Rune_07",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 2,
+      "item_level": 51,
+      "req_level": 46,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 20,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 1.0,
+      "haste": 0.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 9331,
+          "trigger": 1,
+          "text": "Equip: +20 Attack Power."
+        },
+        {
+          "spell_id": 15464,
+          "trigger": 1,
+          "text": "Equip: Improves your chance to hit by 1%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    "61517": {
+      "id": 61517,
+      "name": "Chimaera's Eye",
+      "icon": "INV_Misc_Eye_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 53,
+      "req_level": 48,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 0.0,
+      "arp": 50,
+      "spells": [
+        {
+          "spell_id": 48034,
+          "trigger": 1,
+          "text": "Equip: Your attacks ignore 50 of the target's armor."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    "80674": {
+      "id": 80674,
+      "name": "Corrosive Core",
+      "icon": "Spell_Nature_Acid_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 53,
+      "req_level": 48,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 1.0,
+      "haste": 0.0,
+      "arp": 40,
+      "spells": [
+        {
+          "spell_id": 15464,
+          "trigger": 1,
+          "text": "Equip: Improves your chance to hit by 1%."
+        },
+        {
+          "spell_id": 48033,
+          "trigger": 1,
+          "text": "Equip: Your attacks ignore 40 of the target's armor."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    "84006": {
+      "id": 84006,
+      "name": "Banner of the Scarlet Crusade",
+      "icon": "INV_Banner_02",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 4,
+      "item_level": 76,
+      "req_level": 60,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 30,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 4.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 9336,
+          "trigger": 1,
+          "text": "Equip: +30 Attack Power."
+        },
+        {
+          "spell_id": 13681,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 4%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    "60715": {
+      "id": 60715,
+      "name": "Taskmaster Whip",
+      "icon": "INV_Misc_MonsterTail_03",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 2,
+      "item_level": 63,
+      "req_level": 55,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 2.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 8815,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 2%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    "61095": {
+      "id": 61095,
+      "name": "Boon of Niremius",
+      "icon": "INV_Jewelry_Talisman_05",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 2,
+      "item_level": 60,
+      "req_level": 52,
+      "armor": 0,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 0,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 2.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 8815,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 2%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
+    },
+    "60559": {
+      "id": 60559,
+      "name": "Hatereaver Cog",
+      "icon": "INV_Misc_Gear_01",
+      "slot": "trinket",
+      "subclass": "misc",
+      "quality": 3,
+      "item_level": 57,
+      "req_level": 52,
+      "armor": 120,
+      "durability": 0,
+      "unique": true,
+      "bonding": 1,
+      "speed": 0.0,
+      "min_damage": 0.0,
+      "max_damage": 0.0,
+      "dps": 0.0,
+      "strength": 0,
+      "agility": 0,
+      "stamina": 12,
+      "intellect": 0,
+      "spirit": 0,
+      "resistances": {},
+      "attack_power": 0,
+      "ranged_attack_power": 0,
+      "spell_power": 0,
+      "healing": 0,
+      "crit": 0.0,
+      "hit": 0.0,
+      "haste": 1.0,
+      "arp": 0,
+      "spells": [
+        {
+          "spell_id": 13679,
+          "trigger": 1,
+          "text": "Equip: Increases your attack and casting speed by 1%."
+        }
+      ],
+      "set": null,
+      "set_id": 0,
+      "classes": [
+        "warrior",
+        "paladin",
+        "hunter",
+        "rogue",
+        "priest",
+        "shaman",
+        "mage",
+        "warlock",
+        "druid"
+      ]
     }
   },
   "by_slot": {
@@ -384423,7 +385624,8 @@
       10328,
       10399,
       83413,
-      33077
+      33077,
+      60784
     ],
     "feet": [
       55081,
@@ -386005,7 +387207,8 @@
       19607,
       19615,
       60348,
-      12059
+      12059,
+      80787
     ],
     "off_hand": [
       23242,
@@ -386877,7 +388080,16 @@
       42311,
       33081,
       33151,
-      58244
+      58244,
+      19991,
+      19992,
+      19120,
+      61517,
+      80674,
+      84006,
+      60715,
+      61095,
+      60559
     ],
     "two_hand": [
       22589,

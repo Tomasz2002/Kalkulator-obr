@@ -415,6 +415,11 @@ def calculate_gear_totals(
         "weapon_procs": [],
         "has_pet_summon": False,
         "pet_summon_details": [],
+        "pet_dmg_percent": 0.0,
+        "pet_crit": 0.0,
+        "pet_ap_bonus": 0,
+        "pet_focus_regen_bonus": 0.0,
+        "pet_effects": [],
         "dual_wield_warning": None,
         "relic_warning": None,
         "class_warnings": [],
@@ -500,12 +505,23 @@ def calculate_gear_totals(
                     totals["class_warnings"].append(warn_msg)
 
         totals["equipped_items"].append(item)
-        totals["attack_power"] += item.get("attack_power", 0)
-        totals["ranged_attack_power"] += item.get("ranged_attack_power", 0)
+        item_ap = item.get("attack_power", 0)
+        item_rap = item.get("ranged_attack_power", 0)
+        # Exclude Feral Druid AP ("in Cat, Bear, Dire Bear, and Moonkin forms only") for non-druid classes
+        if cls_clean != "druid":
+            for sp in item.get("spells", []):
+                sp_txt = sp.get("text", "")
+                if "forms only" in sp_txt.lower():
+                    m_fap = re.search(r"\+(\d+)\s*Attack Power in (?:Cat|Bear)", sp_txt, re.I)
+                    if m_fap:
+                        item_ap = max(0, item_ap - int(m_fap.group(1)))
+        totals["attack_power"] += item_ap
+        totals["ranged_attack_power"] += item_rap
         totals["spell_power"] += item.get("spell_power", 0)
         totals["healing"] += item.get("healing", 0)
         totals["crit"] += item.get("crit", 0.0)
         totals["hit"] += item.get("hit", 0.0)
+        totals["haste"] += item.get("haste", 0.0)
         totals["strength"] += item.get("strength", 0)
         totals["agility"] += item.get("agility", 0)
         totals["stamina"] += item.get("stamina", 0)
@@ -520,12 +536,16 @@ def calculate_gear_totals(
             if r_key in totals["resistances"]:
                 totals["resistances"][r_key] += r_val
 
+        item_pet_dmg = float(item.get("pet_dmg_percent", 0.0))
+        item_pet_crit = float(item.get("pet_crit", 0.0))
+
         for sp in item.get("spells", []):
             sp_text = sp.get("text", "")
+            sp_id = sp.get("spell_id")
             totals["procs"].append({
                 "item_id": item["id"],
                 "item_name": item["name"],
-                "spell_id": sp.get("spell_id"),
+                "spell_id": sp_id,
                 "trigger": sp.get("trigger"),
                 "text": sp_text
             })
@@ -533,6 +553,34 @@ def calculate_gear_totals(
                 m = pat.search(sp_text)
                 if m:
                     totals["weapon_skills"][sk_key] = totals["weapon_skills"].get(sk_key, 0) + int(m.group(1))
+
+            # Fallback parsing of pet damage / pet crit from item spell IDs or text if not already set on item
+            if item_pet_dmg == 0.0:
+                if sp_id in (65313, 65314, 27205, 27206, 47354, 47355):
+                    item_pet_dmg = 3.0
+                elif sp_id in (27230, 22854, 52413):
+                    item_pet_dmg = 4.0
+                elif sp_id == 36577:
+                    item_pet_dmg = 5.0
+                else:
+                    m_pdmg = re.search(r"increases (?:damage dealt by )?your pet(?:'s| and enslaved demon's)? (?:damage|damage and health) by (\d+)%", sp_text, re.I)
+                    if m_pdmg:
+                        item_pet_dmg = float(m_pdmg.group(1))
+
+            if item_pet_crit == 0.0:
+                if sp_id in (27042, 27043, 47354, 47355):
+                    item_pet_crit = 2.0
+                else:
+                    m_pcrit = re.search(r"pet's (?:.*)?critical strike chance by (\d+)%", sp_text, re.I)
+                    if m_pcrit:
+                        item_pet_crit = float(m_pcrit.group(1))
+
+        if item_pet_dmg > 0:
+            totals["pet_dmg_percent"] += item_pet_dmg
+            totals["pet_effects"].append(f"{item['name']}: +{int(item_pet_dmg)}% Pet Damage")
+        if item_pet_crit > 0:
+            totals["pet_crit"] += item_pet_crit
+            totals["pet_effects"].append(f"{item['name']}: +{int(item_pet_crit)}% Pet Crit")
 
         if slot in weapon_slots and totals["main_weapon_speed"] == 0.0 and speed > 0:
             totals["main_weapon_speed"] = speed
@@ -679,6 +727,7 @@ def calculate_gear_totals(
         for b in s_info.get("bonuses", []):
             if count >= b.get("threshold", 999):
                 active_bonuses.append(b)
+                b_text = b.get("text", "")
                 if sid == 261 and b.get("threshold") == 4:
                     totals["has_pet_summon"] = True
                     totals["pet_summon_details"].append("Spirit of Eskhandar")
@@ -686,6 +735,71 @@ def calculate_gear_totals(
                 if sid == 6001 and b.get("threshold") == 3:
                     totals["has_pet_summon"] = True
                     totals["pet_summon_details"].append("Set of the Lost")
+
+                # Parse set bonus stats & pet bonuses
+                m_both_ap = re.search(r"Increases Attack Power by (\d+) for both you and your pet", b_text, re.I)
+                if m_both_ap:
+                    ap_v = int(m_both_ap.group(1))
+                    totals["attack_power"] += ap_v
+                    totals["pet_ap_bonus"] += ap_v
+                    totals["pet_effects"].append(f"{s_info.get('name', 'Set')} ({b.get('threshold')}pc): +{ap_v} AP (Hunter & Pet)")
+                else:
+                    m_ap = re.search(r"Set:\s*\+(\d+)\s*Attack Power\.", b_text, re.I)
+                    if m_ap:
+                        totals["attack_power"] += int(m_ap.group(1))
+
+                m_set_pet_dmg = re.search(r"Increases your pet's damage by (\d+)%|(\d+)% increased damage from your summoned pets", b_text, re.I)
+                if m_set_pet_dmg:
+                    pd_v = float(m_set_pet_dmg.group(1) or m_set_pet_dmg.group(2))
+                    totals["pet_dmg_percent"] += pd_v
+                    totals["pet_effects"].append(f"{s_info.get('name', 'Set')} ({b.get('threshold')}pc): +{int(pd_v)}% Pet Damage")
+
+                m_set_pet_focus = re.search(r"Increases pet Focus regeneration by (\d+)", b_text, re.I)
+                if m_set_pet_focus:
+                    pf_v = float(m_set_pet_focus.group(1))
+                    totals["pet_focus_regen_bonus"] += pf_v
+                    totals["pet_effects"].append(f"{s_info.get('name', 'Set')} ({b.get('threshold')}pc): +{int(pf_v)} Pet Focus/tick")
+
+                m_agi = re.search(r"Set:\s*\+(\d+)\s*Agility\.", b_text, re.I)
+                if m_agi:
+                    totals["agility"] += int(m_agi.group(1))
+                m_str = re.search(r"Set:\s*\+(\d+)\s*Strength\.", b_text, re.I)
+                if m_str:
+                    totals["strength"] += int(m_str.group(1))
+                m_sta = re.search(r"Set:\s*\+(\d+)\s*Stamina\.", b_text, re.I)
+                if m_sta:
+                    totals["stamina"] += int(m_sta.group(1))
+                m_int = re.search(r"Set:\s*\+(\d+)\s*Intellect\.", b_text, re.I)
+                if m_int:
+                    totals["intellect"] += int(m_int.group(1))
+                m_spi = re.search(r"Set:\s*\+(\d+)\s*Spirit\.", b_text, re.I)
+                if m_spi:
+                    totals["spirit"] += int(m_spi.group(1))
+                m_arm = re.search(r"Set:\s*\+(\d+)\s*Armor\.", b_text, re.I)
+                if m_arm:
+                    totals["armor"] += int(m_arm.group(1))
+                m_allres = re.search(r"Set:\s*\+(\d+)\s*All Resistances\.", b_text, re.I)
+                if m_allres:
+                    rv = int(m_allres.group(1))
+                    for rk in totals["resistances"]:
+                        totals["resistances"][rk] += rv
+                m_crit = re.search(r"Set:\s*Improves your chance to get a critical strike by (\d+)%\.", b_text, re.I)
+                if m_crit:
+                    totals["crit"] += float(m_crit.group(1))
+                m_hit = re.search(r"Set:\s*Improves your chance to hit by (\d+)%\.", b_text, re.I)
+                if m_hit:
+                    totals["hit"] += float(m_hit.group(1))
+                m_haste = re.search(r"Set:\s*Increases your attack and casting speed by (\d+)%\.", b_text, re.I)
+                if m_haste:
+                    totals["haste"] += float(m_haste.group(1))
+                m_arp = re.search(r"ignore (\d+) of the target's armor", b_text, re.I)
+                if m_arp:
+                    totals["arp"] += int(m_arp.group(1))
+                m_sp = re.search(r"Set:\s*Increases damage and healing done by magical spells and effects by up to (\d+)\.", b_text, re.I)
+                if m_sp:
+                    totals["spell_power"] += int(m_sp.group(1))
+                    totals["healing"] += int(m_sp.group(1))
+
         totals["active_sets"][str(sid)] = {
             "id": sid,
             "name": s_info.get("name", ""),
@@ -694,10 +808,20 @@ def calculate_gear_totals(
             "active_bonuses": active_bonuses,
         }
 
-    totals["total_attack_power"] = totals["attack_power"] + (totals["strength"] * 2)
-    totals["total_ranged_attack_power"] = totals["ranged_attack_power"] + totals["attack_power"] + (totals["agility"] * 2)
-    totals["total_melee_crit"] = round(totals["crit"] + (totals["agility"] / 20.0), 2)
-    totals["total_ranged_crit"] = round(totals["crit"] + (totals["agility"] / 53.0), 2)
+    if (character_class or "").lower().strip() == "hunter":
+        totals["melee_attack_power"] = totals["attack_power"] + totals["strength"] + totals["agility"]
+        totals["total_attack_power"] = totals["melee_attack_power"] if totals["main_weapon_speed"] > 0 and totals["ranged_weapon_speed"] == 0 else (totals["ranged_attack_power"] + totals["attack_power"] + (totals["agility"] * 2))
+        totals["total_ranged_attack_power"] = totals["ranged_attack_power"] + totals["attack_power"] + (totals["agility"] * 2)
+        totals["total_melee_crit"] = round(totals["crit"] + (totals["agility"] / 53.0), 2)
+        totals["total_ranged_crit"] = round(totals["crit"] + (totals["agility"] / 53.0), 2)
+    else:
+        totals["total_attack_power"] = totals["attack_power"] + (totals["strength"] * 2)
+        totals["total_ranged_attack_power"] = totals["ranged_attack_power"] + totals["attack_power"] + (totals["agility"] * 2)
+        totals["total_melee_crit"] = round(totals["crit"] + (totals["agility"] / 20.0), 2)
+        totals["total_ranged_crit"] = round(totals["crit"] + (totals["agility"] / 53.0), 2)
+        totals["melee_attack_power"] = totals["total_attack_power"]
+
+    totals["total_armor"] = totals["armor"] + int(totals["agility"] * 2)
 
     # Compute weapon skills breakdown for all equipped weapon slots
     equipped_weapon_skills = []

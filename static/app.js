@@ -47,11 +47,11 @@ let bossHpPercent = 100.0;
 let executePhasePercent = 20.0;
 let activeEnchantSlot = null;
 
-let currentHunterSpec = "marksmanship";
+let currentHunterSpec = "survival";
 const HUNTER_SPEC_DEFAULTS = {
-  marksmanship: ["rapid_fire", "aimed_shot", "multi_shot", "arcane_shot", "serpent_sting", "steady_shot", "auto_shot"],
-  survival: ["mongoose_bite", "counterattack", "raptor_strike", "immolation_trap", "wing_clip", "white_melee"],
-  beast_mastery: ["bestial_wrath", "intimidation", "multi_shot", "arcane_shot", "serpent_sting", "auto_shot", "pet_focus_dump"]
+  marksmanship: ["aimed_shot", "multi_shot", "serpent_sting", "arcane_shot", "steady_shot", "auto_shot"],
+  survival: ["raptor_strike", "mongoose_bite", "carve", "immolation_trap", "lacerate", "wing_clip", "white_melee"],
+  beast_mastery: ["bestial_wrath", "kill_command", "serpent_sting", "arcane_shot", "steady_shot", "auto_shot", "strike_together", "pet_focus_dump"]
 };
 
 let rotationalSpells = [];
@@ -347,6 +347,15 @@ function determineSlotForItem(item) {
 function getEquippedIds() {
   const ids = [];
   SLOTS.forEach(slotKey => {
+    const card = document.querySelector(`.slot-card[data-slot="${slotKey}"]`) ||
+                 document.querySelector(`.weapon-card[data-slot="${slotKey}"]`) ||
+                 (slotKey === "relic" || slotKey === "ranged" ? document.getElementById("slot-card-third") : null);
+    const input = card ? card.querySelector(".combobox-input") : null;
+    // If the slot input has been cleared by the user, ensure it is treated as unequipped
+    if (input && !input.value.trim()) {
+      equippedItems[slotKey] = null;
+      return;
+    }
     const id = equippedItems[slotKey];
     if (id && id !== 0 && itemsById[String(id)]) {
       ids.push(id);
@@ -1245,41 +1254,41 @@ function renderBuildy() {
 }
 
 const HUNTER_KUKLA_MELEE_GEAR = {
-  head: 12587,      // Eye of Rend (Leather +13 Str, +7 Agi, 2% Crit)
-  neck: 15411,      // Mark of Fordring (+26 AP, 1% Crit)
-  shoulder: 12927,  // Truestrike Shoulders (+24 AP, 2% Hit)
-  back: 13340,      // Cape of the Black Baron (+15 Agi, +20 AP)
-  chest: 11726,     // Savage Gladiator Chain (+13 Agi, 2% Crit)
-  wrist: 18375,     // Bracers of the Eclipse (+10 Str, +24 Agi)
-  hands: 15063,     // Devilsaur Gauntlets (+28 AP, 1% Crit)
-  waist: 13252,     // Cloudrunner Girdle (+15 Str, +14 Agi)
-  legs: 15062,      // Devilsaur Leggings (+46 AP, 1% Crit, 2pc Set: +2% Hit)
-  feet: 14616,      // Bloodmail Boots (+9 Str, +9 Agi, 1% Hit)
-  finger1: 19325,   // Don Julio's Band (1% Crit, 1% Hit)
-  finger2: 18500,   // Tarnished Elven Ring (+15 Agi, 1% Hit)
-  trinket1: 13965,  // Blackhand's Breadth (2% Crit)
-  trinket2: 11815,  // Hand of Justice (+20 AP, 2% Extra Swing Proc)
-  main_hand: 19364, // Ashkandi, Greatsword of the Brotherhood (3.5s 2H Sword, +86 AP)
+  head: 16939,      // Dragonstalker's Helm
+  neck: 18404,      // Onyxia Tooth Pendant
+  shoulder: 16848,  // Giantstalker's Epaulets
+  back: 61010,      // Wing of the Time-Lord
+  chest: 61275,     // Breastplate of Earthen Might
+  wrist: 16850,     // Giantstalker's Bracers
+  hands: 16852,     // Giantstalker's Gloves
+  waist: 16851,     // Giantstalker's Belt
+  legs: 16938,      // Dragonstalker's Legguards
+  feet: 61271,      // Boots of Blazing Steps
+  finger1: 17063,   // Band of Accuria
+  finger2: 18821,   // Quick Strike Ring
+  trinket1: 13965,  // Blackhand's Breadth
+  trinket2: null,   // Empty by default (unless user chooses an on-use trinket)
+  main_hand: 33150, // Yoxtez, Black Breath of the Dragonflight
   off_hand: null,
   relic: null,
-  ranged: 17069     // Striker's Mark (Bow +22 AP, 1% Hit)
+  ranged: 17072     // Blastershot Launcher
 };
 
 const HUNTER_KUKLA_ENCHANTS = {
-  main_hand: 27837, // 2H Agility (+25 Agi)
-  ranged: 18282,    // Biznicks 247x Accurascope (+3% Hit)
-  head: 11647,      // Lesser Arcanum of Voracity (+8 Agi)
-  legs: 11647,      // Lesser Arcanum of Voracity (+8 Agi)
-  shoulder: 24422,  // Zandalar Signet of Might (+30 AP)
-  back: 13882,      // Lesser Agility (+3 Agi)
+  head: 18329,      // Arcanum of Rapidity (+1% Haste)
+  neck: 62804,      // Delicate Emerald Gemstone (+6 Agility)
+  shoulder: 63001,  // Sigil of Quickness (+2% Haste)
+  back: 13882,      // Lesser Agility (+3 Agility)
   chest: 20025,     // Greater Stats (+4 Stats)
   wrist: 20010,     // Superior Strength (+9 Str)
   hands: 20012,     // Greater Agility (+7 Agi)
+  waist: 61804,     // Mithril Belt Buckle (+6 Agility)
+  legs: 18329,      // Arcanum of Rapidity (+1% Haste)
   feet: 20023,      // Greater Agility (+7 Agi)
-  waist: 12053,     // Mithril Belt Buckle (+6 Agility)
-  finger1: 12360,   // Delicate Emerald Gemstone (+6 Agility)
-  finger2: 12360,   // Delicate Emerald Gemstone (+6 Agility)
-  neck: 12360       // Delicate Emerald Gemstone (+6 Agility)
+  finger1: 62804,   // Delicate Emerald Gemstone (+6 Agility)
+  finger2: 62804,   // Delicate Emerald Gemstone (+6 Agility)
+  main_hand: 27837, // 2H Agility (+25 Agi)
+  ranged: null
 };
 
 function equipHunterKuklaMeleeGear() {
@@ -1290,6 +1299,27 @@ function equipHunterKuklaMeleeGear() {
     currentEnchants[slot] = enchId;
     updateEnchantButtonDisplay(slot);
   }
+  const durInput = document.getElementById("cfg-fight-duration");
+  if (durInput) durInput.value = 30;
+  document.querySelectorAll(".dur-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-dur") === "30");
+  });
+  const raceSelect = document.getElementById("cfg-race");
+  if (raceSelect && Array.from(raceSelect.options).some(o => o.value === "orc")) {
+    raceSelect.value = "orc";
+    currentRace = "orc";
+  }
+  const aspectSelect = document.getElementById("cfg-hunter-aspect");
+  if (aspectSelect) aspectSelect.value = "wolf";
+
+  const tsAura = document.getElementById("cfg-trueshot-aura");
+  if (tsAura) tsAura.checked = true;
+
+  const petQuick = document.getElementById("cfg-pet-active-quick");
+  const petSettings = document.getElementById("cfg-pet-active");
+  if (petQuick) petQuick.checked = false;
+  if (petSettings) petSettings.checked = false;
+
   recalculateLiveStats();
   runSimulation();
 }
@@ -1313,11 +1343,26 @@ function wczytajBuild(i) {
   renderBuildy();
   renderOpisBuildu();
 
-  if (currentClass === "hunter" && i === 0) {
-    const equippedCount = Object.values(equippedItems).filter(Boolean).length;
-    if (equippedCount <= 2) {
-      equipHunterKuklaMeleeGear();
-      return;
+  if (currentClass === "hunter") {
+    const bName = (b.nazwa || "").toLowerCase();
+    const hSpecEl = document.getElementById("hunter-spec");
+    if (hSpecEl) {
+      let targetSpec = hSpecEl.value;
+      if (bName.includes("beast") || bName.includes("bm")) targetSpec = "beast_mastery";
+      else if (bName.includes("marksman") || bName.includes("mm")) targetSpec = "marksmanship";
+      else if (bName.includes("survival") || bName.includes("melee")) targetSpec = "survival";
+      if (hSpecEl.value !== targetSpec) {
+        hSpecEl.value = targetSpec;
+        priorityList = [...getDefaultPriorityForClass("hunter")];
+        renderPriorityQueue();
+      }
+    }
+    if (i === 0) {
+      const equippedCount = Object.values(equippedItems).filter(Boolean).length;
+      if (equippedCount <= 2) {
+        equipHunterKuklaMeleeGear();
+        return;
+      }
     }
   }
 
@@ -1398,10 +1443,19 @@ function recalculateLiveStats() {
 function updateStatsDisplay(totals) {
   const speed = totals.main_weapon_speed > 0 ? totals.main_weapon_speed.toFixed(2) : "2.00";
   document.getElementById("stat-speed").textContent = `${speed}s`;
-  document.getElementById("stat-ap").textContent = `${totals.total_attack_power || totals.attack_power || 0} AP`;
+  if (currentClass === "hunter") {
+    const mapVal = totals.melee_attack_power || totals.total_attack_power || 0;
+    const rapVal = totals.total_ranged_attack_power || totals.ranged_attack_power || 0;
+    document.getElementById("stat-ap").textContent = `${mapVal} MAP / ${rapVal} RAP`;
+    document.getElementById("stat-crit").textContent = `${(totals.total_melee_crit || totals.crit || 0).toFixed(1)}%`;
+    document.getElementById("stat-armor").textContent = totals.total_armor || (totals.armor + ((totals.agility || 0) * 2)) || 0;
+  } else {
+    document.getElementById("stat-ap").textContent = `${totals.total_attack_power || totals.attack_power || 0} AP`;
+    document.getElementById("stat-crit").textContent = `${(totals.total_melee_crit || totals.crit || 0).toFixed(1)}%`;
+    document.getElementById("stat-armor").textContent = totals.total_armor || totals.armor || 0;
+  }
   document.getElementById("stat-sp").textContent = `${totals.spell_power || 0} SP`;
   document.getElementById("stat-healing").textContent = `${totals.healing || 0} Heal`;
-  document.getElementById("stat-crit").textContent = `${(totals.total_melee_crit || totals.crit || 0).toFixed(1)}%`;
   document.getElementById("stat-hit").textContent = `${(totals.hit || 0).toFixed(1)}%`;
   const wsEl = document.getElementById("stat-weapon-skill");
   if (wsEl) {
@@ -1414,7 +1468,6 @@ function updateStatsDisplay(totals) {
   document.getElementById("stat-agi").textContent = totals.agility || 0;
   document.getElementById("stat-sta").textContent = totals.stamina || 0;
   document.getElementById("stat-int").textContent = totals.intellect || 0;
-  document.getElementById("stat-armor").textContent = totals.armor || 0;
 
   const setsContainer = document.getElementById("active-sets-list");
   const countEl = document.getElementById("active-sets-count");
@@ -1773,17 +1826,20 @@ function renderPriorityList() {
     if (key === "aimed_shot") cdText = "6.0s CD (2.0s Cast)";
     if (key === "multi_shot") cdText = "10.0s CD";
     if (key === "arcane_shot") cdText = "6.0s CD (Instant)";
-    if (key === "rapid_fire") cdText = "180s CD (-40% Cast)";
+    if (key === "rapid_fire") cdText = "180s CD (+40% Atk Speed)";
     if (key === "bestial_wrath") cdText = "120s CD (+20% Pet)";
     if (key === "intimidation") cdText = "60s CD (Stun & Burst)";
-    if (key === "mongoose_bite") cdText = "4.0s CD (Dodge/Parry)";
-    if (key === "counterattack") cdText = "5.0s CD (Parry Proc)";
-    if (key === "raptor_strike") cdText = "5.0s CD (Next Melee)";
+    if (key === "raptor_strike") cdText = "5.0s CD (100% Wpn + 140)";
+    if (key === "mongoose_bite") cdText = "4.0s CD (60% Wpn + 70)";
+    if (key === "carve") cdText = "10.0s CD (70% Wpn)";
     if (key === "immolation_trap") cdText = "15.0s CD (Fire DoT)";
-    if (key === "wing_clip") cdText = "1.5s GCD (Melee Proc)";
-    if (key === "steady_shot") cdText = "1.5s Cast (Filler)";
+    if (key === "lacerate") cdText = "Crit Proc (40% AP + Bleed)";
+    if (key === "wing_clip") cdText = "3.0s CD (35% Wpn + 50)";
+    if (key === "steady_shot") cdText = "1.5s Cast (1:1 Auto)";
     if (key === "auto_shot" || key === "white_melee") cdText = "Auto Swing";
-    if (key === "pet_focus_dump") cdText = "Focus Dump";
+    if (key === "kill_command") cdText = "8.0s CD (Crit Trigger)";
+    if (key === "strike_together") cdText = "3.0s ICD (Pet Proc)";
+    if (key === "pet_focus_dump") cdText = "Focus Dump (Pet)";
 
     let statText = "";
     if (s.scaling_note) {
@@ -1885,27 +1941,31 @@ function selectHunterRotationSpec(spec) {
 
   const notesText = document.getElementById("hunter-notes-text");
   const descText = document.getElementById("rotation-desc-text");
+  const rfRotLabel = document.querySelector("label[for='cfg-rapid-fire-rot']");
+  if (rfRotLabel) {
+    rfRotLabel.style.display = "inline-flex";
+  }
 
   if (spec === "marksmanship") {
     if (notesText) {
-      notesText.innerHTML = "<strong>Patch 1.18 Rework:</strong> <em>Steady Shot</em> (1.5s cast) jest fizycznym fillerem wplatanym w okna Auto Shot. Czas rzucania <em>Aimed Shot</em> został skrócony do <strong>2.0s</strong> (z 3.0s) i posiada <strong>niezależny 6.0s cooldown</strong> od Arcane Shot. <em>Rapid Fire</em> skraca czas rzucania obu tych strzałów o <strong>40%</strong>!";
+      notesText.innerHTML = "<strong>Marksmanship (Auto Shot &harr; Steady Shot 1:1):</strong> W każdym cyklu strzału po <em>Auto Shot</em> wplatany jest 1 strzał aktywny: <em>Aimed Shot</em> (26s bazowy CD, -2/4/6s ze <em>Swiftshot</em>, resetowany przez kryt z <em>Lock and Load</em>), <em>Multi-Shot</em> (10s CD), <em>Serpent Sting</em> lub naprzemienny filler <em>Steady Shot</em> (1:1 z Auto Shot).";
     }
     if (descText) {
-      descText.textContent = "Marksmanship (Patch 1.18 Rework): Skrócony do 2.0s Aimed Shot, niezależny 6.0s CD od Arcane Shot, potężny Rapid Fire dający -40% cast time oraz nowy fizyczny filler Steady Shot (1.5s cast).";
+      descText.textContent = "Marksmanship (Auto Shot <-> Steady Shot 1:1 Weaving): Po każdym Auto Shot wplatany jest Steady Shot lub umiejętność z kolejki priorytetów (Aimed Shot / Multi-Shot).";
     }
   } else if (spec === "survival") {
     if (notesText) {
-      notesText.innerHTML = "<strong>Survival Melee (Octo/Turtle WoW):</strong> Ciosy wręcz oparte o proce <em>Mongoose Bite</em> (po Dodge/Parry) oraz <em>Counterattack</em> (po Parry), wzmocnione 5-sekundowym <em>Raptor Strike</em> (Superior Strikes 5/5) oraz pułapkami <em>Immolation Trap</em> i <em>Wing Clip</em>.";
+      notesText.innerHTML = "<strong>Survival Single-Target Macro:</strong> Kolejka priorytetów zgodna z makro: <code>/cast Raptor Strike</code> &rarr; <code>/cast Mongoose Bite</code> &rarr; <code>/cast Carve</code> &rarr; <code>/cast Immolation Trap</code> &rarr; <code>/cast Lacerate</code> &rarr; <code>/cast Wing Clip</code> + białe ataki wręcz.";
     }
     if (descText) {
-      descText.textContent = "Survival Melee: Rotacja uderzeń wręcz z procami Mongoose Bite i Counterattack, 5.0s Raptor Strike (-1s z Superior Strikes) oraz podpalającą pułapką Immolation Trap.";
+      descText.textContent = "Survival Melee (Single-Target Macro): Raptor Strike -> Mongoose Bite -> Carve -> Immolation Trap -> Lacerate -> Wing Clip.";
     }
   } else if (spec === "beast_mastery") {
     if (notesText) {
-      notesText.innerHTML = "<strong>Beast Mastery & Pet Synergy:</strong> <em>Bestial Wrath</em> (+20% obrażeń pupila i niewrażliwość na CC na 18s), <em>Intimidation</em> (ogłuszenie i impuls burstu), dump focusu peta (<em>Claw / Bite / Lightning Breath / Furious Howl</em>) oraz wspierające strzały.";
+      notesText.innerHTML = "<strong>Beast Mastery (Octo WoW Raid Rotation):</strong> Naprzemienny <em>Auto Shot &harr; Steady Shot</em> (1:1 weaving), <em>Kill Command (by Pet)</em> (8s CD po krycie Huntera, 80% Pet AP), <em>Strike Together (Coordinated Assault)</em> (20% Hunter AP przy trafieniu ze Steady/Arcane Shot, 3s ICD), <em>Arcane Shot</em>, <em>Serpent Sting (DoT)</em>, <em>Bestial Wrath</em> (+40% Pet Dmg z <em>Scent of Blood</em>) oraz <em>Pet Focus Dump</em> (Claw / Bite / Savage Rend / Lightning Breath).";
     }
     if (descText) {
-      descText.textContent = "Beast Mastery: Rotacja skupiona na Bestial Wrath (+20% obrażeń bestii), Intimidation, automatycznych atakach peta z dumpem focusu oraz dystansowych strzałach myśliwego.";
+      descText.textContent = "Beast Mastery (Auto Shot <-> Steady Shot 1:1): Steady Shot, Auto Shot, Kill Command (by Pet), Strike Together, Arcane Shot, Serpent Sting oraz zdolności Focus peta.";
     }
   }
 
@@ -1975,15 +2035,24 @@ function runSimulation() {
 
   const petFamilyQuick = document.getElementById("cfg-pet-family-quick")?.value;
   const petFamilySettings = document.getElementById("cfg-pet-family")?.value;
-  const petFamily = petFamilyQuick || petFamilySettings || "cat";
+  const petFamily = petFamilyQuick || petFamilySettings || "raptor";
 
   const petActiveChkQuick = document.getElementById("cfg-pet-active-quick");
   const petActiveChkSettings = document.getElementById("cfg-pet-active");
   const petActive = petActiveChkQuick ? petActiveChkQuick.checked : (petActiveChkSettings ? petActiveChkSettings.checked : true);
 
+  const rfChkQuick = document.getElementById("cfg-rapid-fire-quick");
+  const rfChkRot = document.getElementById("cfg-rapid-fire-rot");
+  const rfChkSettings = document.getElementById("cfg-rapid-fire");
+  const useRapidFire = rfChkQuick ? rfChkQuick.checked : (rfChkRot ? rfChkRot.checked : (rfChkSettings ? rfChkSettings.checked : true));
+
   const hunterStyleQuick = document.getElementById("cfg-hunter-style-quick")?.value;
   const hunterStyleSettings = document.getElementById("cfg-combat-style")?.value;
   const combatStyle = hunterStyleQuick || hunterStyleSettings || "auto";
+
+  const ammoQuick = document.getElementById("cfg-ammo-quick")?.value;
+  const ammoSettings = document.getElementById("cfg-ammo-type")?.value;
+  const ammoType = ammoQuick || ammoSettings || "thorium_arrow";
 
   const payload = {
     equipped_items: equippedIds,
@@ -2014,8 +2083,13 @@ function runSimulation() {
     apply_crusader_first: document.getElementById("cfg-opener-crusader")?.checked ?? true,
     pet_family: petFamily,
     pet_active: petActive,
+    use_rapid_fire: useRapidFire,
     combat_style: combatStyle,
-    hunter_spec: currentHunterSpec
+    hunter_spec: currentHunterSpec,
+    ammo_type: ammoType,
+    hunter_aspect: document.getElementById("cfg-hunter-aspect")?.value || "auto",
+    trueshot_aura: document.getElementById("cfg-trueshot-aura")?.checked || false,
+    use_trinkets: document.getElementById("cfg-use-trinkets")?.checked ?? true
   };
 
   fetch("/api/simulate", {
@@ -2195,6 +2269,29 @@ function renderSimulationResults(data) {
     wsEl.textContent = `${ws} / 315 (+${wsHit.toFixed(1)}% Hit, ${glance}% Glance)`;
   }
 
+  if (data.character_class === "hunter") {
+    const mapVal = data.melee_attack_power ?? data.map_ap ?? 0;
+    const rapVal = data.ranged_attack_power ?? data.rap ?? 0;
+    if (mapVal || rapVal) {
+      document.getElementById("stat-ap").textContent = `${mapVal} MAP / ${rapVal} RAP`;
+    }
+    const critVal = data.melee_crit_percent ?? data.melee_crit ?? data.total_crit_percent;
+    if (critVal !== undefined && critVal !== null) {
+      document.getElementById("stat-crit").textContent = `${Number(critVal).toFixed(1)}%`;
+    }
+    const hitVal = data.total_hit_percent ?? data.melee_hit;
+    if (hitVal !== undefined && hitVal !== null) {
+      document.getElementById("stat-hit").textContent = `${Number(hitVal).toFixed(1)}%`;
+    }
+    if (data.gear_summary) {
+      if (data.gear_summary.agility) document.getElementById("stat-agi").textContent = data.gear_summary.agility;
+      if (data.gear_summary.strength) document.getElementById("stat-str").textContent = data.gear_summary.strength;
+      if (data.gear_summary.stamina) document.getElementById("stat-sta").textContent = data.gear_summary.stamina;
+      if (data.gear_summary.intellect) document.getElementById("stat-int").textContent = data.gear_summary.intellect;
+      if (data.gear_summary.total_armor) document.getElementById("stat-armor").textContent = data.gear_summary.total_armor;
+    }
+  }
+
   const infoEl = document.getElementById("sim-scenario-info");
   if (infoEl) {
     const isDw = data.is_dual_wield ? " (DW)" : (data.is_two_handed ? " (2H)" : "");
@@ -2222,8 +2319,8 @@ function renderSimulationResults(data) {
       rotBadge.textContent = data.rotation_mode_name || "Priority Rotation";
       rotBadge.style.display = "inline-flex";
       rotBadge.className = `rot-badge rot-${data.rotation_mode || "priority_rotation"}`;
-    } else if (data.character_class === "hunter" && data.pet_details) {
-      rotBadge.textContent = `Pet: ${data.pet_details.name}`;
+    } else if (data.character_class === "hunter") {
+      rotBadge.textContent = data.use_rapid_fire ? "⚡ Rapid Fire: ON (+40% Atk Speed)" : "Rapid Fire: OFF";
       rotBadge.style.display = "inline-flex";
       rotBadge.className = `rot-badge rot-hunter-pet`;
     } else {
@@ -2325,35 +2422,53 @@ function renderSimulationResults(data) {
       styleRow.innerHTML = `<span>Styl Walki / Spec:</span><strong class="gold">${data.hunter_spec_name || data.combat_style_name || "Survival Melee"}</strong>`;
       castsList.appendChild(styleRow);
 
-      if (data.pet_details) {
+      if (data.pet_details && data.pet_details.active) {
         const p = data.pet_details;
         const petRow = document.createElement("div");
         petRow.className = "b-item";
-        petRow.innerHTML = `<span>Aktywny Pet:</span><strong class="magic">${p.name} (${p.dmg_modifier_percent >= 0 ? '+' : ''}${p.dmg_modifier_percent}% Dmg)</strong>`;
+        petRow.innerHTML = `<span>Aktywny Pet (Octo WoW):</span><strong class="magic">${p.name} (${p.dmg_modifier_percent >= 0 ? '+' : ''}${p.dmg_modifier_percent}% Dmg)</strong>`;
         castsList.appendChild(petRow);
       }
 
+      if (data.ammo_details && data.ammo_details.active_in_spec) {
+        const a = data.ammo_details;
+        const ammoRow = document.createElement("div");
+        ammoRow.className = "b-item";
+        ammoRow.innerHTML = `<span>Amunicja (MM / BM):</span><strong class="gold">${a.name} (+${a.dps} DPS &bull; +${a.bonus_per_shot} dmg/strzał &bull; wkład: +${a.contribution_dps} DPS)</strong>`;
+        castsList.appendChild(ammoRow);
+      }
+
+      const rfRow = document.createElement("div");
+      rfRow.className = "b-item";
+      rfRow.innerHTML = `<span>Odpałka Rapid Fire (+40% Atk Speed):</span><strong class="magic">${data.use_rapid_fire ? `Włączona (${data.rapid_fire_uptime || 25}% uptime)` : "Wyłączona"}</strong>`;
+      castsList.appendChild(rfRow);
+
       const casts = data.ability_casts || {};
       const hunterLabels = {
-        rapid_fire: "Rapid Fire (Burst: -40% Cast Reduction na 15s)",
-        aimed_shot: "Aimed Shot Casts (2.0s Cast, 6.0s CD, 1.18)",
-        steady_shot: "Steady Shot Casts (1.18 Rework Filler 1.5s)",
+        rapid_fire: "Rapid Fire (Odpałka: +40% Attack Speed na 15s)",
+        raptor_strike: "Raptor Strike Casts (/cast Raptor Strike, 5s CD)",
+        mongoose_bite: "Mongoose Bite Casts (/cast Mongoose Bite, 4s CD)",
+        carve: "Carve Casts (/cast Carve, 70% Wpn, 10s CD)",
+        immolation_trap: "Immolation Trap Casts (/cast Immolation Trap, 15s CD)",
+        lacerate: "Lacerate Casts (/cast Lacerate, 40% AP + Bleed)",
+        wing_clip: "Wing Clip Casts (/cast Wing Clip, 3s CD Filler)",
+        aimed_shot: "Aimed Shot Casts (2.5s Cast, 26s CD / Lock & Load)",
+        steady_shot: "Steady Shot Casts (1.5s Cast, 1:1 z Auto Shot)",
         multi_shot: "Multi-Shot Casts (10.0s CD)",
-        arcane_shot: "Arcane Shot Casts (Magia Arcane, 6.0s CD)",
+        arcane_shot: "Arcane Shot Casts (45% Wpn + 166 Arcane, 6.0s CD)",
         serpent_sting: "Serpent Sting Casts (Nature DoT 15s)",
-        auto_shot: "Auto Shot Strzały (Woven Weaving)",
-        raptor_strike: "Raptor Strike Casts (Broń 2H/1H, 5s CD)",
-        mongoose_bite: "Mongoose Bite Casts (Dodge/Parry Proc, 4s CD)",
-        counterattack: "Counterattack Casts (Parry Proc, 5s CD)",
-        immolation_trap: "Immolation Trap Casts (Ogień DoT)",
-        wing_clip: "Wing Clip Casts (Melee Filler / Procs)",
-        bestial_wrath: "Bestial Wrath Casts (+20% Pet Dmg)",
+        auto_shot: "Auto Shot Strzały (1:1 ze Steady Shot)",
+        bestial_wrath: "Bestial Wrath Casts (+40% Pet Dmg z Scent of Blood na 18s)",
         intimidation: "Intimidation Casts (Pet Stun & Burst)",
-        pet_swings: "Pet Auto Attack (Białe Ataki Peta)",
-        pet_claws: "Pet Claw (Focus Dump)",
-        pet_bites: "Pet Bite Casts",
-        pet_lightning_breath: "Pet Lightning Breath (Nature - Ignoruje Pancerz!)",
-        furious_howl: "Furious Howl Casts (+51 Dmg Buff)"
+        pet_swings: "Auto Attack (by Pet - Białe Ataki Peta)",
+        pet_claws: "Claw (by Pet - Rank 8, Focus Dump)",
+        pet_bites: "Bite (by Pet - Rank 8, 6s CD)",
+        pet_savage_rend: "Savage Rend (by Pet Raptor - Bleed DoT)",
+        pet_lightning_breath: "Lightning Breath (by Pet Wind Serpent - Nature)",
+        pet_poison_spit: "Poison Spit (by Pet Serpent - Nature DoT)",
+        pet_coordinated_assault: "Strike Together (Coordinated Assault - 20% Hunter AP)",
+        pet_kill_command: "Kill Command (by Pet - 80% Pet AP po Crit)",
+        furious_howl: "Furious Howl Casts (+Dmg Buff dla Huntera i Peta)"
       };
 
       for (const [key, num] of Object.entries(casts)) {
@@ -2384,19 +2499,31 @@ function renderSimulationResults(data) {
     const elPhysPct = document.getElementById("dt-phys-pct");
     const elHolyVal = document.getElementById("dt-holy-val");
     const elHolyPct = document.getElementById("dt-holy-pct");
+    const elHolyName = dtRow.querySelector(".dtype-holy .dtype-name");
+    if (elHolyName) {
+      elHolyName.textContent = data.character_class === "hunter" ? "Magic / Elemental:" : "Holy / Spell:";
+    }
     if (elPhysVal) elPhysVal.textContent = `${dtb.physical_dps.toFixed(2)} DPS`;
     if (elPhysPct) elPhysPct.textContent = `(${dtb.physical_percent}%)`;
-    if (elHolyVal) elHolyVal.textContent = `${dtb.holy_spell_dps.toFixed(2)} DPS`;
-    if (elHolyPct) elHolyPct.textContent = `(${dtb.holy_spell_percent}%)`;
+    const magicDps = dtb.magic_spell_dps ?? dtb.holy_spell_dps ?? 0;
+    const magicPct = dtb.magic_spell_percent ?? dtb.holy_spell_percent ?? 0;
+    if (elHolyVal) elHolyVal.textContent = `${Number(magicDps).toFixed(2)} DPS`;
+    if (elHolyPct) elHolyPct.textContent = `(${magicPct}%)`;
 
     const shadowPill = document.getElementById("dt-shadow-pill");
     if (shadowPill) {
-      if (dtb.minion_shadow_dps > 0 || (data.has_minions && data.minion_dps > 0)) {
+      const elShadName = shadowPill.querySelector(".dtype-name");
+      if (elShadName) {
+        elShadName.textContent = data.character_class === "hunter" ? "Hunter Pet:" : "Minions / Shadow:";
+      }
+      const petOrMinionDps = dtb.pet_dps ?? dtb.minion_shadow_dps ?? 0;
+      const petOrMinionPct = dtb.pet_percent ?? dtb.minion_shadow_percent ?? 0;
+      if (petOrMinionDps > 0 || (data.has_minions && data.minion_dps > 0)) {
         shadowPill.style.display = "inline-flex";
         const elShadVal = document.getElementById("dt-shadow-val");
         const elShadPct = document.getElementById("dt-shadow-pct");
-        if (elShadVal) elShadVal.textContent = `${dtb.minion_shadow_dps.toFixed(2)} DPS`;
-        if (elShadPct) elShadPct.textContent = `(${dtb.minion_shadow_percent}%)`;
+        if (elShadVal) elShadVal.textContent = `${Number(petOrMinionDps).toFixed(2)} DPS`;
+        if (elShadPct) elShadPct.textContent = `(${petOrMinionPct}%)`;
       } else {
         shadowPill.style.display = "none";
       }
@@ -2712,11 +2839,15 @@ function switchClass(newClass) {
   const hunterQuick = document.getElementById("hunter-quick-config");
   const hunterStyleItem = document.getElementById("setting-hunter-style-item");
   const petFamilyItem = document.getElementById("setting-pet-family-item");
+  const ammoItem = document.getElementById("setting-ammo-item");
+  const aspectItem = document.getElementById("setting-aspect-item");
   const hunterChecks = document.getElementById("setting-hunter-checks");
 
   if (hunterQuick) hunterQuick.style.display = currentClass === "hunter" ? "block" : "none";
   if (hunterStyleItem) hunterStyleItem.style.display = currentClass === "hunter" ? "flex" : "none";
   if (petFamilyItem) petFamilyItem.style.display = currentClass === "hunter" ? "flex" : "none";
+  if (ammoItem) ammoItem.style.display = currentClass === "hunter" ? "flex" : "none";
+  if (aspectItem) aspectItem.style.display = currentClass === "hunter" ? "flex" : "none";
   if (hunterChecks) hunterChecks.style.display = currentClass === "hunter" ? "flex" : "none";
 
   loadRacesForClass(currentClass);
@@ -2840,11 +2971,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       input.addEventListener("input", (e) => {
         const curSlot = card.getAttribute("data-slot") || slotKey;
+        if (!e.target.value.trim()) {
+          clearSlot(curSlot);
+          return;
+        }
         const matches = filterItemsForSlot(curSlot, e.target.value);
         const dropdown = card.querySelector(".combobox-dropdown");
         if (dropdown) {
           renderDropdownItems(dropdown, curSlot, matches);
           dropdown.style.display = "block";
+        }
+      });
+      input.addEventListener("blur", (e) => {
+        const curSlot = card.getAttribute("data-slot") || slotKey;
+        if (!e.target.value.trim()) {
+          clearSlot(curSlot);
         }
       });
     }
@@ -3110,17 +3251,21 @@ document.addEventListener("DOMContentLoaded", () => {
     runSimulation();
   });
 
-  // Hunter Combat Style & Pet Synchronization
+  // Hunter Combat Style & Rapid Fire Synchronization
   const hStyleQuick = document.getElementById("cfg-hunter-style-quick");
   const hStyleSettings = document.getElementById("cfg-combat-style");
   if (hStyleQuick && hStyleSettings) {
     hStyleQuick.addEventListener("change", (e) => {
       hStyleSettings.value = e.target.value;
-      runSimulation();
+      if (e.target.value === "survival") selectHunterRotationSpec("survival");
+      else if (e.target.value === "ranged") selectHunterRotationSpec("marksmanship");
+      else runSimulation();
     });
     hStyleSettings.addEventListener("change", (e) => {
       hStyleQuick.value = e.target.value;
-      runSimulation();
+      if (e.target.value === "survival") selectHunterRotationSpec("survival");
+      else if (e.target.value === "ranged") selectHunterRotationSpec("marksmanship");
+      else runSimulation();
     });
   }
 
@@ -3137,6 +3282,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const ammoQuickEl = document.getElementById("cfg-ammo-quick");
+  const ammoSettingsEl = document.getElementById("cfg-ammo-type");
+  if (ammoQuickEl && ammoSettingsEl) {
+    ammoQuickEl.addEventListener("change", (e) => {
+      ammoSettingsEl.value = e.target.value;
+      runSimulation();
+    });
+    ammoSettingsEl.addEventListener("change", (e) => {
+      ammoQuickEl.value = e.target.value;
+      runSimulation();
+    });
+  }
+
   const petActiveQuick = document.getElementById("cfg-pet-active-quick");
   const petActiveSettings = document.getElementById("cfg-pet-active");
   if (petActiveQuick && petActiveSettings) {
@@ -3148,6 +3306,34 @@ document.addEventListener("DOMContentLoaded", () => {
       petActiveQuick.checked = e.target.checked;
       runSimulation();
     });
+  }
+
+  const rfQuick = document.getElementById("cfg-rapid-fire-quick");
+  const rfRot = document.getElementById("cfg-rapid-fire-rot");
+  const rfSettings = document.getElementById("cfg-rapid-fire");
+  const syncRapidFireCheckboxes = (checked) => {
+    if (rfQuick) rfQuick.checked = checked;
+    if (rfRot) rfRot.checked = checked;
+    if (rfSettings) rfSettings.checked = checked;
+    runSimulation();
+  };
+  if (rfQuick) rfQuick.addEventListener("change", (e) => syncRapidFireCheckboxes(e.target.checked));
+  if (rfRot) rfRot.addEventListener("change", (e) => syncRapidFireCheckboxes(e.target.checked));
+  if (rfSettings) rfSettings.addEventListener("change", (e) => syncRapidFireCheckboxes(e.target.checked));
+
+  const aspectSelect = document.getElementById("cfg-hunter-aspect");
+  if (aspectSelect) {
+    aspectSelect.addEventListener("change", () => runSimulation());
+  }
+
+  const tsAuraChk = document.getElementById("cfg-trueshot-aura");
+  if (tsAuraChk) {
+    tsAuraChk.addEventListener("change", () => runSimulation());
+  }
+
+  const useTrinketsChk = document.getElementById("cfg-use-trinkets");
+  if (useTrinketsChk) {
+    useTrinketsChk.addEventListener("change", () => runSimulation());
   }
 
   document.querySelectorAll(".info-circle").forEach(circle => {

@@ -165,10 +165,15 @@ def api_simulate():
     quest_weapon_skills = data.get("quest_weapon_skills", {})
     primary_seal = str(data.get("primary_seal", "auto")).lower().strip()
     apply_crusader_first = bool(data.get("apply_crusader_first", True))
-    pet_family = str(data.get("pet_family", "cat")).lower().strip()
+    pet_family = str(data.get("pet_family", "raptor")).lower().strip()
     pet_active = bool(data.get("pet_active", True))
+    use_rapid_fire = bool(data.get("use_rapid_fire", True))
     combat_style = str(data.get("combat_style", "auto")).lower().strip()
-    hunter_spec = str(data.get("hunter_spec", data.get("spec", "marksmanship"))).lower().strip()
+    hunter_spec = str(data.get("hunter_spec", data.get("spec", "auto"))).lower().strip()
+    ammo_type = str(data.get("ammo_type", "thorium_arrow")).lower().strip()
+    hunter_aspect = str(data.get("hunter_aspect", "auto")).lower().strip()
+    trueshot_aura = bool(data.get("trueshot_aura", False))
+    use_trinkets = bool(data.get("use_trinkets", True))
 
     result = simulate_combat(
         equipped_items=equipped_items,
@@ -199,8 +204,13 @@ def api_simulate():
         apply_crusader_first=apply_crusader_first,
         pet_family=pet_family,
         pet_active=pet_active,
+        use_rapid_fire=use_rapid_fire,
         combat_style=combat_style,
         hunter_spec=hunter_spec,
+        ammo_type=ammo_type,
+        hunter_aspect=hunter_aspect,
+        trueshot_aura=trueshot_aura,
+        use_trinkets=use_trinkets,
         db=db,
     )
     return jsonify(result)

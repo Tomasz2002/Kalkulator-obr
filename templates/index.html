@@ -266,23 +266,45 @@
                   <select id="cfg-hunter-style-quick" class="build-select">
                     <option value="auto" selected>Auto (Melee/Ranged)</option>
                     <option value="survival">Survival Melee (Zwarcie)</option>
-                    <option value="ranged">Marksmanship Ranged</option>
+                    <option value="ranged">Marksmanship / BM Ranged</option>
                   </select>
                 </div>
                 <div class="quick-control-row">
-                  <label for="cfg-pet-family-quick" class="build-label">Pet Companion:</label>
+                  <label for="cfg-pet-family-quick" class="build-label">Octo WoW Pet:</label>
                   <select id="cfg-pet-family-quick" class="build-select">
-                    <option value="cat" selected>Cat / Kot (+10% Dmg, Claw+Bite)</option>
-                    <option value="wind_serpent">Wind Serpent (Lightning Breath)</option>
-                    <option value="wolf">Wolf / Wilk (Furious Howl +51 Dmg)</option>
-                    <option value="raptor">Raptor (+10% Dmg, Claw+Bite)</option>
-                    <option value="owl_bat">Owl / Sowa (Screech -AP)</option>
-                    <option value="boar">Boar / Dzik (Charge+Bite)</option>
+                    <option value="raptor" selected>Raptor (+10% Dmg, Savage Rend Rank 6 Bleed + Claw)</option>
+                    <option value="wind_serpent">Wind Serpent (+7% Dmg, Lightning Breath Rank 6 Nature + Bite)</option>
+                    <option value="serpent">Serpent / Wąż (Poison Spit Rank 3 Nature DoT + Bite)</option>
+                    <option value="wolf">Wolf / Wilk (Furious Howl Rank 4 +Dmg Buff + Bite)</option>
+                  </select>
+                </div>
+                <div class="quick-control-row">
+                  <label for="cfg-ammo-quick" class="build-label">Amunicja / Strzały:</label>
+                  <select id="cfg-ammo-quick" class="build-select">
+                    <option value="thorium_arrow" selected>Thorium Headed Arrow / Shells (+17.5 DPS - Raid)</option>
+                    <option value="doomshot">Doomshot (+20.0 DPS - Strzały LBRS)</option>
+                    <option value="miniature_cannon_balls">Miniature Cannon Balls (+20.5 DPS - Pociski Strat)</option>
+                    <option value="rockshard_pellets">Rockshard Pellets (+18.0 DPS - Pociski Maraudon)</option>
+                    <option value="ice_threaded">Ice Threaded Arrow / Bullet (+16.5 DPS - AV)</option>
+                    <option value="mithril_gyro_shot">Mithril Gyro-Shot (+15.0 DPS - Inżynieria)</option>
+                    <option value="explosive_arrow">Explosive Arrow (+14.5 DPS)</option>
+                    <option value="jagged_arrow">Jagged Arrow / Accurate Slugs (+13.0 DPS - Vendor)</option>
+                    <option value="hi_impact_mithril">Hi-Impact Mithril Slugs (+12.5 DPS)</option>
+                    <option value="precision_arrow">Precision Arrow (+11.5 DPS)</option>
+                    <option value="feathered_arrow">Feathered Arrow / Exploding Shot (+9.5 DPS)</option>
+                    <option value="razor_arrow">Razor Arrow / Solid Shot (+7.5 DPS)</option>
+                    <option value="sharp_arrow">Sharp Arrow / Heavy Shot (+3.5 DPS)</option>
+                    <option value="rough_arrow">Rough Arrow / Light Shot (+1.5 DPS)</option>
+                    <option value="none">Brak amunicji (0.0 DPS)</option>
                   </select>
                 </div>
                 <label class="seal-checkbox-label" for="cfg-pet-active-quick" style="margin-top: 4px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #e0e0e0; cursor: pointer;">
                   <input type="checkbox" id="cfg-pet-active-quick" checked style="accent-color: var(--accent-gold);">
-                  <span>Pet aktywnie walczy (Summon Pet)</span>
+                  <span>🐾 Pet aktywnie walczy (Summon Pet)</span>
+                </label>
+                <label class="seal-checkbox-label" for="cfg-rapid-fire-quick" style="margin-top: 4px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #e0e0e0; cursor: pointer;">
+                  <input type="checkbox" id="cfg-rapid-fire-quick" checked style="accent-color: var(--accent-gold);">
+                  <span>⚡ Używaj Rapid Fire (+40% Attack Speed na 15s)</span>
                 </label>
               </div>
 
@@ -529,19 +551,25 @@
               <span class="hunter-spec-btn-desc">Steady Shot filler, 2.0s Aimed Shot, -40% Cast Rapid Fire, Multi &amp; Arcane Shot</span>
             </button>
             <button type="button" class="hunter-spec-btn" data-hunter-spec="survival" id="spec-btn-survival">
-              <span class="hunter-spec-btn-title">⚔️ Survival (Melee &amp; Traps)</span>
-              <span class="hunter-spec-btn-desc">Mongoose Bite &amp; Counterattack, 5s Raptor Strike (-1s Superior Strikes), Immolation Trap</span>
+              <span class="hunter-spec-btn-title">⚔️ Survival (Single-Target Macro)</span>
+              <span class="hunter-spec-btn-desc">Raptor Strike &rarr; Mongoose Bite &rarr; Carve &rarr; Immolation Trap &rarr; Lacerate &rarr; Wing Clip</span>
             </button>
             <button type="button" class="hunter-spec-btn" data-hunter-spec="beast_mastery" id="spec-btn-bm">
-              <span class="hunter-spec-btn-title">🐾 Beast Mastery (Pet Synergy)</span>
-              <span class="hunter-spec-btn-desc">Bestial Wrath (+20% Pet Dmg), Intimidation, Pet Focus Dump (Claw/Bite/Breath) &amp; Strzały</span>
+              <span class="hunter-spec-btn-title">🐾 Beast Mastery (Octo WoW Raid Rotation)</span>
+              <span class="hunter-spec-btn-desc">Auto Shot &harr; Steady Shot, Kill Command (by Pet), Strike Together, Arcane Shot, Serpent Sting</span>
             </button>
           </div>
 
           <div class="hunter-notes-banner" id="hunter-notes-banner" style="display: none;">
             <span style="font-size: 16px;">💡</span>
-            <div id="hunter-notes-text">
-              <strong>Patch 1.18 Rework:</strong> <em>Steady Shot</em> (1.5s cast) jest fillerem wplatanym w okna Auto Shot. Czas rzucania <em>Aimed Shot</em> został skrócony do <strong>2.0s</strong> z <strong>niezależnym 6.0s CD</strong> od Arcane Shot. <em>Rapid Fire</em> skraca czas rzucania obu tych strzałów o <strong>40%</strong>!
+            <div style="flex: 1;">
+              <div id="hunter-notes-text">
+                <strong>Patch 1.18 Rework:</strong> <em>Steady Shot</em> (1.5s cast) jest fillerem wplatanym w okna Auto Shot. Czas rzucania <em>Aimed Shot</em> został skrócony do <strong>2.0s</strong> z <strong>niezależnym 6.0s CD</strong> od Arcane Shot. <em>Rapid Fire</em> skraca czas rzucania obu tych strzałów o <strong>40%</strong>!
+              </div>
+              <label for="cfg-rapid-fire-rot" style="margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: var(--accent-gold); cursor: pointer;">
+                <input type="checkbox" id="cfg-rapid-fire-rot" checked style="accent-color: var(--accent-gold); width: 15px; height: 15px;">
+                <span>⚡ Odpałka w walce: Używaj Rapid Fire (+40% szybkości ataków przez 15 sek.)</span>
+              </label>
             </div>
           </div>
 
@@ -682,23 +710,55 @@
               <label for="cfg-combat-style">Hunter Combat Style:</label>
               <select id="cfg-combat-style" class="unit-select">
                 <option value="auto" selected>Auto (Detect based on weapons &amp; talents)</option>
-                <option value="survival">Survival Melee (Raptor Strike &amp; Mongoose Bite)</option>
-                <option value="ranged">Marksmanship Ranged (Auto / Aimed / Multi-Shot)</option>
+                <option value="survival">Survival Melee (Raptor Strike, Mongoose Bite, Carve, Lacerate)</option>
+                <option value="ranged">Marksmanship / BM Ranged (Auto / Aimed / Multi-Shot)</option>
               </select>
               <div class="setting-hint">Choose between Melee Survival or Ranged Shot rotation</div>
             </div>
 
             <div class="setting-item" id="setting-pet-family-item" style="display: none;">
-              <label for="cfg-pet-family">Hunter Pet Family:</label>
+              <label for="cfg-pet-family">Octo WoW Hunter Pet Family:</label>
               <select id="cfg-pet-family" class="unit-select">
-                <option value="cat" selected>Cat (+10% Dmg, 1.2s Speed, Claw, Bite)</option>
-                <option value="wind_serpent">Wind Serpent (+7% Dmg, Lightning Breath - Nature, Bite)</option>
-                <option value="wolf">Wolf (1.5s Speed, Furious Howl +51 Hunter Atk, Bite)</option>
-                <option value="raptor">Raptor (+10% Dmg, 2.0s Speed, Claw, Bite)</option>
-                <option value="owl_bat">Owl / Bat (+7% Dmg, Screech AoE AP debuff, Claw)</option>
-                <option value="boar">Boar (-10% Dmg, Charge, Bite)</option>
+                <option value="raptor" selected>Raptor (+10% Dmg, 2.0s Speed, Savage Rend Rank 6 Bleed + Claw)</option>
+                <option value="wind_serpent">Wind Serpent (+7% Dmg, 2.0s Speed, Lightning Breath Rank 6 Nature + Bite)</option>
+                <option value="serpent">Serpent (2.0s Speed, Poison Spit Rank 3 Nature DoT + Bite)</option>
+                <option value="wolf">Wolf (1.5s Speed, Furious Howl Rank 4 +Dmg Buff + Bite)</option>
               </select>
-              <div class="setting-hint">Different pets provide distinct combat abilities and damage bonuses</div>
+              <div class="setting-hint">Authentic Octo WoW pet families and focus abilities from Spell.dbc</div>
+            </div>
+
+            <div class="setting-item" id="setting-ammo-item" style="display: none;">
+              <label for="cfg-ammo-type">Hunter Ammunition (Strzały / Pociski - MM &amp; BM):</label>
+              <select id="cfg-ammo-type" class="unit-select">
+                <option value="thorium_arrow" selected>Thorium Headed Arrow / Thorium Shells (+17.5 DPS)</option>
+                <option value="doomshot">Doomshot (+20.0 DPS - Strzały LBRS)</option>
+                <option value="miniature_cannon_balls">Miniature Cannon Balls (+20.5 DPS - Pociski Stratholme)</option>
+                <option value="rockshard_pellets">Rockshard Pellets (+18.0 DPS - Pociski Maraudon)</option>
+                <option value="ice_threaded">Ice Threaded Arrow / Bullet (+16.5 DPS - Alterac Valley)</option>
+                <option value="mithril_gyro_shot">Mithril Gyro-Shot (+15.0 DPS - Engineering)</option>
+                <option value="explosive_arrow">Explosive Arrow (+14.5 DPS)</option>
+                <option value="jagged_arrow">Jagged Arrow / Accurate Slugs (+13.0 DPS - Vendor)</option>
+                <option value="hi_impact_mithril">Hi-Impact Mithril Slugs (+12.5 DPS)</option>
+                <option value="precision_arrow">Precision Arrow (+11.5 DPS)</option>
+                <option value="feathered_arrow">Feathered Arrow / Exploding Shot (+9.5 DPS)</option>
+                <option value="razor_arrow">Razor Arrow / Solid Shot (+7.5 DPS)</option>
+                <option value="sharp_arrow">Sharp Arrow / Heavy Shot (+3.5 DPS)</option>
+                <option value="rough_arrow">Rough Arrow / Light Shot (+1.5 DPS)</option>
+                <option value="none">Brak amunicji (0.0 DPS)</option>
+              </select>
+              <div class="setting-hint">Dodaje obrażenia (Ammo DPS &times; Weapon Speed) do każdego strzału w Marksmanship i Beast Mastery</div>
+            </div>
+
+            <div class="setting-item" id="setting-aspect-item" style="display: none;">
+              <label for="cfg-hunter-aspect">Hunter Aspect (Aspekt łowcy):</label>
+              <select id="cfg-hunter-aspect" class="unit-select">
+                <option value="auto" selected>Auto (Hawk dla Ranged / Wolf dla Survival Melee)</option>
+                <option value="wolf">Aspect of the Wolf (+120 Melee AP / +144 z Dragonstalker 3pc &amp; Swift Aspects)</option>
+                <option value="hawk">Aspect of the Hawk (+120 Ranged AP / +144 z Dragonstalker 3pc &amp; Swift Aspects)</option>
+                <option value="monkey">Aspect of the Monkey (+8% Dodge)</option>
+                <option value="none">Brak aspektu (None)</option>
+              </select>
+              <div class="setting-hint">Octo WoW DBC: Aspect of the Wolf zwiększa moc ataku w zwarciu o +120 MAP i aktywuje Swift Aspects (+3-15% Haste) dla ataków wręcz</div>
             </div>
           </div>
 
@@ -706,7 +766,22 @@
             <label class="check-label" id="lbl-cfg-pet-active">
               <input type="checkbox" id="cfg-pet-active" checked>
               <span class="check-custom"></span>
-              <span class="check-text">Hunter Pet Active (Pet attacks &amp; uses focus abilities)</span>
+              <span class="check-text">🐾 Hunter Pet Active (Pet attacks &amp; uses Octo WoW Focus abilities)</span>
+            </label>
+            <label class="check-label" id="lbl-cfg-rapid-fire" style="margin-top: 8px;">
+              <input type="checkbox" id="cfg-rapid-fire" checked>
+              <span class="check-custom"></span>
+              <span class="check-text">⚡ Używaj odpałki Rapid Fire (+40% Attack Speed na 15 sek.)</span>
+            </label>
+            <label class="check-label" id="lbl-cfg-trueshot-aura" style="margin-top: 8px;">
+              <input type="checkbox" id="cfg-trueshot-aura">
+              <span class="check-custom"></span>
+              <span class="check-text">🐯 Trueshot Aura (+3% Attack Power &amp; +30 AP)</span>
+            </label>
+            <label class="check-label" id="lbl-cfg-use-trinkets" style="margin-top: 8px;">
+              <input type="checkbox" id="cfg-use-trinkets" checked>
+              <span class="check-custom"></span>
+              <span class="check-text">✨ Używaj trinketów na start walki (Devilsaur Eye, Earthstrike itp.)</span>
             </label>
           </div>
 

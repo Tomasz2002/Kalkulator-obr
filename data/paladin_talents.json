@@ -115,7 +115,7 @@
       "name": "Sanctity Aura",
       "icon": "spell_holy_mindvision",
       "ranks": 1,
-      "desc": "Increases Holy damage done by party members within 30 yards by 10%. Players may only have one Aura on them per Paladin at any one time.",
+      "desc": "Increases Holy damage done by party members within 30 yards by 10%.  Players may only have one Aura on them per Paladin at any one time.",
       "descPl": "Zwiększa obrażenia święte zadawane przez członków drużyny w promieniu 30 metrów o 10%. Gracze mogą mieć na sobie tylko jedną Aurę od jednego Paladyna w tym samym czasie.",
       "descDe": "Erhöht den von Gruppenmitgliedern im Umkreis von 30 Metern verursachten heiligen Schaden um 10%. Spieler können pro Paladin immer nur eine Aura auf sich haben.",
       "descFr": "Augmente les dégâts Sacrés infligés par les membres du groupe dans un rayon de 30 mètres de 10%. Les joueurs ne peuvent avoir qu'une seule Aura par Paladin à la fois.",
@@ -132,7 +132,7 @@
       "name": "Improved Lay on Hands",
       "icon": "spell_holy_layonhands",
       "ranks": 2,
-      "desc": "Gives the target of your Lay on Hands spell a 15/30% bonus to their armor value from items for 2 min. In addition, the cooldown for your Lay on Hands spell is reduced by 10/20 min.",
+      "desc": "Gives the target of your Lay on Hands spell a 15/30% bonus to their armor value from items for 2 min.  In addition, the cooldown for your Lay on Hands spell is reduced by 10/20 min.",
       "descPl": "Daje celowi twojego zaklęcia Lay on Hands premię 15/30% do wartości pancerza z przedmiotów przez 2 min. Dodatkowo czas odnowienia twojego zaklęcia Lay on Hands jest skrócony o 10/20 min.",
       "descDe": "Gewährt dem Ziel deines Lay on Hands-Zaubers 2 Min. lang einen Bonus von 15/30% auf seinen Rüstungswert von Gegenständen. Zusätzlich wird die Abklingzeit deines Lay on Hands-Zaubers um 10/20 Min. reduziert.",
       "descFr": "Confère à la cible de votre sort Lay on Hands un bonus de 15/30% à la valeur d'armure de ses objets pendant 2 min. De plus, le temps de recharge de votre sort Lay on Hands est réduit de 10/20 min.",
@@ -217,6 +217,10 @@
       "name": "Divine Favor",
       "icon": "spell_holy_heal",
       "ranks": 5,
+      "req": [
+        "Holy Shock",
+        1
+      ],
       "desc": "Improves your chance to get a critical strike with Holy Shock by 10/20/30/40/50%.",
       "descPl": "Zwiększa twoją szansę na trafienie krytyczne przez Holy Shock o 10/20/30/40/50%.",
       "descDe": "Verbessert deine Chance, mit Holy Shock einen kritischen Treffer zu erzielen, um 10/20/30/40/50%.",
@@ -224,11 +228,7 @@
       "descEs": "Mejora tu probabilidad de asestar un golpe crítico con Holy Shock en un 10/20/30/40/50%.",
       "descIt": "Aumenta la tua probabilità di ottenere un colpo critico con Holy Shock del 10/20/30/40/50%.",
       "descPt": "Melhora sua chance de causar um acerto crítico com Holy Shock em 10/20/30/40/50%.",
-      "descRu": "Увеличивает ваш шанс нанести критический удар с помощью Holy Shock на 10/20/30/40/50%.",
-      "req": [
-        "Holy Shock",
-        1
-      ]
+      "descRu": "Увеличивает ваш шанс нанести критический удар с помощью Holy Shock на 10/20/30/40/50%."
     },
     {
       "tree": 0,
@@ -272,18 +272,18 @@
       "name": "Blessed Strikes",
       "icon": "spell_holy_revivechampion",
       "ranks": 5,
-      "desc": "Crusader Strike has a 20/40/60/80/100% chance to reset the cooldown of your Holy Shock. In addition, the healing effect of your Holy Strike is increased by 20/40/60/80/100% and benefits from an additional 5/10/15/20/25% of your healing power.",
+      "req": [
+        "Holy Shock",
+        1
+      ],
+      "desc": "Crusader Strike has a 20/40/60/80/100% chance to reset the cooldown of your Holy Shock.  In addition, the healing effect of your Holy Strike is increased by 20/40/60/80/100% and benefits from an additional 5/10/15/20/25% of your healing power.",
       "descPl": "Crusader Strike ma 20/40/60/80/100% szansy na zresetowanie czasu odnowienia twojego Holy Shock. Dodatkowo efekt leczenia twojego Holy Strike jest zwiększony o 20/40/60/80/100% i korzysta z dodatkowych 5/10/15/20/25% twojej mocy leczenia.",
       "descDe": "Crusader Strike hat eine Chance von 20/40/60/80/100%, die Abklingzeit deines Holy Shock zurückzusetzen. Zusätzlich wird der Heileffekt deines Holy Strike um 20/40/60/80/100% erhöht und profitiert von zusätzlichen 5/10/15/20/25% deiner Heilkraft.",
       "descFr": "Crusader Strike a 20/40/60/80/100% de chances de réinitialiser le temps de recharge de votre Holy Shock. De plus, l'effet de soin de votre Holy Strike est augmenté de 20/40/60/80/100% et bénéficie de 5/10/15/20/25% supplémentaires de votre puissance de soins.",
       "descEs": "Crusader Strike tiene un 20/40/60/80/100% de probabilidad de reiniciar el enfriamiento de tu Holy Shock. Además, el efecto de sanación de tu Holy Strike aumenta un 20/40/60/80/100% y se beneficia de un 5/10/15/20/25% adicional de tu poder de sanación.",
       "descIt": "Crusader Strike ha una probabilità del 20/40/60/80/100% di azzerare il cooldown del tuo Holy Shock. Inoltre, l'effetto di guarigione del tuo Holy Strike è aumentato del 20/40/60/80/100% e beneficia di un ulteriore 5/10/15/20/25% del tuo potere di guarigione.",
       "descPt": "Crusader Strike tem 20/40/60/80/100% de chance de reiniciar o tempo de recarga do seu Holy Shock. Além disso, o efeito de cura do seu Holy Strike é aumentado em 20/40/60/80/100% e se beneficia de 5/10/15/20/25% adicionais do seu poder de cura.",
-      "descRu": "Crusader Strike с вероятностью 20/40/60/80/100% сбрасывает время восстановления вашего Holy Shock. Кроме того, лечащий эффект вашего Holy Strike увеличивается на 20/40/60/80/100% и дополнительно использует 5/10/15/20/25% вашей силы лечения.",
-      "req": [
-        "Holy Shock",
-        1
-      ]
+      "descRu": "Crusader Strike с вероятностью 20/40/60/80/100% сбрасывает время восстановления вашего Holy Shock. Кроме того, лечащий эффект вашего Holy Strike увеличивается на 20/40/60/80/100% и дополнительно использует 5/10/15/20/25% вашей силы лечения."
     },
     {
       "tree": 0,
@@ -293,6 +293,10 @@
       "name": "Daybreak",
       "icon": "spell_holy_auramastery",
       "ranks": 1,
+      "req": [
+        "Holy Shock",
+        1
+      ],
       "desc": "Critically healing an ally applies Daybreak for 30 sec. When the ally takes damage, Daybreak is consumed to heal them for 248 to 289.",
       "descPl": "Krytyczne wyleczenie sojusznika nakłada Daybreak na 30 sek. Gdy sojusznik otrzyma obrażenia, Daybreak zostaje zużyty, przywracając od 248 do 289 punktów zdrowia.",
       "descDe": "Eine kritische Heilung eines Verbündeten wendet 30 Sek. lang Daybreak an. Wenn der Verbündete Schaden erleidet, wird Daybreak verbraucht, um ihn um 248 bis 289 zu heilen.",
@@ -300,11 +304,7 @@
       "descEs": "Sanar críticamente a un aliado aplica Daybreak durante 30 seg. Cuando el aliado recibe daño, Daybreak se consume para sanarlo 248 a 289.",
       "descIt": "Curare criticamente un alleato applica Daybreak per 30 sec. Quando l'alleato subisce danno, Daybreak viene consumato per curarlo da 248 a 289.",
       "descPt": "Curar criticamente um aliado aplica Daybreak por 30 seg. Quando o aliado recebe dano, Daybreak é consumido para curá-lo em 248 a 289.",
-      "descRu": "Критическое исцеление союзника накладывает Daybreak на 30 сек. Когда союзник получает урон, Daybreak расходуется, исцеляя его на 248–289.",
-      "req": [
-        "Holy Shock",
-        1
-      ]
+      "descRu": "Критическое исцеление союзника накладывает Daybreak на 30 сек. Когда союзник получает урон, Daybreak расходуется, исцеляя его на 248–289."
     },
     {
       "tree": 1,
@@ -416,7 +416,7 @@
       "name": "Blessing of Sanctuary",
       "icon": "spell_nature_lightningshield",
       "ranks": 1,
-      "desc": "Places a Blessing on the friendly target, reducing damage taken from all sources by up to 10 for 10 min. In addition, when the target blocks a melee attack, the attacker takes 14 Holy damage. Players may only have one Blessing on them per Paladin at any one time.",
+      "desc": "Places a Blessing on the friendly target, reducing damage taken from all sources by up to 10 for 10 min.  In addition, when the target blocks a melee attack, the attacker takes 14 Holy damage.  Players may only have one Blessing on them per Paladin at any one time.",
       "descPl": "Nakłada Blessing na przyjazny cel, redukując obrażenia otrzymywane ze wszystkich źródeł o maksymalnie 10 przez 10 min. Dodatkowo, gdy cel zablokuje atak w zwarciu, atakujący otrzymuje 14 obrażeń świętych. Gracze mogą mieć na sobie tylko jedno Blessing od jednego Paladyna w tym samym czasie.",
       "descDe": "Legt einen Segen auf das befreundete Ziel, wodurch der aus allen Quellen erlittene Schaden 10 Min. lang um bis zu 10 reduziert wird. Zusätzlich erleidet der Angreifer 14 heiligen Schaden, wenn das Ziel einen Nahkampfangriff blockt. Spieler können pro Paladin immer nur einen Segen auf sich haben.",
       "descFr": "Confère une Blessing à la cible alliée, réduisant les dégâts subis de toutes sources jusqu'à 10 pendant 10 min. De plus, lorsque la cible bloque une attaque au corps à corps, l'attaquant subit 14 points de dégâts Sacrés. Les joueurs ne peuvent avoir qu'une seule Blessing par Paladin à la fois.",
@@ -433,6 +433,10 @@
       "name": "Shield Specialization",
       "icon": "inv_shield_06",
       "ranks": 3,
+      "req": [
+        "Redoubt",
+        5
+      ],
       "desc": "Increases the amount of damage absorbed by your shield by 10/20/30% and has a 33/66/100% chance to restore 2% of maximum mana when a block occurs. This effect cannot occur more than once every 5 sec.",
       "descPl": "Zwiększa ilość obrażeń pochłanianych przez twoją tarczę o 10/20/30% i ma 33/66/100% szansy na przywrócenie 2% maksymalnej many, gdy nastąpi zablokowanie. Ten efekt nie może wystąpić częściej niż raz na 5 sek.",
       "descDe": "Erhöht die von deinem Schild absorbierte Schadensmenge um 10/20/30% und hat eine Chance von 33/66/100%, bei einem Block 2% des maximalen Manas wiederherzustellen. Dieser Effekt kann nicht öfter als alle 5 Sek. auftreten.",
@@ -440,11 +444,7 @@
       "descEs": "Aumenta la cantidad de daño absorbido por tu escudo en un 10/20/30% y tiene un 33/66/100% de probabilidad de restaurar un 2% del maná máximo cuando se produce un bloqueo. Este efecto no puede ocurrir más de una vez cada 5 seg.",
       "descIt": "Aumenta la quantità di danno assorbita dal tuo scudo del 10/20/30% e ha una probabilità del 33/66/100% di ripristinare il 2% del mana massimo quando si verifica un blocco. Questo effetto non può verificarsi più di una volta ogni 5 sec.",
       "descPt": "Aumenta a quantidade de dano absorvido pelo seu escudo em 10/20/30% e tem 33/66/100% de chance de restaurar 2% da mana máxima quando ocorre um bloqueio. Este efeito não pode ocorrer mais de uma vez a cada 5 seg.",
-      "descRu": "Увеличивает объем урона, поглощаемого вашим щитом, на 10/20/30% и дает 33/66/100% шанс восстановить 2% максимального запаса маны при блокировании. Этот эффект может срабатывать не чаще одного раза в 5 сек.",
-      "req": [
-        "Redoubt",
-        5
-      ]
+      "descRu": "Увеличивает объем урона, поглощаемого вашим щитом, на 10/20/30% и дает 33/66/100% шанс восстановить 2% максимального запаса маны при блокировании. Этот эффект может срабатывать не чаще одного раза в 5 сек."
     },
     {
       "tree": 1,
@@ -505,6 +505,10 @@
       "name": "Righteous Defense",
       "icon": "ability_warrior_swordandboard",
       "ranks": 3,
+      "req": [
+        "Improved Righteous Fury",
+        3
+      ],
       "desc": "While Righteous Fury is active, your damage taken is reduced by 3/6/10%.",
       "descPl": "Gdy Righteous Fury jest aktywne, otrzymywane przez ciebie obrażenia są redukowane o 3/6/10%.",
       "descDe": "Solange Righteous Fury aktiv ist, wird dein erlittener Schaden um 3/6/10% reduziert.",
@@ -512,11 +516,7 @@
       "descEs": "Mientras Righteous Fury está activo, el daño que recibes se reduce en un 3/6/10%.",
       "descIt": "Mentre Righteous Fury è attivo, il danno che subisci è ridotto del 3/6/10%.",
       "descPt": "Enquanto Righteous Fury estiver ativo, o dano que você recebe é reduzido em 3/6/10%.",
-      "descRu": "Пока активен Righteous Fury, получаемый вами урон снижается на 3/6/10%.",
-      "req": [
-        "Improved Righteous Fury",
-        3
-      ]
+      "descRu": "Пока активен Righteous Fury, получаемый вами урон снижается на 3/6/10%."
     },
     {
       "tree": 1,
@@ -526,7 +526,7 @@
       "name": "Holy Shield",
       "icon": "spell_holy_blessingofprotection",
       "ranks": 1,
-      "desc": "Increases chance to block by 45% for 10 sec. While active, each blocked attack deals 35 Holy damage to the attacker. Damage caused by Holy Shield generates 50% additional threat. Each block expends a charge. 4 charges.",
+      "desc": "Increases chance to block by 45% for 10 sec. While active, each blocked attack deals 35 Holy damage to the attacker.  Damage caused by Holy Shield generates 50% additional threat.  Each block expends a charge.  4 charges.",
       "descPl": "Zwiększa szansę na zablokowanie o 45% na 10 sek. Gdy jest aktywne, każdy zablokowany atak zadaje 35 obrażeń świętych atakującemu. Obrażenia zadane przez Holy Shield generują 50% dodatkowego zagrożenia. Każde zablokowanie zużywa ładunek. 4 ładunki.",
       "descDe": "Erhöht die Blockchance 10 Sek. lang um 45%. Solange aktiv, fügt jeder geblockte Angriff dem Angreifer 35 heiligen Schaden zu. Von Holy Shield verursachter Schaden erzeugt 50% zusätzliche Bedrohung. Jeder Block verbraucht eine Ladung. 4 Ladungen.",
       "descFr": "Augmente la chance de blocage de 45% pendant 10 sec. Tant qu'il est actif, chaque attaque bloquée inflige 35 points de dégâts Sacrés à l'attaquant. Les dégâts causés par Holy Shield génèrent 50% de menace supplémentaire. Chaque blocage consomme une charge. 4 charges.",
@@ -577,6 +577,10 @@
       "name": "Bulwark of the Righteous",
       "icon": "ability_warrior_victoryrush",
       "ranks": 1,
+      "req": [
+        "Holy Shield",
+        1
+      ],
       "desc": "Bash the target with your shield, dealing 274 to 301 Holy damage and reducing the damage you take by 30% for 12 sec.",
       "descPl": "Uderz cel swoją tarczą, zadając od 274 do 301 obrażeń świętych i redukując otrzymywane przez ciebie obrażenia o 30% na 12 sek.",
       "descDe": "Schlägt das Ziel mit deinem Schild, wodurch 274 bis 301 heiliger Schaden verursacht und der von dir erlittene Schaden 12 Sek. lang um 30% reduziert wird.",
@@ -584,11 +588,7 @@
       "descEs": "Golpea al objetivo con tu escudo, causando 274 a 301 de daño Sagrado y reduciendo el daño que recibes en un 30% durante 12 seg.",
       "descIt": "Percuoti il bersaglio con il tuo scudo, infliggendo da 274 a 301 danni da Sacro e riducendo il danno che subisci del 30% per 12 sec.",
       "descPt": "Golpeia o alvo com seu escudo, causando 274 a 301 de dano Sagrado e reduzindo o dano que você recebe em 30% por 12 seg.",
-      "descRu": "Бьете цель щитом, нанося 274–301 ед. урона школы Holy и снижая получаемый вами урон на 30% на 12 сек.",
-      "req": [
-        "Holy Shield",
-        1
-      ]
+      "descRu": "Бьете цель щитом, нанося 274–301 ед. урона школы Holy и снижая получаемый вами урон на 30% на 12 сек."
     },
     {
       "tree": 2,
@@ -717,7 +717,7 @@
       "name": "Blessing of Kings",
       "icon": "spell_magic_magearmor",
       "ranks": 1,
-      "desc": "Places a Blessing on the friendly target, increasing total stats by 10% for 10 min. Players may only have one Blessing on them per Paladin at any one time.",
+      "desc": "Places a Blessing on the friendly target, increasing total stats by 10% for 10 min.  Players may only have one Blessing on them per Paladin at any one time.",
       "descPl": "Nakłada Blessing na przyjazny cel, zwiększając całkowite statystyki o 10% na 10 min. Gracze mogą mieć na sobie tylko jedno Blessing od jednego Paladyna w tym samym czasie.",
       "descDe": "Legt einen Segen auf das befreundete Ziel, wodurch die Gesamtwerte 10 Min. lang um 10% erhöht werden. Spieler können pro Paladin immer nur einen Segen auf sich haben.",
       "descFr": "Confère une Blessing à la cible alliée, augmentant ses caractéristiques totales de 10% pendant 10 min. Les joueurs ne peuvent avoir qu'une seule Blessing par Paladin à la fois.",
@@ -734,7 +734,7 @@
       "name": "Pursuit of Justice",
       "icon": "spell_holy_persuitofjustice",
       "ranks": 2,
-      "desc": "Increases movement and mounted movement speed by 4/8%. This does not stack with other movement speed increasing effects.",
+      "desc": "Increases movement and mounted movement speed by 4/8%.  This does not stack with other movement speed increasing effects.",
       "descPl": "Zwiększa prędkość poruszania się oraz prędkość poruszania się na wierzchowcu o 4/8%. Nie kumuluje się z innymi efektami zwiększającymi prędkość poruszania się.",
       "descDe": "Erhöht das Bewegungstempo und das berittene Bewegungstempo um 4/8%. Dies stapelt sich nicht mit anderen Effekten, die das Bewegungstempo erhöhen.",
       "descFr": "Augmente la vitesse de déplacement à pied et à monture de 4/8%. Ne se cumule pas avec les autres effets augmentant la vitesse de déplacement.",
@@ -785,7 +785,7 @@
       "name": "Eye for an Eye",
       "icon": "spell_holy_eyeforaneye",
       "ranks": 2,
-      "desc": "All spell criticals against you cause 15/30% of the damage taken to the caster as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",
+      "desc": "All spell criticals against you cause 15/30% of the damage taken to the caster as well.  The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",
       "descPl": "Wszystkie trafienia krytyczne zaklęć przeciwko tobie zadają również 15/30% otrzymanych obrażeń rzucającemu. Obrażenia zadane przez Eye for an Eye nie przekroczą 50% twojego całkowitego zdrowia.",
       "descDe": "Alle kritischen Zaubertreffer gegen dich fügen auch dem Zaubernden 15/30% des erlittenen Schadens zu. Der von Eye for an Eye verursachte Schaden überschreitet nicht 50% der Gesamtgesundheit des Paladins.",
       "descFr": "Tous les coups critiques de sort portés contre vous infligent également 15/30% des dégâts subis à leur incantateur. Les dégâts causés par Eye for an Eye ne peuvent pas dépasser 50% des points de vie totaux du Paladin.",
@@ -802,6 +802,10 @@
       "name": "Vengeance",
       "icon": "ability_racial_avatar",
       "ranks": 5,
+      "req": [
+        "Conviction",
+        5
+      ],
       "desc": "Gives you a 1/2/3/4/5% bonus to all damage you deal and decreases threat you generate by 2/4/6/8/10% for 30 sec after dealing a critical strike from a weapon swing, spell, or ability. This effect stacks up to 3 times. Threat reduction does not apply if the Paladin is under the effect of Righteous Fury.",
       "descPl": "Daje ci premię 1/2/3/4/5% do wszystkich zadawanych przez ciebie obrażeń i zmniejsza generowane przez ciebie zagrożenie o 2/4/6/8/10% na 30 sek po zadaniu trafienia krytycznego z uderzenia bronią, zaklęcia lub zdolności. Ten efekt kumuluje się do 3 razy. Redukcja zagrożenia nie ma zastosowania, jeśli jesteś pod wpływem Righteous Fury.",
       "descDe": "Gewährt dir einen Bonus von 1/2/3/4/5% auf allen von dir verursachten Schaden und verringert die von dir erzeugte Bedrohung 30 Sek. lang um 2/4/6/8/10%, nachdem du mit einem Waffenschwung, Zauber oder einer Fähigkeit einen kritischen Treffer erzielt hast. Dieser Effekt stapelt sich bis zu 3-mal. Die Bedrohungsreduzierung gilt nicht, wenn der Paladin unter dem Effekt von Righteous Fury steht.",
@@ -809,11 +813,7 @@
       "descEs": "Te otorga una bonificación del 1/2/3/4/5% a todo el daño que causas y reduce la amenaza que generas en un 2/4/6/8/10% durante 30 seg tras asestar un golpe crítico con un golpe de arma, hechizo o habilidad. Este efecto se acumula hasta 3 veces. La reducción de amenaza no se aplica si el Paladín está bajo el efecto de Righteous Fury.",
       "descIt": "Ti conferisce un bonus dell'1/2/3/4/5% a tutto il danno che infliggi e riduce la minaccia che generi del 2/4/6/8/10% per 30 sec dopo aver messo a segno un colpo critico da un fendente, un incantesimo o un'abilità. Questo effetto si accumula fino a 3 volte. La riduzione della minaccia non si applica se il Paladino è sotto l'effetto di Righteous Fury.",
       "descPt": "Concede um bônus de 1/2/3/4/5% a todo o dano que você causa e diminui a ameaça que você gera em 2/4/6/8/10% por 30 seg após causar um acerto crítico com um golpe de arma, magia ou habilidade. Este efeito acumula até 3 vezes. A redução de ameaça não se aplica se o Paladino estiver sob o efeito de Righteous Fury.",
-      "descRu": "Дает вам бонус 1/2/3/4/5% ко всему наносимому вами урону и уменьшает создаваемую вами угрозу на 2/4/6/8/10% в течение 30 сек после нанесения критического удара оружием, заклинанием или способностью. Этот эффект складывается до 3 раз. Снижение угрозы не применяется, если паладин находится под действием Righteous Fury.",
-      "req": [
-        "Conviction",
-        5
-      ]
+      "descRu": "Дает вам бонус 1/2/3/4/5% ко всему наносимому вами урону и уменьшает создаваемую вами угрозу на 2/4/6/8/10% в течение 30 сек после нанесения критического удара оружием, заклинанием или способностью. Этот эффект складывается до 3 раз. Снижение угрозы не применяется, если паладин находится под действием Righteous Fury."
     },
     {
       "tree": 2,
@@ -823,7 +823,7 @@
       "name": "Seal of Command",
       "icon": "ability_warrior_innerrage",
       "ranks": 1,
-      "desc": "Gives the Paladin a chance to deal additional Holy damage equal to 70% of melee damage. Only one Seal can be active on the Paladin at any one time. Lasts 30 sec.\nUnleashing this Seal's energy will judge an enemy, instantly causing 68 to 72 Holy damage, 137 to 145 if the target is stunned or incapacitated. This damage is increased by 15% of your attack power.",
+      "desc": "Gives the Paladin a chance to deal additional Holy damage equal to 70% of melee damage.  Only one Seal can be active on the Paladin at any one time.  Lasts 30 sec.\n\nUnleashing this Seal's energy will judge an enemy, instantly causing 68 to 72 Holy damage, 137 to 145 if the target is stunned or incapacitated. This damage is increased by 15% of your attack power.",
       "descPl": "Daje ci szansę na zadanie dodatkowych obrażeń świętych równych 70% obrażeń w zwarciu. Tylko jedna Seal może być aktywna na tobie w tym samym czasie. Trwa 30 sek.\nUwolnienie energii tej Seal osądzi wroga, natychmiast zadając od 68 do 72 obrażeń świętych, od 137 do 145, jeśli cel jest ogłuszony lub obezwładniony. Te obrażenia są zwiększone o 15% twojej mocy ataku.",
       "descDe": "Verleiht dem Paladin eine Chance, zusätzlichen heiligen Schaden in Höhe von 70% des Nahkampfschadens zu verursachen. Es kann immer nur ein Seal auf dem Paladin aktiv sein. Hält 30 Sek. an.\nDas Entfesseln der Energie dieses Seal richtet einen Gegner und verursacht sofort 68 bis 72 heiligen Schaden, 137 bis 145, wenn das Ziel betäubt oder handlungsunfähig ist. Dieser Schaden wird um 15% deiner Angriffskraft erhöht.",
       "descFr": "Donne au Paladin une chance d'infliger des dégâts Sacrés supplémentaires égaux à 70% des dégâts de corps à corps. Un seul Seal peut être actif sur le Paladin à la fois. Dure 30 sec.\nLibérer l'énergie de ce Seal juge un ennemi, infligeant instantanément 68 à 72 points de dégâts Sacrés, 137 à 145 si la cible est étourdie ou incapacitée. Ces dégâts sont augmentés de 15% de votre puissance d'attaque.",
@@ -857,7 +857,7 @@
       "name": "Repentance",
       "icon": "spell_holy_prayerofhealing",
       "ranks": 1,
-      "desc": "Puts the enemy target in a state of meditation, incapacitating them for up to 6 sec. Any damage caused will awaken the target.\nIf the target is immune to the effect, they repent for their sins, taking 80 Holy damage each time they perform a melee attack for 20 sec.",
+      "desc": "Puts the enemy target in a state of meditation, incapacitating them for up to 6 sec.  Any damage caused will awaken the target.\n\nIf the target is immune to the effect, they repent for their sins, taking 80 Holy damage each time they perform a melee attack for 20 sec.",
       "descPl": "Wprowadza wrogi cel w stan medytacji, obezwładniając go na maksymalnie 6 sek. Jakiekolwiek zadane obrażenia obudzą cel.\nJeśli cel jest odporny na ten efekt, odpokutowuje za swoje grzechy, otrzymując 80 obrażeń świętych za każdym razem, gdy wykona atak w zwarciu, przez 20 sek.",
       "descDe": "Versetzt das gegnerische Ziel in einen Zustand der Meditation, wodurch es bis zu 6 Sek. lang handlungsunfähig wird. Jeglicher verursachte Schaden erweckt das Ziel.\nIst das Ziel immun gegen den Effekt, büßt es für seine Sünden und erleidet 20 Sek. lang jedes Mal, wenn es einen Nahkampfangriff ausführt, 80 heiligen Schaden.",
       "descFr": "Plonge la cible ennemie dans un état de méditation, l'incapacitant jusqu'à 6 sec. Tout dégât causé réveille la cible.\nSi la cible est immunisée contre l'effet, elle se repent de ses péchés, subissant 80 points de dégâts Sacrés chaque fois qu'elle effectue une attaque au corps à corps pendant 20 sec.",
@@ -913,6 +913,150 @@
         "2|Vengeful Strikes": 5,
         "0|Divine Strength": 5,
         "0|Improved Seal of Righteousness": 5
+      }
+    },
+    {
+      "nazwa": "Protection",
+      "opis": "Tankowanie instancji: Holy Shield, Reckoning i zagrożenie z Righteous Fury. Build nastawiony na trzymanie kilku celów naraz.",
+      "tryb": "PvE",
+      "opisEn": "Instance tanking: Holy Shield, Reckoning and threat from Righteous Fury. A build built around holding several targets at once.",
+      "ikona": "spell_holy_blessingofprotection",
+      "kolejnosc": [
+        "Improved Devotion Aura 5 i Toughness 5 — pancerz to podstawa tanka w tej klasie.",
+        "Improved Righteous Fury 3 — bez tego nie utrzymasz celów przy dobrym DPS-ie w grupie.",
+        "Shield Specialization 3 i Anticipation 3 — bloki i obrona.",
+        "Holy Shield jak tylko odblokujesz — blokowanie zadaje obrażenia święte, czyli samo robi zagrożenie.",
+        "Reckoning 5, potem Righteous Strikes 5 i Bulwark of the Righteous na koniec."
+      ],
+      "kolejnoscEn": [
+        "Improved Devotion Aura 5 and Toughness 5 — armor is the foundation of a tank in this class.",
+        "Improved Righteous Fury 3 — without it you won't hold targets against good DPS in the group.",
+        "Shield Specialization 3 and Anticipation 3 — blocks and defense.",
+        "Holy Shield as soon as you unlock it — blocking deals holy damage, so it generates threat on its own.",
+        "Reckoning 5, then Righteous Strikes 5 and Bulwark of the Righteous at the end."
+      ],
+      "uwagi": [
+        "Precision 3 w Protection wygląda na talent pod obrażenia, ale chybiony cios to zerowe zagrożenie — dla tanka to talent obronny.",
+        "Divine Intellect w Holy tylko dlatego, że mana kończy się szybciej niż zdrowie."
+      ],
+      "uwagiEn": [
+        "Precision 3 in Protection looks like a damage talent, but a missed hit is zero threat — for a tank it's a defensive talent.",
+        "Divine Intellect in Holy only because mana runs out faster than health."
+      ],
+      "pkt": {
+        "1|Improved Devotion Aura": 5,
+        "1|Redoubt": 5,
+        "1|Toughness": 5,
+        "1|Precision": 3,
+        "1|Improved Righteous Fury": 3,
+        "1|Shield Specialization": 3,
+        "1|Anticipation": 3,
+        "1|Improved Hammer of Justice": 1,
+        "1|Righteous Defense": 3,
+        "1|Holy Shield": 1,
+        "1|Reckoning": 5,
+        "1|Righteous Strikes": 5,
+        "1|Bulwark of the Righteous": 1,
+        "0|Divine Strength": 5,
+        "0|Divine Intellect": 3
+      }
+    },
+    {
+      "nazwa": "Holy",
+      "opis": "Leczenie jednego celu, najlepsze w grze na tym poziomie. Illumination zwraca manę za krytyczne uleczenia, Holy Shock daje leczenie natychmiastowe.",
+      "tryb": "PvE",
+      "opisEn": "Single-target healing, the best in the game at this level. Illumination returns mana for critical heals, Holy Shock provides an instant heal.",
+      "ikona": "spell_holy_auramastery",
+      "kolejnosc": [
+        "Divine Intellect 5 — więcej many, czyli dłuższe leczenie.",
+        "Spiritual Focus 2, żeby obrażenia nie przerywały rzucania.",
+        "Illumination 5 — najważniejszy talent leczącego paladyna, zwraca manę za krytyki.",
+        "Holy Shock jak tylko odblokujesz, potem Holy Power i Daybreak.",
+        "Blessing of Kings w Retribution — +10% statystyk dla całej drużyny."
+      ],
+      "kolejnoscEn": [
+        "Divine Intellect 5 — more mana, meaning longer healing.",
+        "Spiritual Focus 2, so damage doesn't interrupt casting.",
+        "Illumination 5 — the most important talent for a healing paladin, it returns mana for crits.",
+        "Holy Shock as soon as you unlock it, then Holy Power and Daybreak.",
+        "Blessing of Kings in Retribution — +10% stats for the whole party."
+      ],
+      "uwagi": [
+        "Sanctity Aura podnosi obrażenia święte całej drużyny — bierzesz ją nawet jako leczący.",
+        "Ironclad zamienia twój pancerz na siłę leczenia, więc nie zdejmuj ciężkiej zbroi."
+      ],
+      "uwagiEn": [
+        "Sanctity Aura raises holy damage for the whole party — you take it even as a healer.",
+        "Ironclad converts your armor into healing power, so don't take off your heavy armor."
+      ],
+      "pkt": {
+        "0|Divine Intellect": 5,
+        "0|Spiritual Focus": 2,
+        "0|Holy Judgement": 3,
+        "0|Healing Light": 3,
+        "0|Sanctity Aura": 1,
+        "0|Unyielding Faith": 2,
+        "0|Illumination": 5,
+        "0|Ironclad": 2,
+        "0|Divine Favor": 5,
+        "0|Holy Shock": 1,
+        "0|Holy Power": 3,
+        "0|Daybreak": 1,
+        "2|Improved Blessings": 5,
+        "2|Benediction": 5,
+        "2|Improved Judgement": 2,
+        "2|Deflection": 3,
+        "2|Blessing of Kings": 1,
+        "2|Pursuit of Justice": 2
+      }
+    },
+    {
+      "nazwa": "Retribution",
+      "opis": "Burst z dwuręcznej broni i kontrola. Seal of Command bije dodatkowymi obrażeniami świętymi, Repentance wyłącza cel z walki, a Hammer of Justice ogłusza w kluczowym momencie.",
+      "tryb": "PvP",
+      "opisEn": "Burst z dwuręcznej broni i kontrola. Seal of Command bije dodatkowymi obrażeniami świętymi, Repentance wyłącza cel z walki, a Hammer of Justice ogłusza w kluczowym momencie.",
+      "ikona": "spell_holy_prayerofhealing",
+      "kolejnosc": [
+        "Benediction 5 — tańsze pieczęcie i Judgement, mana jest tu wąskim gardłem.",
+        "Conviction 5 — szansa na krytyk bronią, największy pojedynczy skok obrażeń.",
+        "Seal of Command jak tylko dostępny — dodatkowe obrażenia święte z każdego uderzenia.",
+        "Vengeance 5 i Vengeful Strikes — obrażenia po krytyku i z Crusader Strike.",
+        "Repentance — 6 sek wyłączenia celu, twoje otwarcie albo ratunek.",
+        "W Holy: Unyielding Faith 2 (odporność na strach) i Divine Strength 5 (siła)."
+      ],
+      "kolejnoscEn": [
+        "Benediction 5 — tańsze pieczęcie i Judgement, mana jest tu wąskim gardłem.",
+        "Conviction 5 — szansa na krytyk bronią, największy pojedynczy skok obrażeń.",
+        "Seal of Command jak tylko dostępny — dodatkowe obrażenia święte z każdego uderzenia.",
+        "Vengeance 5 i Vengeful Strikes — obrażenia po krytyku i z Crusader Strike.",
+        "Repentance — 6 sek wyłączenia celu, twoje otwarcie albo ratunek.",
+        "W Holy: Unyielding Faith 2 (odporność na strach) i Divine Strength 5 (siła)."
+      ],
+      "uwagi": [
+        "Pursuit of Justice daje +8% ruchu — bez tego paladyn nie dogoni kitujących przeciwników.",
+        "Unyielding Faith i Repentance to odpowiedź na kontrolę: mniej strachu, a sam wyłączasz przeciwnika z walki."
+      ],
+      "uwagiEn": [
+        "Pursuit of Justice daje +8% ruchu — bez tego paladyn nie dogoni kitujących przeciwników.",
+        "Unyielding Faith i Repentance to odpowiedź na kontrolę: mniej strachu, a sam wyłączasz przeciwnika z walki."
+      ],
+      "pkt": {
+        "2|Benediction": 5,
+        "2|Deflection": 5,
+        "2|Conviction": 5,
+        "2|Pursuit of Justice": 2,
+        "2|Two-Handed Weapon Specialization": 3,
+        "2|Seal of Command": 1,
+        "2|Vengeance": 5,
+        "2|Vengeful Strikes": 4,
+        "2|Repentance": 1,
+        "0|Divine Strength": 5,
+        "0|Improved Seal of Righteousness": 5,
+        "0|Sanctity Aura": 1,
+        "0|Unyielding Faith": 2,
+        "0|Healing Light": 2,
+        "0|Improved Concentration Aura": 3,
+        "0|Ironclad": 2
       }
     }
   ]
